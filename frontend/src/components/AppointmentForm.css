@@ -86,7 +86,6 @@
   background-repeat: no-repeat;
   background-position: right 1rem center;
   background-size: 1em;
-  max-height: none;
 }
 
 .service-select:focus {
@@ -421,4 +420,198 @@
 /* Add this to ensure the dropdown stays visible */
 .service-select[size] {
   height: auto;
+}
+
+.service-select-button {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  border: 2px solid var(--border-light);
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #333;
+  text-align: left;
+  position: relative;
+}
+
+.service-select-button::after {
+  content: '';
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #333;
+}
+
+.service-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.service-modal {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: modalFadeIn 0.3s ease;
+}
+
+.service-modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 1;
+}
+
+.service-modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  line-height: 1;
+}
+
+.service-modal-content {
+  padding: 1.5rem;
+}
+
+.service-category {
+  margin-bottom: 2rem;
+}
+
+.service-category h4 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.service-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.service-option {
+  width: 100%;
+  text-align: left;
+  padding: 1rem;
+  border: 2px solid var(--border-light);
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.service-option:hover {
+  border-color: var(--primary-400);
+  transform: translateY(-1px);
+}
+
+.service-option.selected {
+  border-color: var(--primary-500);
+  background: var(--primary-50);
+}
+
+.service-option-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.service-name {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.service-duration {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .service-modal {
+    max-height: 100vh;
+    border-radius: 0;
+  }
+  
+  .service-modal-overlay {
+    padding: 0;
+  }
+}
+
+/* Add loading state styles */
+.service-loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+/* Improve error handling visibility */
+.service-error {
+  text-align: center;
+  padding: 2rem;
+  color: var(--error);
+  background: var(--error-light);
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+/* Ensure modal content is always visible */
+.service-modal-content {
+  min-height: 200px;
+}
+
+.optional {
+  color: var(--text-secondary);
+  font-size: 0.9em;
+  font-weight: normal;
+}
+
+.form-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }

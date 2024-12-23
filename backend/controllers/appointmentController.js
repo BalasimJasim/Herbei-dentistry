@@ -26,64 +26,74 @@ const validatePhoneNumber = (phone) => {
 // @access  Public
 export const createAppointment = async (req, res) => {
   try {
-    const appointmentData = req.body
+    const appointmentData = req.body;
+
+    // Only include email if it's provided
+    const appointmentToCreate = {
+      ...appointmentData,
+      email: appointmentData.email || undefined, // This will exclude email if it's empty
+    };
 
     // Ensure dateTime is a valid date
-    const appointmentDate = new Date(appointmentData.dateTime)
+    const appointmentDate = new Date(appointmentData.dateTime);
     if (isNaN(appointmentDate.getTime())) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid appointment date'
-      })
+        message: "Invalid appointment date",
+      });
     }
 
     // Create the appointment
-    const appointment = await Appointment.create({
-      ...appointmentData,
-      dateTime: appointmentDate
-    })
+    const appointment = await Appointment.create(appointmentToCreate);
+
+    // Send notifications only if email is provided
+    if (appointment.email) {
+      try {
+        await sendAppointmentNotifications.sendEmail({
+          to: appointment.email,
+          subject: "Appointment Confirmation",
+          template: "appointment-confirmation",
+          data: {
+            firstName: appointment.firstName,
+            lastName: appointment.lastName,
+            date: appointment.dateTime.toLocaleDateString(),
+            time: appointment.dateTime.toLocaleTimeString(),
+            service: appointment.serviceId,
+          },
+        });
+      } catch (error) {
+        console.error("Failed to send email notification:", error);
+      }
+    }
 
     // Send confirmation notifications
     try {
-      // Send email confirmation
-      await sendAppointmentNotifications.sendEmail({
-        to: appointmentData.email,
-        subject: 'Appointment Confirmation',
-        template: 'appointment-confirmation',
-        data: {
-          firstName: appointmentData.firstName,
-          lastName: appointmentData.lastName,
-          date: appointmentDate.toLocaleDateString(),
-          time: appointmentDate.toLocaleTimeString(),
-          service: appointmentData.serviceId // You might want to fetch service details here
-        }
-      })
-
       // Send SMS confirmation
       await sendAppointmentNotifications.sendSMS({
         to: appointmentData.phone,
-        template: 'appointment-confirmation',
+        template: "appointment-confirmation",
         data: {
           firstName: appointmentData.firstName,
           date: appointmentDate.toLocaleDateString(),
-          time: appointmentDate.toLocaleTimeString()
-        }
-      })
+          time: appointmentDate.toLocaleTimeString(),
+        },
+      });
 
       // Schedule reminders (e.g., 24 hours before appointment)
-      await scheduleReminders(appointment)
+      await scheduleReminders(appointment);
 
-      console.log('Notifications sent successfully')
+      console.log("Notifications sent successfully");
     } catch (notificationError) {
-      console.error('Error sending notifications:', notificationError)
+      console.error("Error sending notifications:", notificationError);
       // Don't fail the appointment creation if notifications fail
     }
 
     res.status(201).json({
       success: true,
       data: appointment,
-      message: 'Appointment booked successfully. Confirmation sent to your email and phone.'
-    })
+      message:
+        "Appointment booked successfully. Confirmation sent to your email and phone.",
+    });
   } catch (error) {
     console.error('Appointment creation error:', error)
     res.status(500).json({

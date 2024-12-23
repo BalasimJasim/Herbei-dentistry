@@ -123,12 +123,48 @@ const AppointmentCalendar = ({
     );
   };
 
-  const tileDisabled = ({ date }) => {
+  const tileDisabled = ({ date, view }) => {
+    // Only run checks for month view
+    if (view !== "month") return false;
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Disable past dates, weekends, and holidays
-    return date < today || isWeekend(date) || isHoliday(date);
+    // Create a copy of the date for comparison
+    const compareDate = new Date(date.getTime());
+    compareDate.setHours(0, 0, 0, 0);
+
+    // Only disable weekends and holidays
+    // Past dates will be styled differently but not disabled
+    return isWeekend(compareDate) || isHoliday(compareDate);
+  };
+
+  const tileClassName = ({ date, view }) => {
+    if (view !== "month") return "";
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const compareDate = new Date(date.getTime());
+    compareDate.setHours(0, 0, 0, 0);
+
+    let classes = [];
+
+    // Weekend dates
+    if (isWeekend(compareDate)) {
+      classes.push("weekend");
+    }
+
+    // Past dates
+    if (compareDate < today) {
+      classes.push("past-date");
+    }
+    // Available dates (not weekend, not holiday)
+    else if (!isWeekend(compareDate) && !isHoliday(compareDate)) {
+      classes.push("available-date");
+    }
+
+    return classes.join(" ");
   };
 
   // Add tile content to show holiday names
@@ -147,15 +183,21 @@ const AppointmentCalendar = ({
         tileDisabled={tileDisabled}
         tileContent={tileContent}
         minDate={new Date()}
-        maxDate={new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)}
-        navigationLabel={navigationLabel}
-        nextLabel={navigation.next}
-        prevLabel={navigation.prev}
-        next2Label={navigation.next2}
-        prev2Label={navigation.prev2}
-        showNeighboringMonth={false}
-        formatShortWeekday={(locale, date) => format(date, "EEE")}
+        maxDate={new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)}
+        navigationLabel={({ date }) => format(date, "yyyy-MM")}
+        nextLabel={<FaChevronRight />}
+        prevLabel={<FaChevronLeft />}
+        next2Label={null}
+        prev2Label={null}
+        showNeighboringMonth={true}
+        calendarType="gregory"
+        formatShortWeekday={(locale, date) =>
+          ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"][date.getDay()]
+        }
         className="custom-calendar"
+        tileClassName={tileClassName}
+        view="month"
+        onViewChange={null}
       />
       {selectedDate && renderTimeSlots()}
     </div>
