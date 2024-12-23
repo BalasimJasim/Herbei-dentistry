@@ -1,0 +1,68 @@
+
+
+Appointment System Workflow
+User Flow:
+The user clicks on the "Book Appointment" button.
+They are redirected to the Appointment Page.
+The user selects a Service (e.g., root canal, cleaning, crown preparation, etc.).
+After selecting the service, the user chooses an Available Date.
+Next, the user selects an Available Time Slot for that service (ensuring no overlap for the same cabinet or specialist at the same time).
+The user fills in their Personal Information (Name, Phone Number, Email, etc.).
+Once completed, the user receives a Confirmation via SMS and Email.
+Cabinets and Services Mapping
+The booking system should allocate appointments to specific cabinets based on the service selected. Below is the mapping of cabinets to services:
+
+Consultation Cabinet (1):
+
+General consultation.
+Operative Dentistry Cabinets (2):
+
+Root canal treatment.
+Dental fillings.
+Teeth cleaning.
+Orthopedic Cabinet (1):
+
+Tooth preparation for crowns and bridges.
+Dentures.
+Pediatrics Cabinet (1):
+
+Orthodontics (braces).
+Consultation for braces.
+Surgery Cabinet (1):
+
+All-on-4 and All-on-6 procedures.
+Sinus lifting.
+Surgery/implant consultation.
+Bone grafting.
+Instructions for Implementation
+Dynamic Service Selection:
+
+When the user selects a service, ensure that the system maps the service to the correct cabinet and displays only the available dates and time slots for that cabinet.
+Prevent Appointment Overlaps:
+
+Ensure that two users cannot book an appointment for the same cabinet or specialist at the same time slot. This requires backend logic to check and block conflicting time slots.
+UI/UX Design:
+
+The appointment page should follow this logical flow:
+Service selection at the top.
+Date picker below the service selection.
+Time slot picker below the date picker.
+Personal information form at the end.
+Ensure the design is user-friendly, clean, and responsive.
+Calendar and Time Slots:
+
+Make the calendar functional to display only available dates based on the cabinet’s schedule.
+Ensure time slots are dynamically loaded and show availability for the selected service and date.
+Confirmation System:
+
+After the user completes the booking, send a confirmation SMS and email. Use the existing email and SMS functionality, and ensure it integrates seamlessly with the booking system.
+Validation:
+
+Add validation for user inputs (e.g., required fields, valid email/phone format).
+Display error messages for unavailable time slots or incorrect inputs.
+Testing:
+
+Test the appointment system thoroughly to ensure:
+No overlapping appointments.
+Correct cabinet allocation based on service.
+SMS and email confirmations are sent successfully.

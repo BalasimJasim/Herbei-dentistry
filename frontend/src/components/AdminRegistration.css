@@ -1,0 +1,60 @@
+.admin-registration {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+.registration-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+.registration-card h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--primary-700);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid var(--border-light);
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary-500);
+}
+
+.submit-button {
+  width: 100%;
+  padding: 1rem;
+  background: var(--primary-600);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background: var(--primary-700);
+} 

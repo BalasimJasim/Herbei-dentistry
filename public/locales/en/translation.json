@@ -1,0 +1,33 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "bookAppointment": "Book Appointment",
+    "contact": "Contact",
+    "patientPortal": "Patient Portal"
+  },
+  "home": {
+    "welcome": "Welcome to Herbie Dental Clinic",
+    "slogan": "Your smile is our priority",
+    "bookNow": "Book Your Appointment Now"
+  },
+  "appointment": {
+    "personalInfo": "Personal Information",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phone": "Phone Number",
+    "preferredContact": "Preferred Contact Method",
+    "appointmentDetails": "Appointment Details",
+    "selectService": "Select a Service",
+    "newPatient": "Are you a new patient?",
+    "yes": "Yes",
+    "no": "No",
+    "insurance": "Insurance Provider",
+    "policyNumber": "Policy Number",
+    "notes": "Additional Notes",
+    "book": "Book Appointment",
+    "notesPlaceholder": "Add any special requirements or concerns here"
+  }
+} 

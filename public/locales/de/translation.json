@@ -1,0 +1,48 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "about": "Über uns",
+    "services": "Leistungen",
+    "bookAppointment": "Termin buchen",
+    "contact": "Kontakt",
+    "patientPortal": "Patientenportal"
+  },
+  "home": {
+    "welcome": "Willkommen bei Herbie Dental Clinic",
+    "slogan": "Ihr Lächeln ist unsere Priorität",
+    "bookNow": "Jetzt Termin vereinbaren"
+  },
+  "appointment": {
+    "personalInfo": "Persönliche Informationen",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "email": "E-Mail",
+    "phone": "Telefonnummer",
+    "preferredContact": "Bevorzugte Kontaktmethode",
+    "appointmentDetails": "Termindetails",
+    "selectService": "Leistung auswählen",
+    "newPatient": "Sind Sie ein neuer Patient?",
+    "yes": "Ja",
+    "no": "Nein",
+    "insurance": "Krankenversicherung",
+    "policyNumber": "Versicherungsnummer",
+    "notes": "Zusätzliche Anmerkungen",
+    "book": "Termin buchen",
+    "emailContact": "E-Mail",
+    "phoneContact": "Telefon",
+    "textContact": "SMS"
+  },
+  "services": {
+    "general": "Allgemeine Zahnmedizin",
+    "cosmetic": "Ästhetische Zahnmedizin",
+    "orthodontics": "Kieferorthopädie",
+    "implants": "Zahnimplantate",
+    "emergency": "Notfallbehandlung"
+  },
+  "confirmation": {
+    "success": "Termin bestätigt!",
+    "thankYou": "Vielen Dank, dass Sie sich für Herbie Dental Clinic entschieden haben",
+    "emailSent": "Eine Bestätigungs-E-Mail wurde gesendet an",
+    "reminder": "Sie erhalten 24 Stunden vor Ihrem Termin eine Erinnerung"
+  }
+} 

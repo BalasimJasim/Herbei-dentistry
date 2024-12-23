@@ -1,0 +1,194 @@
+.confirmation-container {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.confirmation-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.confirmation-header {
+  background: #4CAF50;
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+.success-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.confirmation-header h1 {
+  margin-bottom: 0.5rem;
+}
+
+.appointment-details {
+  padding: 2rem;
+}
+
+.appointment-details h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 5px;
+}
+
+.detail-icon {
+  color: #4CAF50;
+  font-size: 1.2rem;
+  margin-top: 0.2rem;
+}
+
+.detail-row strong {
+  display: block;
+  color: #666;
+  margin-bottom: 0.25rem;
+}
+
+.detail-row p {
+  color: #333;
+  margin: 0;
+}
+
+.duration {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+.contact-details {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+}
+
+.notes-section {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 5px;
+}
+
+.confirmation-footer {
+  padding: 2rem;
+  background: #f8f9fa;
+  border-top: 1px solid #eee;
+}
+
+.reminder-text {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #666;
+}
+
+.important-info {
+  margin-bottom: 1.5rem;
+}
+
+.important-info h3 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.important-info ul {
+  list-style: none;
+  padding: 0;
+}
+
+.important-info li {
+  margin-bottom: 0.5rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.important-info li::before {
+  content: '•';
+  color: #4CAF50;
+  position: absolute;
+  left: 0;
+}
+
+.action-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.action-buttons button,
+.action-buttons a {
+  padding: 1rem;
+  text-align: center;
+  border-radius: 5px;
+  font-weight: 500;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+
+.add-to-calendar {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.add-to-calendar:hover {
+  background: #45a049;
+}
+
+.book-another {
+  background: white;
+  color: #4CAF50;
+  border: 2px solid #4CAF50;
+}
+
+.book-another:hover {
+  background: #f8f9fa;
+}
+
+.view-appointments {
+  background: #333;
+  color: white;
+}
+
+.view-appointments:hover {
+  background: #444;
+}
+
+.confirmation-error {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.book-again-btn {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background: #4CAF50;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .confirmation-container {
+    padding: 1rem;
+  }
+  
+  .action-buttons {
+    grid-template-columns: 1fr;
+  }
+} 

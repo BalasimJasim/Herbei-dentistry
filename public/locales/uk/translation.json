@@ -1,0 +1,32 @@
+{
+  "nav": {
+    "home": "Головна",
+    "about": "Про нас",
+    "services": "Послуги",
+    "bookAppointment": "Записатися",
+    "contact": "Контакти",
+    "patientPortal": "Портал пацієнта"
+  },
+  "home": {
+    "welcome": "Ласкаво просимо до стоматологічної клініки Herbie",
+    "slogan": "Ваша посмішка - наш пріоритет",
+    "bookNow": "Записатися зараз"
+  },
+  "appointment": {
+    "personalInfo": "Особиста інформація",
+    "firstName": "Ім'я",
+    "lastName": "Прізвище",
+    "email": "Електронна пошта",
+    "phone": "Номер телефону",
+    "preferredContact": "Бажаний спосіб зв'язку",
+    "appointmentDetails": "Деталі запису",
+    "selectService": "Оберіть послугу",
+    "newPatient": "Ви новий пацієнт?",
+    "yes": "Так",
+    "no": "Ні",
+    "insurance": "Страхова компанія",
+    "policyNumber": "Номер поліса",
+    "notes": "Додаткові примітки",
+    "book": "Записатися"
+  }
+} 

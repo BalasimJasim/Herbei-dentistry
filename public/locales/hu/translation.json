@@ -1,0 +1,48 @@
+{
+  "nav": {
+    "home": "Főoldal",
+    "about": "Rólunk",
+    "services": "Szolgáltatások",
+    "bookAppointment": "Időpontfoglalás",
+    "contact": "Kapcsolat",
+    "patientPortal": "Páciens Portál"
+  },
+  "home": {
+    "welcome": "Üdvözöljük a Herbie Dental Clinic-nél",
+    "slogan": "Az Ön mosolya a mi prioritásunk",
+    "bookNow": "Foglaljon időpontot most"
+  },
+  "appointment": {
+    "personalInfo": "Személyes adatok",
+    "firstName": "Keresztnév",
+    "lastName": "Vezetéknév",
+    "email": "E-mail cím",
+    "phone": "Telefonszám",
+    "preferredContact": "Preferált kapcsolattartási mód",
+    "appointmentDetails": "Időpont részletei",
+    "selectService": "Válasszon szolgáltatást",
+    "newPatient": "Új páciens?",
+    "yes": "Igen",
+    "no": "Nem",
+    "insurance": "Biztosító",
+    "policyNumber": "Biztosítási szám",
+    "notes": "További megjegyzések",
+    "book": "Időpont foglalása",
+    "emailContact": "E-mail",
+    "phoneContact": "Telefon",
+    "textContact": "SMS"
+  },
+  "services": {
+    "general": "Általános fogászat",
+    "cosmetic": "Esztétikai fogászat",
+    "orthodontics": "Fogszabályozás",
+    "implants": "Fogimplantátumok",
+    "emergency": "Sürgősségi ellátás"
+  },
+  "confirmation": {
+    "success": "Időpont megerősítve!",
+    "thankYou": "Köszönjük, hogy a Herbie Dental Clinic-et választotta",
+    "emailSent": "Visszaigazoló e-mailt küldtünk a következő címre",
+    "reminder": "Az időpont előtt 24 órával emlékeztetőt küldünk"
+  }
+} 

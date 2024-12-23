@@ -1,0 +1,241 @@
+.calendar-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Calendar styling */
+.react-calendar {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  background: white;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 1rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+/* Calendar navigation */
+.react-calendar__navigation {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem;
+  background: var(--neutral-50);
+  border-radius: 8px;
+}
+
+.react-calendar__navigation button {
+  min-width: 44px;
+  height: 44px;
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.react-calendar__navigation button:enabled:hover,
+.react-calendar__navigation button:enabled:focus {
+  background-color: var(--primary-50);
+  color: var(--primary-600);
+}
+
+.calendar-nav-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+  text-align: center;
+}
+
+.calendar-nav-icon {
+  font-size: 1.2rem;
+}
+
+/* Calendar tiles */
+.react-calendar__month-view__weekdays {
+  background: var(--neutral-50);
+  border-radius: 8px;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.react-calendar__month-view__days {
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.react-calendar__tile {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  position: relative;
+  padding-bottom: 1.2rem !important;
+}
+
+.react-calendar__tile:enabled:hover {
+  background-color: var(--primary-50);
+  color: var(--primary-600);
+  transform: translateY(-1px);
+}
+
+.react-calendar__tile--active {
+  background-color: var(--primary-500) !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+.react-calendar__tile--now {
+  background-color: var(--neutral-100);
+  font-weight: 600;
+}
+
+/* Disabled dates */
+.react-calendar__tile:disabled {
+  background-color: var(--neutral-50);
+  color: var(--neutral-400);
+  cursor: not-allowed;
+}
+
+/* Time slots */
+.time-slots {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.time-slot {
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--border-light);
+  border-radius: 6px;
+  text-align: center;
+  cursor: pointer;
+  background: white;
+  color: var(--text-primary);
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.time-slot:hover:not(.disabled) {
+  border-color: var(--primary-400);
+  background-color: var(--primary-50);
+  color: var(--primary-700);
+  transform: translateY(-1px);
+}
+
+.time-slot.selected {
+  background-color: var(--primary-500);
+  color: white;
+  border-color: var(--primary-500);
+}
+
+.time-slot.disabled {
+  background-color: var(--neutral-50);
+  color: var(--neutral-400);
+  cursor: not-allowed;
+  border-color: var(--neutral-200);
+}
+
+/* No slots message */
+.no-slots {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+  background: var(--neutral-50);
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+/* Loading state */
+.loading-slots {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+/* Add these CSS variables to your root */
+:root {
+  --text-primary: #2d3748;
+  --text-secondary: #4a5568;
+  --primary-50: #ebf5ff;
+  --primary-400: #4299e1;
+  --primary-500: #3182ce;
+  --primary-600: #2b6cb0;
+  --primary-700: #2c5282;
+  --neutral-50: #f7fafc;
+  --neutral-100: #edf2f7;
+  --neutral-200: #e2e8f0;
+  --neutral-400: #a0aec0;
+  --border-light: #e2e8f0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .calendar-container {
+    padding: 1rem;
+  }
+
+  .react-calendar {
+    padding: 0.5rem;
+  }
+
+  .time-slots {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .time-slot {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .react-calendar__navigation button {
+    min-width: 40px;
+    height: 40px;
+  }
+
+  .react-calendar__tile {
+    height: 40px;
+    font-size: 0.9rem;
+  }
+
+  .calendar-nav-label {
+    font-size: 1rem;
+  }
+}
+
+/* Add these styles to your existing CSS */
+.holiday-marker {
+  font-size: 0.7rem;
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--primary-500);
+}
+
+/* Style for disabled holiday tiles */
+.react-calendar__tile:disabled .holiday-marker {
+  opacity: 0.5;
+} 

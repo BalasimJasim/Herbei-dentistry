@@ -1,0 +1,32 @@
+[dir="rtl"] {
+  /* Text alignment */
+  text-align: right;
+}
+
+[dir="rtl"] .nav-links {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .form-group {
+  text-align: right;
+}
+
+[dir="rtl"] .radio-group label {
+  margin-right: 0;
+  margin-left: 1rem;
+}
+
+[dir="rtl"] .detail-icon {
+  margin-right: 0;
+  margin-left: 1rem;
+}
+
+[dir="rtl"] .important-info li {
+  padding-right: 1.5rem;
+  padding-left: 0;
+}
+
+[dir="rtl"] .important-info li::before {
+  right: 0;
+  left: auto;
+} 
