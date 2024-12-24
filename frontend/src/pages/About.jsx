@@ -7,8 +7,8 @@ const About = () => {
     <>
       <Helmet>
         <title>About Us - Herbie Dental Clinic</title>
-        <meta 
-          name="description" 
+        <meta
+          name="description"
           content="Learn about Herbie Dental Clinic's experienced team, our mission, and our commitment to providing exceptional dental care."
         />
       </Helmet>
@@ -16,7 +16,7 @@ const About = () => {
       <section className="about-hero">
         <div className="container">
           <h1>About Herbie Dental Clinic</h1>
-          <p className="lead">Providing Quality Dental Care Since 2010</p>
+          <p className="lead">Providing Quality Dental Care Since 2020</p>
         </div>
       </section>
 
@@ -25,28 +25,39 @@ const About = () => {
           <div className="mission-box">
             <h2>Our Mission</h2>
             <p>
-              To provide exceptional dental care in a comfortable and welcoming 
-              environment, ensuring every patient achieves optimal oral health 
+              To provide exceptional dental care in a comfortable and welcoming
+              environment, ensuring every patient achieves optimal oral health
               through personalized treatment plans and education.
             </p>
           </div>
-          
+
           <div className="values-grid">
             <div className="value-card">
               <h3>Excellence</h3>
-              <p>Delivering the highest standard of dental care using cutting-edge technology</p>
+              <p>
+                Delivering the highest standard of dental care using
+                cutting-edge technology
+              </p>
             </div>
             <div className="value-card">
               <h3>Compassion</h3>
-              <p>Treating every patient with empathy, understanding, and respect</p>
+              <p>
+                Treating every patient with empathy, understanding, and respect
+              </p>
             </div>
             <div className="value-card">
               <h3>Integrity</h3>
-              <p>Maintaining honest and transparent relationships with our patients</p>
+              <p>
+                Maintaining honest and transparent relationships with our
+                patients
+              </p>
             </div>
             <div className="value-card">
               <h3>Innovation</h3>
-              <p>Staying current with the latest dental techniques and technologies</p>
+              <p>
+                Staying current with the latest dental techniques and
+                technologies
+              </p>
             </div>
           </div>
         </div>
@@ -56,7 +67,7 @@ const About = () => {
         <div className="container">
           <h2>Meet Our Team</h2>
           <div className="team-grid">
-            {teamMembers.map(member => (
+            {teamMembers.map((member) => (
               <TeamMember key={member.id} {...member} />
             ))}
           </div>
@@ -67,7 +78,7 @@ const About = () => {
         <div className="container">
           <h2>Tour Our Facility</h2>
           <div className="clinic-gallery">
-            {clinicImages.map(image => (
+            {clinicImages.map((image) => (
               <div key={image.id} className="gallery-item">
                 <img src={image.url} alt={image.alt} />
                 <p>{image.description}</p>
@@ -77,7 +88,7 @@ const About = () => {
         </div>
       </section>
     </>
-  )
+  );
 }
 
 const teamMembers = [
