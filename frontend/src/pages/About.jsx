@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet-async";
 import founderImage from "../assets/images/image0.jpeg";
+import doctorImage from "../assets/images/doc.jpeg";
 import "./About.css";
 
 const About = () => {
@@ -10,31 +11,24 @@ const About = () => {
   const teamMembers = [
     {
       id: 1,
-      name: "Юрій Гербей",
-      role: "Хірург-стоматолог, Ортопед-стоматолог",
+      name: t("about.founder.name"),
+      role: t("about.founder.title"),
       image: founderImage,
-      description:
-        "Засновник клініки, провідний спеціаліст з хірургічної та ортопедичної стоматології. Має великий досвід у складних хірургічних випадках та естетичному протезуванні. Постійно вдосконалює свої навички на міжнародних конференціях та майстер-класах.",
+      description: t("about.founder.description"),
       specializations: [
         "Дентальна імплантація",
         "Кістково-пластичні операції",
         "Протезування на імплантах",
-        "Естетична реабілітація",
-        "Хірургічна пародонтологія",
       ],
-      expertise: [
-        "Спеціалізація в хірургічній стоматології та ортопедії з 2018 року",
-        "Експерт з імплантації та протезування на імплантах",
-        "Досвід проведення складних кістково-пластичних операцій",
-        "Сертифікований спеціаліст по системам імплантації Nobel Biocare та Straumann",
-        "Учасник міжнародних конференцій з імплантології та естетичної стоматології",
-      ],
+      expertise: Object.values(
+        t("about.founder.expertise", { returnObjects: true })
+      ),
     },
     {
       id: 2,
       name: "Марія Ковальчук",
       role: "Терапевт-стоматолог",
-      image: "/images/placeholder-female.jpg",
+      image: doctorImage,
       description:
         "Спеціаліст з лікування карієсу та його ускладнень. 3 роки досвіду в естетичній реставрації.",
       specializations: [
@@ -47,68 +41,67 @@ const About = () => {
       id: 3,
       name: "Олена Петренко",
       role: "Стоматолог-гігієніст",
-      image: "/images/placeholder-female.jpg",
+      image: doctorImage,
       description:
         "Експерт з професійної гігієни порожнини рота та профілактики захворювань ясен.",
       specializations: ["Професійна гігієна", "Відбілювання", "Профілактика"],
+    },
+    {
+      id: 4,
+      name: "Андрій Мельник",
+      role: "Ортодонт",
+      image: doctorImage,
+      description:
+        "Спеціаліст з виправлення прикусу та вирівнювання зубів. Експерт з брекет-систем та елайнерів.",
+      specializations: ["��рекет-системи", "Елайнери", "Виправлення прикусу"],
     },
   ];
 
   return (
     <div className="about-page">
       <Helmet>
-
-        <title>About Us - Herbie Dental Clinic</title>
-        <meta
-          name="description"
-          content="Learn about Herbie Dental Clinic's experienced team, our mission, and our commitment to providing exceptional dental care."
-        />
-
+        <title>{t("about.title")}</title>
+        <meta name="description" content={t("about.subtitle")} />
       </Helmet>
 
       {/* Hero Section */}
       <div className="hero-section">
         <div className="container">
-
-          <h1>About Herbie Dental Clinic</h1>
-          <p className="lead">Providing Quality Dental Care Since 2020</p>
-
+          <h1>{t("about.title")}</h1>
+          <p className="lead">{t("about.subtitle")}</p>
         </div>
       </div>
 
       {/* Updated Founder Section */}
       <div className="founder-section">
         <div className="container">
-
           <div className="founder-content">
             <div className="founder-image">
-              <img
-                src={founderImage}
-                alt="Юрій Гербей - Хірург-стоматолог, Ортопед"
-              />
+              <img src={founderImage} alt={t("about.founder.name")} />
             </div>
             <div className="founder-info">
-              <span className="founder-label">Засновник та Головний Лікар</span>
-              <h2>Юрій Гербей</h2>
-              <h3>Хірург-стоматолог, Ортопед-стоматолог</h3>
+              <span className="founder-label">
+                {t("about.founder.subtitle")}
+              </span>
+              <h2>{t("about.founder.name")}</h2>
+              <h3>{t("about.founder.title")}</h3>
               <p className="founder-description">
-                Спеціаліст з більш ніж 5-річним досвідом у хірургічній та
-                ортопедичній стоматології. Експерт з дентальної імплантації та
-                естетичного протезування. Постійно вдосконалює свої навички,
-                відвідуючи міжнародні конференції та майстер-класи провідних
-                спеціалістів світу.
+                {t("about.founder.description")}
               </p>
-              <div className="expertise-section">
-                <h4>Професійна експертиза:</h4>
-                <ul className="expertise-list">
-                  {teamMembers[0].expertise.map((item, index) => (
-                    <li key={index}>
-                      <span className="check-icon">✓</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {/* Expertise Section */}
+              {teamMembers[0].expertise && (
+                <div className="expertise-section">
+                  <h4>Професійна експертиза:</h4>
+                  <ul className="expertise-list">
+                    {teamMembers[0].expertise.map((item, index) => (
+                      <li key={index}>
+                        <span className="check-icon">✓</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               <div className="specializations-section">
                 <h4>Спеціалізації:</h4>
                 <div className="specializations">
@@ -119,7 +112,6 @@ const About = () => {
                   ))}
                 </div>
               </div>
-
             </div>
           </div>
         </div>
@@ -128,7 +120,6 @@ const About = () => {
       {/* Values Section */}
       <div className="values-section">
         <div className="container">
-
           <h2>{t("about.values.title")}</h2>
           <div className="values-grid">
             {["quality", "innovation", "care"].map((value) => (
@@ -136,7 +127,6 @@ const About = () => {
                 <h3>{t(`about.values.${value}.title`)}</h3>
                 <p>{t(`about.values.${value}.description`)}</p>
               </div>
-
             ))}
           </div>
         </div>
@@ -145,7 +135,6 @@ const About = () => {
       {/* Team Section */}
       <div className="team-section">
         <div className="container">
-
           <h2>Наша Команда</h2>
           <p className="team-intro">
             Наша команда складається з висококваліфікованих спеціалістів, які
@@ -170,16 +159,11 @@ const About = () => {
                     ))}
                   </div>
                 </div>
-
-          
               </div>
             ))}
           </div>
         </div>
-
       </div>
-
-     
 
       {/* CTA Section */}
       <div className="cta-section">

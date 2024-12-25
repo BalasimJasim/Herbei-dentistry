@@ -23,69 +23,72 @@ import AdminDashboard from './components/AdminDashboard'
 import AdminLogin from './components/AdminLogin'
 import AdminErrorBoundary from './components/AdminErrorBoundary'
 import AppointmentList from "./components/AppointmentList";
+import { I18nextProvider } from "react-i18next";
 
 function App() {
   return (
-    <HelmetProvider>
-      <Router>
-        <AuthProvider>
-          <LanguageProvider>
-            <div className="app">
-              <Navbar />
-              <main>
-                <Routes>
-                  <Route
-                    path="/admin/*"
-                    element={
-                      <AdminErrorBoundary>
-                        <Routes>
-                          <Route path="login" element={<AdminLogin />} />
-                          <Route element={<AdminRoute />}>
-                            <Route
-                              path="dashboard"
-                              element={<AdminDashboard />}
-                            />
-                            <Route
-                              path="register"
-                              element={<AdminRegistration />}
-                            />
-                          </Route>
-                        </Routes>
-                      </AdminErrorBoundary>
-                    }
-                  />
-                  <Route path="/" element={<Home />} />
-                  <Route path="/:lang" element={<Home />} />
-                  <Route path="/:lang/about" element={<About />} />
-                  <Route path="/:lang/services" element={<Services />} />
-                  <Route
-                    path="/:lang/appointments"
-                    element={<Appointments />}
-                  />
-                  <Route
-                    path="/:lang/appointments/confirmation"
-                    element={<AppointmentConfirmation />}
-                  />
-                  <Route path="/:lang/contact" element={<Contact />} />
-                  <Route
-                    path="/:lang/patient-portal"
-                    element={<PatientPortal />}
-                  />
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
-              </main>
-              <Footer />
-              <ToastContainer
-                position="bottom-right"
-                autoClose={5000}
-                rtl={isRTL(i18n.language)}
-              />
-              <AppointmentList />
-            </div>
-          </LanguageProvider>
-        </AuthProvider>
-      </Router>
-    </HelmetProvider>
+    <I18nextProvider i18n={i18n}>
+      <HelmetProvider>
+        <Router>
+          <AuthProvider>
+            <LanguageProvider>
+              <div className="app">
+                <Navbar />
+                <main>
+                  <Routes>
+                    <Route
+                      path="/admin/*"
+                      element={
+                        <AdminErrorBoundary>
+                          <Routes>
+                            <Route path="login" element={<AdminLogin />} />
+                            <Route element={<AdminRoute />}>
+                              <Route
+                                path="dashboard"
+                                element={<AdminDashboard />}
+                              />
+                              <Route
+                                path="register"
+                                element={<AdminRegistration />}
+                              />
+                            </Route>
+                          </Routes>
+                        </AdminErrorBoundary>
+                      }
+                    />
+                    <Route path="/" element={<Home />} />
+                    <Route path="/:lang" element={<Home />} />
+                    <Route path="/:lang/about" element={<About />} />
+                    <Route path="/:lang/services" element={<Services />} />
+                    <Route
+                      path="/:lang/appointments"
+                      element={<Appointments />}
+                    />
+                    <Route
+                      path="/:lang/appointments/confirmation"
+                      element={<AppointmentConfirmation />}
+                    />
+                    <Route path="/:lang/contact" element={<Contact />} />
+                    <Route
+                      path="/:lang/patient-portal"
+                      element={<PatientPortal />}
+                    />
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                  </Routes>
+                </main>
+                <Footer />
+                <ToastContainer
+                  position="bottom-right"
+                  autoClose={5000}
+                  rtl={isRTL(i18n.language)}
+                />
+                <AppointmentList />
+              </div>
+            </LanguageProvider>
+          </AuthProvider>
+        </Router>
+      </HelmetProvider>
+    </I18nextProvider>
   );
 }
 

@@ -1,21 +1,28 @@
 .navbar {
-  background: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  height: 70px;
+  height: 80px;
   display: flex;
   align-items: center;
+  transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+  height: 70px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
 }
 
 .navbar-container {
   width: 100%;
-  max-width: 1280px;
+  max-width: var(--container-width);
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 var(--spacing-4);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -24,28 +31,34 @@
 .navbar-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
-}
-
-.navbar-logo {
-  height: 40px;
-  width: auto;
-}
-
-.navbar-brand h1 {
-  font-family: var(--font-family-display);
-  font-size: 24px;
-  font-weight: 600;
-  color: #2C3E50;
-  margin: 0;
 }
 
 .navbar-brand a {
-  text-decoration: none;
-  color: inherit;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--spacing-3);
+  text-decoration: none;
+  color: var(--neutral-900);
+}
+
+.navbar-logo {
+  height: 48px;
+  width: auto;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.navbar-brand:hover .navbar-logo {
+  transform: scale(1.05);
+}
+
+.navbar-brand h1 {
+  font-family: var(--font-family-heading);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--primary-600);
+  margin: 0;
+  letter-spacing: -0.5px;
 }
 
 .nav-menu {
@@ -377,4 +390,40 @@
   .hamburger::after {
     background: CanvasText;
   }
+}
+
+/* Add these new styles */
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-tagline {
+  font-size: var(--text-sm);
+  color: var(--neutral-600);
+  margin-top: -2px;
+}
+
+/* Update responsive styles */
+@media (max-width: 768px) {
+  .navbar-brand h1 {
+    font-size: var(--text-xl);
+  }
+
+  .brand-tagline {
+    display: none;
+  }
+
+  .navbar-logo {
+    height: 40px;
+  }
+}
+
+/* Add hover effects */
+.navbar-brand a:hover .brand-text h1 {
+  color: var(--primary-700);
+}
+
+.navbar-brand a:hover .navbar-logo {
+  transform: scale(1.05);
 } 
