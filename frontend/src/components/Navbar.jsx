@@ -1,8 +1,8 @@
-import { Link, useLocation } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useAuth } from '../contexts/AuthContext'
-import LanguageSwitcher from './LanguageSwitcher'
+import { Link, useLocation, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useAuth } from "../contexts/AuthContext";
+import LanguageSwitcher from "./LanguageSwitcher";
 import logo from "../assets/images/logo1.jpeg";
 
 import "./Navbar.css";
@@ -10,9 +10,14 @@ import "./Navbar.css";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const location = useLocation();
   const { user } = useAuth();
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const { lang } = useParams();
+
+  // Use current language if lang param is undefined
+  const currentLang = lang || i18n.language;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,21 +35,17 @@ const Navbar = () => {
 
   // Improved active state check
   const isActive = (path) => {
-    // Remove language prefix and get current path
-    const currentPath = location.pathname.replace(/^\/[a-z]{2}/, "");
+    const currentPath = location.pathname.replace(`/${lang}`, "");
 
-    // Special case for home page
     if (path === "/") {
       return currentPath === "/" || currentPath === "";
     }
 
-    // For other pages, check if the current path starts with the given path
-    // and make sure it's an exact match or followed by a slash or nothing
     return (
       currentPath === path ||
       currentPath.startsWith(`${path}/`) ||
       currentPath === path.slice(1)
-    ); // handle paths without leading slash
+    );
   };
 
   const navLinks = [
@@ -57,6 +58,16 @@ const Navbar = () => {
       ? [{ path: "/admin/dashboard", text: "Admin Dashboard" }]
       : []),
   ];
+
+  const toggleDropdown = (name) => {
+    setActiveDropdown(activeDropdown === name ? null : name);
+  };
+
+  useEffect(() => {
+    // Close dropdown and mobile menu when route changes
+    setActiveDropdown(null);
+    setIsOpen(false);
+  }, [location.pathname]);
 
   return (
     <nav className={`navbar ${isScrolled ? "scrolled" : ""}`}>
@@ -108,6 +119,60 @@ const Navbar = () => {
                 {t("nav.patientPortal")}
               </Link>
             </li>
+            <div
+              className={`dropdown ${
+                activeDropdown === "education" ? "active" : ""
+              }`}
+            >
+              <button
+                className="dropdown-toggle"
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggleDropdown("education");
+                }}
+              >
+                {t("nav.education")}
+                <i className="fas fa-chevron-down"></i>
+              </button>
+              <div className="dropdown-menu">
+                <Link
+                  to={`/${currentLang}/education/oral-hygiene`}
+                  onClick={() => {
+                    setActiveDropdown(null);
+                    setIsOpen(false);
+                  }}
+                >
+                  {t("education.nav.oralHygiene")}
+                </Link>
+                <Link
+                  to={`/${currentLang}/education/procedures`}
+                  onClick={() => {
+                    setActiveDropdown(null);
+                    setIsOpen(false);
+                  }}
+                >
+                  {t("education.nav.procedures")}
+                </Link>
+                <Link
+                  to={`/${currentLang}/education/implants`}
+                  onClick={() => {
+                    setActiveDropdown(null);
+                    setIsOpen(false);
+                  }}
+                >
+                  {t("education.nav.implants")}
+                </Link>
+                <Link
+                  to={`/${currentLang}/education/all-on-x`}
+                  onClick={() => {
+                    setActiveDropdown(null);
+                    setIsOpen(false);
+                  }}
+                >
+                  {t("education.nav.allOnX")}
+                </Link>
+              </div>
+            </div>
           </ul>
 
           <div className="lang-switcher-container">
@@ -119,4 +184,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar 
+export default Navbar;

@@ -1,15 +1,47 @@
-
 @import '../styles/variables.css';
 
 /* Hero Section */
 .hero-section {
   background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
-  min-height: 85vh;
+  padding: var(--spacing-16) var(--spacing-8);
+  text-align: center;
+  min-height: 60vh;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
   position: relative;
-
   overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('../assets/images/hero-pattern.svg');
+  background-size: cover;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.hero-section h1 {
+  font-size: var(--text-4xl);
+  color: var(--neutral-900);
+  margin-bottom: var(--spacing-4);
+  position: relative;
+  z-index: 1;
+}
+
+.hero-section .subtitle {
+  font-size: var(--text-xl);
+  color: var(--neutral-700);
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
 .hero-container {

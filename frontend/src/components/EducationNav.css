@@ -1,0 +1,54 @@
+.education-nav {
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem 0;
+  position: sticky;
+  top: 80px;
+  z-index: 100;
+}
+
+.education-nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 0 1rem;
+}
+
+.education-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--neutral-600);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  transition: all 0.3s ease;
+}
+
+.education-nav-link i {
+  font-size: 1.2rem;
+}
+
+.education-nav-link:hover {
+  color: var(--primary-600);
+  background: var(--primary-50);
+}
+
+.education-nav-link.active {
+  color: var(--primary-600);
+  background: var(--primary-50);
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .education-nav-container {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .education-nav-link {
+    font-size: 0.9rem;
+  }
+} 

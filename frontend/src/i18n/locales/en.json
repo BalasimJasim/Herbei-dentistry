@@ -35,7 +35,8 @@
     "services": "Services",
     "bookAppointment": "Book Appointment",
     "contact": "Contact",
-    "patientPortal": "Patient Portal"
+    "patientPortal": "Patient Portal",
+    "education": "Patient Education"
   },
   "footer": {
     "description": "Your trusted partner in dental health. We combine modern technology with compassionate care to provide you with the best dental experience.",
@@ -156,6 +157,189 @@
       "title": "Ready to Transform Your Smile?",
       "description": "Schedule a consultation with our dental specialists today",
       "button": "Book Your Visit"
+    }
+  },
+  "education": {
+    "oralHygiene": {
+      "title": "Oral Hygiene Guide",
+      "subtitle": "Learn the essential steps for maintaining optimal dental health",
+      "brushing": {
+        "title": "Proper Brushing Technique",
+        "description": "Effective brushing is key to preventing cavities and maintaining healthy gums.",
+        "tips": [
+          "Brush at least twice a day for two minutes each time",
+          "Use fluoride toothpaste and a soft-bristled brush",
+          "Replace your toothbrush every 3-4 months",
+          "Use gentle circular motions",
+          "Don't forget to brush your tongue"
+        ]
+      },
+      "flossing": {
+        "title": "Flossing Essentials",
+        "description": "Daily flossing removes plaque and food particles between teeth where your toothbrush can't reach.",
+        "tips": [
+          "Floss at least once daily",
+          "Use about 18 inches of floss",
+          "Curve the floss around each tooth",
+          "Use clean sections of floss for each tooth",
+          "Be gentle to avoid damaging your gums"
+        ]
+      },
+      "checkups": {
+        "title": "Regular Dental Check-ups",
+        "description": "Professional cleanings and check-ups every 6 months help maintain your oral health and catch problems early.",
+        "ctaButton": "Schedule Your Check-up"
+      }
+    },
+    "procedures": {
+      "title": "Common Dental Procedures",
+      "subtitle": "Understanding what to expect during your dental treatment",
+      "cleaning": {
+        "title": "Professional Teeth Cleaning",
+        "description": "Regular professional cleaning is essential for maintaining oral health and preventing gum disease.",
+        "points": [
+          "Removes plaque and tartar buildup",
+          "Includes thorough examination of teeth and gums",
+          "Typically takes 30-60 minutes",
+          "Recommended every 6 months",
+          "Helps prevent cavities and gum disease"
+        ]
+      },
+      "fillings": {
+        "title": "Dental Fillings",
+        "description": "Fillings restore damaged teeth and prevent further decay.",
+        "points": [
+          "Treats cavities and tooth decay",
+          "Multiple material options available",
+          "Usually completed in one visit",
+          "Preserves natural tooth structure",
+          "Can last many years with proper care"
+        ]
+      },
+      "rootCanal": {
+        "title": "Root Canal Treatment",
+        "description": "Root canal therapy saves severely damaged or infected teeth.",
+        "points": [
+          "Removes infected tooth pulp",
+          "Relieves tooth pain and sensitivity",
+          "Preserves natural tooth",
+          "Usually requires 1-2 visits",
+          "High success rate for saving teeth"
+        ]
+      },
+      "crowns": {
+        "title": "Dental Crowns",
+        "description": "Crowns protect and restore damaged or weakened teeth.",
+        "points": [
+          "Covers and protects damaged teeth",
+          "Custom-made for perfect fit",
+          "Natural-looking appearance",
+          "Improves tooth strength and function",
+          "Can last 10-15 years or more"
+        ]
+      }
+    },
+    "implants": {
+      "title": "Dental Implants",
+      "subtitle": "A permanent solution for missing teeth with natural-looking results",
+      "what": {
+        "title": "What Are Dental Implants?",
+        "description": "Dental implants are titanium posts that serve as artificial tooth roots, providing a permanent base for fixed replacement teeth.",
+        "points": [
+          "Titanium post acts as an artificial root",
+          "Integrates naturally with your jawbone",
+          "Provides stable support for artificial teeth",
+          "Can last a lifetime with proper care",
+          "Looks and functions like natural teeth"
+        ]
+      },
+      "benefits": {
+        "title": "Benefits of Dental Implants",
+        "description": "Implants offer numerous advantages over traditional tooth replacement options.",
+        "points": [
+          "Prevents bone loss and maintains facial structure",
+          "No impact on surrounding healthy teeth",
+          "Improved speech and comfort",
+          "Eat your favorite foods without restrictions",
+          "Boost in confidence with a natural-looking smile"
+        ]
+      },
+      "procedure": {
+        "title": "The Implant Procedure",
+        "description": "The dental implant process is completed in several stages to ensure optimal results.",
+        "steps": [
+          "Initial consultation and treatment planning",
+          "Placement of the titanium implant",
+          "Healing period for osseointegration (3-6 months)",
+          "Attachment of the abutment",
+          "Placement of the final crown or prosthetic"
+        ]
+      },
+      "candidacy": {
+        "title": "Are You a Candidate?",
+        "description": "Most people with good oral health are eligible for dental implants.",
+        "points": [
+          "Adequate bone density in the jaw",
+          "Healthy gums free of periodontal disease",
+          "Good overall oral health",
+          "Commitment to oral hygiene",
+          "Non-smoker or willing to quit during treatment"
+        ]
+      }
+    },
+    "allOnX": {
+      "title": "All-on-X Dental Solutions",
+      "subtitle": "Complete arch restoration with advanced implant technology",
+      "overview": {
+        "title": "Understanding All-on-X",
+        "description": "All-on-X is an innovative full-arch restoration that provides a permanent solution for multiple missing teeth using strategically placed dental implants.",
+        "points": [
+          "Full arch replacement with 4-6 implants",
+          "Immediate function with temporary prosthesis",
+          "Permanent, non-removable solution",
+          "More stable than traditional dentures",
+          "Preserves jaw bone structure"
+        ]
+      },
+      "types": {
+        "title": "Types of All-on-X Solutions",
+        "description": "Different options are available based on your specific needs and bone structure.",
+        "solutions": [
+          "All-on-4: Uses 4 implants for full arch restoration",
+          "All-on-6: Enhanced stability with 6 implants",
+          "All-on-8: Maximum support for complex cases",
+          "Hybrid solutions for unique situations",
+          "Custom treatment plans available"
+        ]
+      },
+      "benefits": {
+        "title": "Advantages of All-on-X",
+        "description": "All-on-X offers numerous benefits over traditional tooth replacement methods.",
+        "points": [
+          "Restored ability to eat and speak normally",
+          "Natural-looking and feeling teeth",
+          "Improved facial structure support",
+          "No need for removable dentures",
+          "Long-lasting, durable solution"
+        ]
+      },
+      "process": {
+        "title": "Treatment Process",
+        "description": "The All-on-X procedure is completed in several carefully planned stages.",
+        "steps": [
+          "Comprehensive evaluation and 3D imaging",
+          "Custom treatment planning",
+          "Implant placement surgery",
+          "Same-day temporary teeth placement",
+          "Final restoration after healing"
+        ]
+      }
+    },
+    "nav": {
+      "oralHygiene": "Oral Hygiene",
+      "procedures": "Dental Procedures",
+      "implants": "Dental Implants",
+      "allOnX": "All-on-X Solutions"
     }
   }
 } 
