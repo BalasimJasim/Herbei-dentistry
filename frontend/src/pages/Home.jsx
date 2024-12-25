@@ -17,19 +17,12 @@ const Home = () => {
             <p>{t("home.hero.subtitle")}</p>
             <div className="hero-buttons">
               <Link to="/appointments" className="hero-button primary">
-                {t("home.hero.bookAppointment")}
+                {t("nav.bookAppointment")}
               </Link>
               <Link to="/services" className="hero-button secondary">
-                {t("home.hero.ourServices")}
+                {t("nav.services")}
               </Link>
             </div>
-          </div>
-          <div className="hero-image-wrapper">
-            <img
-              src="/images/hero-dental.jpg"
-              alt="Modern dental care"
-              className="hero-image"
-            />
           </div>
         </div>
       </section>
@@ -49,30 +42,8 @@ const Home = () => {
               <h3>{t("home.features.modern.title")}</h3>
               <p>{t("home.features.modern.description")}</p>
             </div>
-            {/* Add more feature cards */}
+            {/* Add other feature cards similarly */}
           </div>
-        </div>
-      </section>
-
-      {/* Services Preview */}
-      <section className="services-preview">
-        <div className="section-container">
-          <div className="section-header">
-            <h2>{t("home.services.title")}</h2>
-            <p>{t("home.services.subtitle")}</p>
-          </div>
-          <div className="services-grid">{/* Service Cards */}</div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="testimonials-section">
-        <div className="section-container">
-          <div className="section-header">
-            <h2>{t("home.testimonials.title")}</h2>
-            <p>{t("home.testimonials.subtitle")}</p>
-          </div>
-          <div className="testimonials-grid">{/* Testimonial Cards */}</div>
         </div>
       </section>
 
@@ -80,10 +51,10 @@ const Home = () => {
       <section className="cta-section">
         <div className="section-container">
           <div className="cta-content">
-            <h2>{t("home.cta.title")}</h2>
-            <p>{t("home.cta.subtitle")}</p>
+            <h2>{t("home.testimonials.cta.title")}</h2>
+            <p>{t("home.testimonials.cta.subtitle")}</p>
             <Link to="/appointments" className="cta-button">
-              {t("home.cta.button")}
+              {t("home.testimonials.cta.button")}
             </Link>
           </div>
         </div>

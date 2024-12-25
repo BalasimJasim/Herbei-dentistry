@@ -1,46 +1,46 @@
-import { useTranslation } from 'react-i18next'
-import { useNavigate, useLocation } from 'react-router-dom'
-import './LanguageSwitcher.css'
+import React from "react";
+import { useTranslation } from "react-i18next";
+import ukFlag from "../assets/images/ukraine.jpg";
+import enFlag from "../assets/images/english.jpg";
+import "./LanguageSwitcher.css";
 
 const LanguageSwitcher = () => {
-  const { i18n } = useTranslation()
-  const navigate = useNavigate()
-  const location = useLocation()
+  const { i18n } = useTranslation();
 
   const languages = [
-    { code: 'en', name: 'English', flag: '🇬🇧' },
-    { code: 'uk', name: 'Українська', flag: '🇺🇦' },
-    { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-    { code: 'hu', name: 'Magyar', flag: '🇭🇺' }
-  ]
+    {
+      code: "en",
+      name: "English",
+      flag: enFlag,
+    },
+    {
+      code: "uk",
+      name: "Українська",
+      flag: ukFlag,
+    },
+  ];
 
-  const changeLanguage = (lng) => {
-    if (lng === i18n.language) return
-
-    i18n.changeLanguage(lng)
-    
-    // Update URL to include language
-    const pathWithoutLang = location.pathname.replace(/^\/[a-z]{2}/, '')
-    const newPath = `/${lng}${pathWithoutLang || '/'}`
-    navigate(newPath, { replace: true })
-  }
+  const handleLanguageChange = (languageCode) => {
+    i18n.changeLanguage(languageCode);
+    localStorage.setItem("preferredLanguage", languageCode);
+  };
 
   return (
     <div className="language-switcher">
-      <select
-        value={i18n.language}
-        onChange={(e) => changeLanguage(e.target.value)}
-        className="language-selector"
-        aria-label="Select Language"
-      >
-        {languages.map((lang) => (
-          <option key={lang.code} value={lang.code}>
-            {lang.flag} {lang.name}
-          </option>
-        ))}
-      </select>
+      {languages.map((language) => (
+        <button
+          key={language.code}
+          onClick={() => handleLanguageChange(language.code)}
+          className={`lang-btn ${
+            i18n.language === language.code ? "active" : ""
+          }`}
+          aria-label={`Switch to ${language.name}`}
+        >
+          <img src={language.flag} alt={language.name} />
+        </button>
+      ))}
     </div>
-  )
-}
+  );
+};
 
-export default LanguageSwitcher 
+export default LanguageSwitcher;

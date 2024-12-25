@@ -29,53 +29,78 @@
       }
     }
   },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "bookAppointment": "Book Appointment",
+    "contact": "Contact",
+    "patientPortal": "Patient Portal"
+  },
+  "footer": {
+    "description": "Your trusted partner in dental health. We combine modern technology with compassionate care to provide you with the best dental experience.",
+    "quickLinks": "Quick Links",
+    "services": "Our Services",
+    "contact": "Contact Info"
+  },
   "home": {
     "hero": {
-      "title": "Your Trusted Partner in Dental Care",
-      "subtitle": "Experience exceptional dental care with our expert team using modern technology and compassionate approach",
-      "bookAppointment": "Book Appointment",
-      "ourServices": "Our Services"
+      "title": "Welcome to Modern Dental Care",
+      "subtitle": "Experience exceptional dental care with state-of-the-art technology and a compassionate team dedicated to your smile"
     },
     "features": {
       "title": "Why Choose Us",
-      "subtitle": "We provide comprehensive dental care with a focus on patient comfort and satisfaction",
+      "subtitle": "We provide comprehensive dental care with a focus on patient comfort",
       "modern": {
         "title": "Modern Technology",
         "description": "State-of-the-art equipment and latest dental procedures"
-      },
-      "expert": {
-        "title": "Expert Team",
-        "description": "Highly qualified professionals with years of experience"
-      },
-      "care": {
-        "title": "Patient-First Approach",
-        "description": "Personalized care tailored to your needs"
-      }
-    },
-    "services": {
-      "title": "Our Services",
-      "subtitle": "Comprehensive dental care for you and your family",
-      "general": {
-        "title": "General Dentistry",
-        "description": "Regular check-ups and preventive care"
-      },
-      "cosmetic": {
-        "title": "Cosmetic Dentistry",
-        "description": "Transform your smile with our aesthetic treatments"
-      },
-      "surgical": {
-        "title": "Dental Surgery",
-        "description": "Advanced surgical procedures with precision"
       }
     },
     "testimonials": {
-      "title": "Patient Stories",
-      "subtitle": "What our patients say about their experience",
       "cta": {
         "title": "Ready to Transform Your Smile?",
-        "subtitle": "Schedule your consultation today and take the first step towards optimal dental health",
-        "button": "Book Your Visit"
+        "subtitle": "Schedule your consultation today",
+        "button": "Book Your Visit Now"
       }
+    }
+  },
+  "appointments": {
+    "title": "Book Your Appointment",
+    "subtitle": "Schedule your visit with our dental specialists",
+    "form": {
+      "personalInfo": "Personal Information",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "dateTime": "Preferred Date & Time",
+      "selectDate": "Select Date",
+      "selectTime": "Select Time",
+      "service": "Service Type",
+      "selectService": "Select Service",
+      "message": "Additional Notes",
+      "messagePlaceholder": "Any specific concerns or requests...",
+      "submit": "Book Appointment",
+      "required": "Required field"
+    },
+    "services": {
+      "general": "General Dentistry",
+      "cosmetic": "Cosmetic Dentistry",
+      "surgical": "Dental Surgery",
+      "orthodontic": "Orthodontics",
+      "hygiene": "Dental Hygiene",
+      "implants": "Dental Implants"
+    },
+    "success": {
+      "title": "Appointment Request Sent!",
+      "message": "We'll contact you shortly to confirm your appointment.",
+      "return": "Return to Home"
+    },
+    "error": {
+      "generic": "Something went wrong. Please try again.",
+      "required": "Please fill in all required fields.",
+      "email": "Please enter a valid email address.",
+      "phone": "Please enter a valid phone number."
     }
   }
 } 

@@ -1,8 +1,8 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import "./Footer.css";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -21,32 +21,62 @@ const Footer = () => {
         <div className="footer-section">
           <h3>{t("footer.quickLinks")}</h3>
           <ul className="footer-links">
-            <li className="footer-link">
-              <Link to="/services">{t("footer.services")}</Link>
+            <li>
+              <Link to="/about">About Us</Link>
             </li>
-            {/* More links */}
+            <li>
+              <Link to="/services">Our Services</Link>
+            </li>
+            <li>
+              <Link to="/appointments">Book Appointment</Link>
+            </li>
+            <li>
+              <Link to="/contact">Contact Us</Link>
+            </li>
           </ul>
         </div>
 
         <div className="footer-section">
-          <h3>{t("footer.services")}</h3>
-          <ul className="footer-links">{/* Service links */}</ul>
+          <h3>Our Services</h3>
+          <ul className="footer-links">
+            <li>
+              <Link to="/services#general">General Dentistry</Link>
+            </li>
+            <li>
+              <Link to="/services#cosmetic">Cosmetic Dentistry</Link>
+            </li>
+            <li>
+              <Link to="/services#surgical">Dental Surgery</Link>
+            </li>
+            <li>
+              <Link to="/services#orthodontics">Orthodontics</Link>
+            </li>
+          </ul>
         </div>
 
         <div className="footer-section">
-          <h3>{t("footer.contact")}</h3>
+          <h3>Contact Info</h3>
           <div className="contact-info">
             <div className="contact-item">
               <FaPhone />
-              <span>123-456-7890</span>
+              <span>+380 123 456 789</span>
             </div>
-            {/* More contact info */}
+            <div className="contact-item">
+              <FaEnvelope />
+              <span>info@herbiedental.com</span>
+            </div>
+            <div className="contact-item">
+              <FaMapMarkerAlt />
+              <span>123 Dental Street, City, Country</span>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="bottom-bar">
-        <p>&copy; 2024 Herbie Dental. {t("footer.rights")}</p>
+        <p>
+          &copy; {new Date().getFullYear()} Herbie Dental. All rights reserved.
+        </p>
       </div>
     </footer>
   );
