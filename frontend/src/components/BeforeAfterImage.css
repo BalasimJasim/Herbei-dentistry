@@ -1,0 +1,45 @@
+.before-after-container {
+  margin: 2rem 0;
+  padding: 1rem;
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.image-comparison {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.before-image,
+.after-image {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+}
+
+.before-image img,
+.after-image img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+}
+
+.image-label {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+  .image-comparison {
+    flex-direction: column;
+    gap: 1rem;
+  }
+} 
