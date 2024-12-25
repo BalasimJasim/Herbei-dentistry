@@ -1,108 +1,95 @@
-import { Helmet } from 'react-helmet-async'
-import { Link } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
-import './Home.css'
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { FaTooth, FaCalendarAlt, FaUserMd } from "react-icons/fa";
+import "./Home.css";
 
 const Home = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   return (
     <>
-      <Helmet>
-        <title>Herbie Dental Clinic - Your Trusted Dental Care Provider</title>
-        <meta 
-          name="description" 
-          content="Welcome to Herbie Dental Clinic. We provide comprehensive dental care services including general dentistry, cosmetic dentistry, and emergency dental care."
-        />
-      </Helmet>
-
-      <section className="hero">
-        <div className="hero-content">
-          <h1>Welcome to Herbie Dental</h1>
-          <p>Experience exceptional dental care with our expert team</p>
-          <Link to="/appointments" className="cta-button">
-            Book Your Appointment
-          </Link>
-        </div>
-      </section>
-
-      <section className="about-preview">
-        <h2>Expert Dental Care You Can Trust</h2>
-        <p>
-          At Herbie Dental Clinic, we combine modern technology with compassionate
-          care to provide you with the best dental experience possible.
-        </p>
-        <Link to="/about" className="learn-more">
-          Learn More About Us
-        </Link>
-      </section>
-
-      <section className="services-highlight">
-        <h2>Our Services</h2>
-        <div className="services-grid">
-          {services.map((service) => (
-            <div key={service.id} className="service-card">
-              <img src={service.icon} alt={service.name} />
-              <h3>{service.name}</h3>
-              <p>{service.description}</p>
-              <Link to={`/services#${service.id}`}>Learn More</Link>
+      {/* Hero Section */}
+      <section className="hero-section">
+        <div className="hero-container">
+          <div className="hero-content">
+            <h1>{t("home.hero.title")}</h1>
+            <p>{t("home.hero.subtitle")}</p>
+            <div className="hero-buttons">
+              <Link to="/appointments" className="hero-button primary">
+                {t("home.hero.bookAppointment")}
+              </Link>
+              <Link to="/services" className="hero-button secondary">
+                {t("home.hero.ourServices")}
+              </Link>
             </div>
-          ))}
+          </div>
+          <div className="hero-image-wrapper">
+            <img
+              src="/images/hero-dental.jpg"
+              alt="Modern dental care"
+              className="hero-image"
+            />
+          </div>
         </div>
       </section>
 
-      <section className="testimonials">
-        <h2>What Our Patients Say</h2>
-        <div className="testimonials-carousel">
-          {testimonials.map((testimonial) => (
-            <div key={testimonial.id} className="testimonial-card">
-              <p>"{testimonial.text}"</p>
-              <div className="testimonial-author">
-                <strong>{testimonial.name}</strong>
-                <span>{testimonial.date}</span>
+      {/* Why Choose Us */}
+      <section className="features-section">
+        <div className="section-container">
+          <div className="section-header">
+            <h2>{t("home.features.title")}</h2>
+            <p>{t("home.features.subtitle")}</p>
+          </div>
+          <div className="features-grid">
+            <div className="feature-card">
+              <div className="feature-icon">
+                <FaTooth />
               </div>
+              <h3>{t("home.features.modern.title")}</h3>
+              <p>{t("home.features.modern.description")}</p>
             </div>
-          ))}
+            {/* Add more feature cards */}
+          </div>
+        </div>
+      </section>
+
+      {/* Services Preview */}
+      <section className="services-preview">
+        <div className="section-container">
+          <div className="section-header">
+            <h2>{t("home.services.title")}</h2>
+            <p>{t("home.services.subtitle")}</p>
+          </div>
+          <div className="services-grid">{/* Service Cards */}</div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="testimonials-section">
+        <div className="section-container">
+          <div className="section-header">
+            <h2>{t("home.testimonials.title")}</h2>
+            <p>{t("home.testimonials.subtitle")}</p>
+          </div>
+          <div className="testimonials-grid">{/* Testimonial Cards */}</div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="cta-section">
+        <div className="section-container">
+          <div className="cta-content">
+            <h2>{t("home.cta.title")}</h2>
+            <p>{t("home.cta.subtitle")}</p>
+            <Link to="/appointments" className="cta-button">
+              {t("home.cta.button")}
+            </Link>
+          </div>
         </div>
       </section>
     </>
-  )
-}
+  );
+};
 
-const services = [
-  {
-    id: 'general-dentistry',
-    name: 'General Dentistry',
-    description: 'Comprehensive dental care for the whole family',
-    icon: '/icons/general-dentistry.svg'
-  },
-  {
-    id: 'cosmetic-dentistry',
-    name: 'Cosmetic Dentistry',
-    description: 'Transform your smile with our aesthetic treatments',
-    icon: '/icons/cosmetic-dentistry.svg'
-  },
-  {
-    id: 'orthodontics',
-    name: 'Orthodontics',
-    description: 'Achieve the perfect alignment for your teeth',
-    icon: '/icons/orthodontics.svg'
-  }
-]
-
-const testimonials = [
-  {
-    id: 1,
-    name: 'Sarah Johnson',
-    text: 'The best dental experience I\'ve ever had. The staff is incredibly professional and caring.',
-    date: 'March 2024'
-  },
-  {
-    id: 2,
-    name: 'Michael Chen',
-    text: 'Dr. Herbie and the team made my dental anxiety disappear. Highly recommended!',
-    date: 'February 2024'
-  }
-]
-
-export default Home 
+export default Home;
