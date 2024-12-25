@@ -57,21 +57,29 @@ const About = () => {
   return (
     <div className="about-page">
       <Helmet>
-        <title>{t("about.title")} - Herbie Dental</title>
-        <meta name="description" content={t("about.subtitle")} />
+
+        <title>About Us - Herbie Dental Clinic</title>
+        <meta
+          name="description"
+          content="Learn about Herbie Dental Clinic's experienced team, our mission, and our commitment to providing exceptional dental care."
+        />
+
       </Helmet>
 
       {/* Hero Section */}
       <div className="hero-section">
         <div className="container">
-          <h1>{t("about.title")}</h1>
-          <p className="subtitle">{t("about.subtitle")}</p>
+
+          <h1>About Herbie Dental Clinic</h1>
+          <p className="lead">Providing Quality Dental Care Since 2020</p>
+
         </div>
       </div>
 
       {/* Updated Founder Section */}
       <div className="founder-section">
         <div className="container">
+
           <div className="founder-content">
             <div className="founder-image">
               <img
@@ -111,6 +119,7 @@ const About = () => {
                   ))}
                 </div>
               </div>
+
             </div>
           </div>
         </div>
@@ -119,6 +128,7 @@ const About = () => {
       {/* Values Section */}
       <div className="values-section">
         <div className="container">
+
           <h2>{t("about.values.title")}</h2>
           <div className="values-grid">
             {["quality", "innovation", "care"].map((value) => (
@@ -126,6 +136,7 @@ const About = () => {
                 <h3>{t(`about.values.${value}.title`)}</h3>
                 <p>{t(`about.values.${value}.description`)}</p>
               </div>
+
             ))}
           </div>
         </div>
@@ -134,6 +145,7 @@ const About = () => {
       {/* Team Section */}
       <div className="team-section">
         <div className="container">
+
           <h2>Наша Команда</h2>
           <p className="team-intro">
             Наша команда складається з висококваліфікованих спеціалістів, які
@@ -158,11 +170,16 @@ const About = () => {
                     ))}
                   </div>
                 </div>
+
+          
               </div>
             ))}
           </div>
         </div>
+
       </div>
+
+     
 
       {/* CTA Section */}
       <div className="cta-section">

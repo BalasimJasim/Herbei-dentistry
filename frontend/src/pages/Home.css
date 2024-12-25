@@ -1,3 +1,4 @@
+
 @import '../styles/variables.css';
 
 /* Hero Section */
@@ -7,6 +8,7 @@
   display: flex;
   align-items: center;
   position: relative;
+
   overflow: hidden;
 }
 
@@ -21,6 +23,7 @@
 }
 
 .hero-content {
+
   animation: fadeIn 0.8s ease-out;
 }
 
@@ -28,6 +31,7 @@
   font-size: clamp(2.5rem, 5vw, var(--text-5xl));
   color: var(--neutral-900);
   font-weight: 800;
+
   line-height: 1.2;
   margin-bottom: var(--spacing-6);
 }
@@ -119,10 +123,13 @@
   font-size: var(--text-lg);
   color: var(--neutral-600);
   line-height: 1.6;
+
+
 }
 
 .features-grid {
   display: grid;
+
   grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-8);
 }
@@ -240,8 +247,10 @@
 @media (max-width: 1024px) {
   .features-grid {
     grid-template-columns: repeat(2, 1fr);
+
   }
 }
+
 
 @media (max-width: 768px) {
   .hero-container {
@@ -275,5 +284,8 @@
 
   .section-header {
     padding: 0 var(--spacing-4);
+
+ 
   }
 } 
+

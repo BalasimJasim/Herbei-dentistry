@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
-import Calendar from 'react-calendar'
-import 'react-calendar/dist/Calendar.css'
-import './AppointmentCalendar.css'
-import api from '../utils/axios'
-import { format } from 'date-fns'
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+import { useState, useEffect } from "react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import "./AppointmentCalendar.css";
+import api from "../utils/axios";
+import { format } from "date-fns";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { isHoliday, isWeekend } from "../utils/holidays";
 
 const AppointmentCalendar = ({
@@ -202,4 +202,4 @@ const AppointmentCalendar = ({
   );
 };
 
-export default AppointmentCalendar 
+export default AppointmentCalendar;
