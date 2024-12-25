@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../contexts/AuthContext'
 import LanguageSwitcher from './LanguageSwitcher'
-import logo from "../assets/images/logo.jpeg";
+import logo from "../assets/images/logo1.jpeg";
 
 import "./Navbar.css";
 
