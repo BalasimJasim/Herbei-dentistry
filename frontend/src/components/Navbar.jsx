@@ -91,6 +91,13 @@ const Navbar = () => {
                 </Link>
               </li>
             ))}
+            {user?.role === "admin" && (
+              <li>
+                <Link to="/admin/dashboard" className="admin-link">
+                  Admin Dashboard
+                </Link>
+              </li>
+            )}
             <li>
               <Link
                 to="/patient-portal"

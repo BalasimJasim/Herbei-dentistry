@@ -1,30 +1,16 @@
-import PropTypes from 'prop-types'
-import { Navigate, useLocation, Outlet } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
-import './AdminRoute.css'
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const AdminRoute = () => {
-  const { user, loading } = useAuth()
-  const location = useLocation()
+  const { user } = useAuth();
 
-  if (loading) {
-    return (
-      <div className="loading-screen">
-        <div className="loading-spinner"></div>
-        <p>Loading...</p>
-      </div>
-    )
-  }
-
+  // If not authenticated, redirect to login
   if (!user) {
-    return <Navigate to="/admin/login" state={{ from: location }} replace />
+    return <Navigate to="/admin/login" replace />;
   }
 
-  if (user.role !== 'admin') {
-    return <Navigate to="/" replace />
-  }
+  // If authenticated, render child routes
+  return <Outlet />;
+};
 
-  return <Outlet />
-}
-
-export default AdminRoute 
+export default AdminRoute;

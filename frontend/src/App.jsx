@@ -24,6 +24,7 @@ import AdminLogin from './components/AdminLogin'
 import AdminErrorBoundary from './components/AdminErrorBoundary'
 import AppointmentList from "./components/AppointmentList";
 import { I18nextProvider } from "react-i18next";
+import AdminKeyboardShortcut from "./components/AdminKeyboardShortcut";
 
 function App() {
   return (
@@ -33,29 +34,21 @@ function App() {
           <AuthProvider>
             <LanguageProvider>
               <div className="app">
+                <AdminKeyboardShortcut />
                 <Navbar />
                 <main>
                   <Routes>
-                    <Route
-                      path="/admin/*"
-                      element={
-                        <AdminErrorBoundary>
-                          <Routes>
-                            <Route path="login" element={<AdminLogin />} />
-                            <Route element={<AdminRoute />}>
-                              <Route
-                                path="dashboard"
-                                element={<AdminDashboard />}
-                              />
-                              <Route
-                                path="register"
-                                element={<AdminRegistration />}
-                              />
-                            </Route>
-                          </Routes>
-                        </AdminErrorBoundary>
-                      }
-                    />
+                    <Route path="/admin/login" element={<AdminLogin />} />
+                    <Route element={<AdminRoute />}>
+                      <Route
+                        path="/admin/dashboard"
+                        element={<AdminDashboard />}
+                      />
+                      <Route
+                        path="/admin/register"
+                        element={<AdminRegistration />}
+                      />
+                    </Route>
                     <Route path="/" element={<Home />} />
                     <Route path="/:lang" element={<Home />} />
                     <Route path="/:lang/about" element={<About />} />
@@ -92,4 +85,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
