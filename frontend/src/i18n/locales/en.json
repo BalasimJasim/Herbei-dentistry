@@ -102,5 +102,60 @@
       "email": "Please enter a valid email address.",
       "phone": "Please enter a valid phone number."
     }
+  },
+  "services": {
+    "title": "Our Dental Services",
+    "subtitle": "Comprehensive dental care with modern approach",
+    "categories": {
+      "general": {
+        "title": "General & Preventive Dentistry",
+        "description": "Regular dental care to maintain your oral health and prevent future problems",
+        "services": [
+          "Comprehensive Dental Exams",
+          "Professional Teeth Cleaning",
+          "Dental Fillings",
+          "Root Canal Treatment",
+          "Periodontal Treatment"
+        ]
+      },
+      "cosmetic": {
+        "title": "Cosmetic Dentistry",
+        "description": "Transform your smile with our advanced aesthetic treatments",
+        "services": [
+          "Professional Teeth Whitening",
+          "Porcelain Veneers",
+          "Dental Bonding",
+          "Smile Makeover",
+          "Cosmetic Contouring"
+        ]
+      },
+      "surgical": {
+        "title": "Oral Surgery",
+        "description": "Expert surgical procedures with precision and care",
+        "services": [
+          "Dental Implants",
+          "Wisdom Teeth Removal",
+          "Bone Grafting",
+          "Complex Extractions",
+          "Soft Tissue Surgery"
+        ]
+      },
+      "orthodontic": {
+        "title": "Orthodontics",
+        "description": "Achieve a perfectly aligned smile with our orthodontic solutions",
+        "services": [
+          "Traditional Braces",
+          "Clear Aligners (Invisalign)",
+          "Retainers",
+          "Early Orthodontic Treatment",
+          "Bite Correction"
+        ]
+      }
+    },
+    "cta": {
+      "title": "Ready to Transform Your Smile?",
+      "description": "Schedule a consultation with our dental specialists today",
+      "button": "Book Your Visit"
+    }
   }
 } 
