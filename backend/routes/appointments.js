@@ -6,6 +6,7 @@ import {
   getUserAppointments,
   getSpecialistsByService
 } from '../controllers/appointmentController.js';
+import { protect } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -130,5 +131,6 @@ router.get('/test-service-slots/:serviceId', async (req, res) => {
     });
   }
 });
+router.delete("/:id", protect, cancelAppointment);
 
 export default router; 

@@ -1,0 +1,81 @@
+{
+  "about": {
+    "title": "About Herbie Dental",
+    "subtitle": "Providing exceptional dental care with expertise and compassion",
+    "founder": {
+      "name": "Dr. Yurii Herbei",
+      "title": "Oral Surgeon & Orthopedic Specialist",
+      "description": "With over 5 years of specialized experience in oral surgery and orthopedics, Dr. Herbei combines exceptional skill with a commitment to patient care. Known for his efficient work and outstanding results, he has established himself as a leading dental specialist in the region.",
+      "expertise": {
+        "1": "Specialized in Oral Surgery and Orthopedics",
+        "2": "Over 5 years of clinical experience",
+        "3": "Known for fast and high-quality treatments"
+      }
+    },
+    "values": {
+      "title": "Our Values",
+      "subtitle": "What sets us apart in dental care",
+      "quality": {
+        "title": "Excellence in Care",
+        "description": "We maintain the highest standards in dental procedures and patient care"
+      },
+      "innovation": {
+        "title": "Modern Approach",
+        "description": "Using the latest technology and techniques for optimal results"
+      },
+      "care": {
+        "title": "Patient-Focused",
+        "description": "Providing comfortable and personalized care for every patient"
+      }
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Your Trusted Partner in Dental Care",
+      "subtitle": "Experience exceptional dental care with our expert team using modern technology and compassionate approach",
+      "bookAppointment": "Book Appointment",
+      "ourServices": "Our Services"
+    },
+    "features": {
+      "title": "Why Choose Us",
+      "subtitle": "We provide comprehensive dental care with a focus on patient comfort and satisfaction",
+      "modern": {
+        "title": "Modern Technology",
+        "description": "State-of-the-art equipment and latest dental procedures"
+      },
+      "expert": {
+        "title": "Expert Team",
+        "description": "Highly qualified professionals with years of experience"
+      },
+      "care": {
+        "title": "Patient-First Approach",
+        "description": "Personalized care tailored to your needs"
+      }
+    },
+    "services": {
+      "title": "Our Services",
+      "subtitle": "Comprehensive dental care for you and your family",
+      "general": {
+        "title": "General Dentistry",
+        "description": "Regular check-ups and preventive care"
+      },
+      "cosmetic": {
+        "title": "Cosmetic Dentistry",
+        "description": "Transform your smile with our aesthetic treatments"
+      },
+      "surgical": {
+        "title": "Dental Surgery",
+        "description": "Advanced surgical procedures with precision"
+      }
+    },
+    "testimonials": {
+      "title": "Patient Stories",
+      "subtitle": "What our patients say about their experience",
+      "cta": {
+        "title": "Ready to Transform Your Smile?",
+        "subtitle": "Schedule your consultation today and take the first step towards optimal dental health",
+        "button": "Book Your Visit"
+      }
+    }
+  }
+} 

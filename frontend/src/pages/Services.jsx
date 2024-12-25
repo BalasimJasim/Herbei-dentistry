@@ -1,160 +1,159 @@
-import { Helmet } from 'react-helmet-async'
-import { useState } from 'react'
-import './Services.css'
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet-async";
+import "./Services.css";
 
 const Services = () => {
-  const [activeCategory, setActiveCategory] = useState('all')
+  const { t } = useTranslation();
 
-  const filteredServices = activeCategory === 'all' 
-    ? services 
-    : services.filter(service => service.category === activeCategory)
+  const services = [
+    {
+      id: 1,
+      category: "Хірургічна стоматологія",
+      icon: "🦷",
+      services: [
+        {
+          name: "Дентальна імплантація",
+          description:
+            "Встановлення імплантів преміум класу Nobel Biocare та Straumann",
+          features: [
+            "Комп'ютерне планування імплантації",
+            "Імплантація за один день",
+            "Гарантія на імпланти",
+          ],
+        },
+        {
+          name: "Видалення зубів",
+          description: "Атравматичне видалення зубів будь-якої складності",
+          features: [
+            "Безболісне видалення",
+            "Збереження кісткової тканини",
+            "Швидке відновлення",
+          ],
+        },
+        {
+          name: "Кістково-пластичні операції",
+          description: "Відновлення об'єму кісткової тканини",
+          features: [
+            "Синус-ліфтинг",
+            "Направлена регенерація кістки",
+            "Використання сучасних матеріалів",
+          ],
+        },
+      ],
+    },
+    {
+      id: 2,
+      category: "Ортопедична стоматологія",
+      icon: "👑",
+      services: [
+        {
+          name: "Протезування на імплантах",
+          description: "Відновлення втрачених зубів за допомогою імплантів",
+          features: [
+            "Індивідуальний дизайн посмішки",
+            "Естетичні коронки",
+            "Довговічні матеріали",
+          ],
+        },
+        {
+          name: "Вініри та коронки",
+          description: "Естетична реставрація зубів",
+          features: [
+            "Цифрове моделювання",
+            "Безметалева кераміка",
+            "Природний вигляд",
+          ],
+        },
+      ],
+    },
+    {
+      id: 3,
+      category: "Профілактика та гігієна",
+      icon: "✨",
+      services: [
+        {
+          name: "Професійна гігієна",
+          description: "Комплексна чистка зубів та профілактика захворювань",
+          features: [
+            "Ультразвукова чистка",
+            "Air Flow чистка",
+            "Фторування емалі",
+          ],
+        },
+        {
+          name: "Відбілювання зубів",
+          description: "Професійне відбілювання за сучасними технологіями",
+          features: [
+            "Безпечне відбілювання",
+            "Тривалий результат",
+            "Індивідуальний підбір відтінку",
+          ],
+        },
+      ],
+    },
+  ];
 
   return (
-    <>
+    <div className="services-page">
       <Helmet>
-        <title>Our Services - Herbie Dental Clinic</title>
-        <meta 
-          name="description" 
-          content="Explore our comprehensive dental services including general dentistry, cosmetic procedures, orthodontics, and more."
+        <title>Послуги - Herbie Dental</title>
+        <meta
+          name="description"
+          content="Повний спектр стоматологічних послуг: імплантація, протезування, естетична стоматологія"
         />
       </Helmet>
 
-      <section className="services-hero">
+      <div className="services-hero">
         <div className="container">
-          <h1>Our Dental Services</h1>
-          <p className="lead">Comprehensive Care for Your Smile</p>
+          <h1>Наші Послуги</h1>
+          <p>Комплексний підхід до лікування та естетичної реабілітації</p>
         </div>
-      </section>
+      </div>
 
-      <section className="services-filter">
+      <div className="services-content">
         <div className="container">
-          <div className="filter-buttons">
-            <button 
-              className={activeCategory === 'all' ? 'active' : ''} 
-              onClick={() => setActiveCategory('all')}
-            >
-              All Services
-            </button>
-            <button 
-              className={activeCategory === 'general' ? 'active' : ''} 
-              onClick={() => setActiveCategory('general')}
-            >
-              General Dentistry
-            </button>
-            <button 
-              className={activeCategory === 'cosmetic' ? 'active' : ''} 
-              onClick={() => setActiveCategory('cosmetic')}
-            >
-              Cosmetic Dentistry
-            </button>
-            <button 
-              className={activeCategory === 'specialty' ? 'active' : ''} 
-              onClick={() => setActiveCategory('specialty')}
-            >
-              Specialty Services
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section className="services-list">
-        <div className="container">
-          <div className="services-grid">
-            {filteredServices.map(service => (
-              <div key={service.id} className="service-card" id={service.id}>
-                <div className="service-image">
-                  <img src={service.image} alt={service.name} />
-                </div>
-                <div className="service-content">
-                  <h3>{service.name}</h3>
-                  <p className="service-description">{service.description}</p>
-                  <ul className="service-features">
-                    {service.features.map((feature, index) => (
-                      <li key={index}>{feature}</li>
-                    ))}
-                  </ul>
-                  <div className="service-footer">
-                    <span className="service-price">Starting from ${service.startingPrice}</span>
-                    <button 
-                      className="book-button"
-                      onClick={() => window.location.href = `/appointments?service=${service.id}`}
-                    >
-                      Book Now
-                    </button>
-                  </div>
-                </div>
+          {services.map((category) => (
+            <div key={category.id} className="service-category">
+              <div className="category-header">
+                <span className="category-icon">{category.icon}</span>
+                <h2>{category.category}</h2>
               </div>
-            ))}
-          </div>
+              <div className="services-grid">
+                {category.services.map((service, index) => (
+                  <div key={index} className="service-card">
+                    <h3>{service.name}</h3>
+                    <p>{service.description}</p>
+                    <ul className="features-list">
+                      {service.features.map((feature, idx) => (
+                        <li key={idx}>
+                          <span className="feature-bullet">•</span>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
-      </section>
+      </div>
 
-      <section className="insurance-section">
+      <div className="consultation-cta">
         <div className="container">
-          <h2>Insurance & Payment Options</h2>
-          <p>We accept most major insurance providers and offer flexible payment plans.</p>
-          <div className="insurance-logos">
-            {insuranceProviders.map(provider => (
-              <img 
-                key={provider.id} 
-                src={provider.logo} 
-                alt={provider.name} 
-                title={provider.name} 
-              />
-            ))}
-          </div>
+          <h2>Потрібна консультація?</h2>
+          <p>
+            Запишіться на безкоштовну консультацію та отримайте детальний план
+            лікування
+          </p>
+          <a href="/appointments" className="cta-button">
+            Записатись на прийом
+          </a>
         </div>
-      </section>
-    </>
-  )
-}
+      </div>
+    </div>
+  );
+};
 
-const services = [
-  {
-    id: 'general-checkup',
-    category: 'general',
-    name: 'Dental Check-up & Cleaning',
-    description: 'Comprehensive dental examination and professional cleaning to maintain optimal oral health.',
-    image: '/images/services/checkup.jpg',
-    features: [
-      'Complete oral examination',
-      'Professional teeth cleaning',
-      'Digital X-rays',
-      'Oral cancer screening',
-      'Personalized care plan'
-    ],
-    startingPrice: 99
-  },
-  {
-    id: 'teeth-whitening',
-    category: 'cosmetic',
-    name: 'Professional Teeth Whitening',
-    description: 'Advanced whitening treatments to brighten your smile by several shades.',
-    image: '/images/services/whitening.jpg',
-    features: [
-      'In-office power whitening',
-      'Take-home whitening kits',
-      'Custom-fitted trays',
-      'Long-lasting results',
-      'Safe and effective treatment'
-    ],
-    startingPrice: 299
-  },
-  // Add more services...
-]
-
-const insuranceProviders = [
-  {
-    id: 1,
-    name: 'Delta Dental',
-    logo: '/images/insurance/delta-dental.png'
-  },
-  {
-    id: 2,
-    name: 'Cigna',
-    logo: '/images/insurance/cigna.png'
-  },
-  // Add more providers...
-]
-
-export default Services 
+export default Services;

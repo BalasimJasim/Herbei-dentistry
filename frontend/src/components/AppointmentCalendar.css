@@ -137,62 +137,109 @@
   border: 1px solid #e2e8f0;
 }
 
-/* Time slots */
-.time-slots {
+/* Time slots styling */
+.time-slots-container {
   margin-top: 2rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.time-slots-title {
+  font-size: 1.25rem;
+  color: var(--primary-700);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.time-slots-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 1rem;
-  padding: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .time-slot {
-  padding: 0.75rem 1rem;
-  border: 2px solid var(--border-light);
+  padding: 0.75rem;
+  border: 2px solid var(--primary-100);
   border-radius: 6px;
-  text-align: center;
-  cursor: pointer;
   background: white;
-  color: var(--text-primary);
+  color: var(--primary-800);
+  font-size: 1rem;
   font-weight: 500;
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.time-slot:hover:not(.disabled) {
-  border-color: var(--primary-400);
-  background-color: var(--primary-50);
-  color: var(--primary-700);
-  transform: translateY(-1px);
+.time-slot:hover:not(:disabled) {
+  background: var(--primary-50);
+  border-color: var(--primary-300);
+  transform: translateY(-2px);
 }
 
 .time-slot.selected {
-  background-color: var(--primary-500);
+  background: var(--primary-600);
+  border-color: var(--primary-600);
   color: white;
-  border-color: var(--primary-500);
 }
 
-.time-slot.disabled {
-  background-color: var(--neutral-50);
+.time-slot.unavailable {
+  background-color: var(--neutral-100);
+  border-color: var(--neutral-200);
   color: var(--neutral-400);
   cursor: not-allowed;
-  border-color: var(--neutral-200);
+  opacity: 0.7;
 }
 
-/* No slots message */
-.no-slots {
-  text-align: center;
-  padding: 2rem;
-  color: var(--text-secondary);
-  background: var(--neutral-50);
-  border-radius: 8px;
-  margin-top: 1rem;
+.time-slot.unavailable:hover {
+  transform: none;
+  background-color: var(--neutral-100);
 }
 
-/* Loading state */
 .loading-slots {
   text-align: center;
   padding: 2rem;
   color: var(--text-secondary);
+  font-style: italic;
+}
+
+.no-slots {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  background: var(--neutral-50);
+  border-radius: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .time-slots-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .time-slot {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* High contrast mode support */
+@media (forced-colors: active) {
+  .time-slot {
+    border: 2px solid ButtonBorder;
+  }
+
+  .time-slot.selected {
+    border: 2px solid Highlight;
+  }
+
+  .time-slot.unavailable {
+    opacity: 0.5;
+  }
 }
 
 /* Add these CSS variables to your root */
@@ -209,41 +256,6 @@
   --neutral-200: #e2e8f0;
   --neutral-400: #a0aec0;
   --border-light: #e2e8f0;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .calendar-container {
-    padding: 1rem;
-  }
-
-  .react-calendar {
-    padding: 0.5rem;
-  }
-
-  .time-slots {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 0.75rem;
-  }
-
-  .time-slot {
-    padding: 0.5rem;
-    font-size: 0.9rem;
-  }
-
-  .react-calendar__navigation button {
-    min-width: 40px;
-    height: 40px;
-  }
-
-  .react-calendar__tile {
-    height: 40px;
-    font-size: 0.9rem;
-  }
-
-  .calendar-nav-label {
-    font-size: 1rem;
-  }
 }
 
 /* Add these styles to your existing CSS */
@@ -316,4 +328,22 @@
 .react-calendar__tile:not(.past-date):not(.weekend):not(:disabled) {
   color: #333;
   cursor: pointer;
+}
+
+.time-slot.unavailable {
+  background-color: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.time-slot.unavailable:hover {
+  background-color: #f5f5f5;
+  transform: none;
+}
+
+.loading-slots {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
 } 

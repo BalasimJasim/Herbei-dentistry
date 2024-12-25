@@ -1,119 +1,181 @@
-import { Helmet } from 'react-helmet-async'
-import TeamMember from '../components/TeamMember'
-import './About.css'
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet-async";
+import founderImage from "../assets/images/image0.jpeg";
+import "./About.css";
 
 const About = () => {
+  const { t } = useTranslation();
+
+  const teamMembers = [
+    {
+      id: 1,
+      name: "Юрій Гербей",
+      role: "Хірург-стоматолог, Ортопед-стоматолог",
+      image: founderImage,
+      description:
+        "Засновник клініки, провідний спеціаліст з хірургічної та ортопедичної стоматології. Має великий досвід у складних хірургічних випадках та естетичному протезуванні. Постійно вдосконалює свої навички на міжнародних конференціях та майстер-класах.",
+      specializations: [
+        "Дентальна імплантація",
+        "Кістково-пластичні операції",
+        "Протезування на імплантах",
+        "Естетична реабілітація",
+        "Хірургічна пародонтологія",
+      ],
+      expertise: [
+        "Спеціалізація в хірургічній стоматології та ортопедії з 2018 року",
+        "Експерт з імплантації та протезування на імплантах",
+        "Досвід проведення складних кістково-пластичних операцій",
+        "Сертифікований спеціаліст по системам імплантації Nobel Biocare та Straumann",
+        "Учасник міжнародних конференцій з імплантології та естетичної стоматології",
+      ],
+    },
+    {
+      id: 2,
+      name: "Марія Ковальчук",
+      role: "Терапевт-стоматолог",
+      image: "/images/placeholder-female.jpg",
+      description:
+        "Спеціаліст з лікування карієсу та його ускладнень. 3 роки досвіду в естетичній реставрації.",
+      specializations: [
+        "Лікування карієсу",
+        "Естетична реставрація",
+        "Ендодонтія",
+      ],
+    },
+    {
+      id: 3,
+      name: "Олена Петренко",
+      role: "Стоматолог-гігієніст",
+      image: "/images/placeholder-female.jpg",
+      description:
+        "Експерт з професійної гігієни порожнини рота та профілактики захворювань ясен.",
+      specializations: ["Професійна гігієна", "Відбілювання", "Профілактика"],
+    },
+  ];
+
   return (
-    <>
+    <div className="about-page">
       <Helmet>
-        <title>About Us - Herbie Dental Clinic</title>
-        <meta 
-          name="description" 
-          content="Learn about Herbie Dental Clinic's experienced team, our mission, and our commitment to providing exceptional dental care."
-        />
+        <title>{t("about.title")} - Herbie Dental</title>
+        <meta name="description" content={t("about.subtitle")} />
       </Helmet>
 
-      <section className="about-hero">
+      {/* Hero Section */}
+      <div className="hero-section">
         <div className="container">
-          <h1>About Herbie Dental Clinic</h1>
-          <p className="lead">Providing Quality Dental Care Since 2010</p>
+          <h1>{t("about.title")}</h1>
+          <p className="subtitle">{t("about.subtitle")}</p>
         </div>
-      </section>
+      </div>
 
-      <section className="mission-values">
+      {/* Updated Founder Section */}
+      <div className="founder-section">
         <div className="container">
-          <div className="mission-box">
-            <h2>Our Mission</h2>
-            <p>
-              To provide exceptional dental care in a comfortable and welcoming 
-              environment, ensuring every patient achieves optimal oral health 
-              through personalized treatment plans and education.
-            </p>
+          <div className="founder-content">
+            <div className="founder-image">
+              <img
+                src={founderImage}
+                alt="Юрій Гербей - Хірург-стоматолог, Ортопед"
+              />
+            </div>
+            <div className="founder-info">
+              <span className="founder-label">Засновник та Головний Лікар</span>
+              <h2>Юрій Гербей</h2>
+              <h3>Хірург-стоматолог, Ортопед-стоматолог</h3>
+              <p className="founder-description">
+                Спеціаліст з більш ніж 5-річним досвідом у хірургічній та
+                ортопедичній стоматології. Експерт з дентальної імплантації та
+                естетичного протезування. Постійно вдосконалює свої навички,
+                відвідуючи міжнародні конференції та майстер-класи провідних
+                спеціалістів світу.
+              </p>
+              <div className="expertise-section">
+                <h4>Професійна експертиза:</h4>
+                <ul className="expertise-list">
+                  {teamMembers[0].expertise.map((item, index) => (
+                    <li key={index}>
+                      <span className="check-icon">✓</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="specializations-section">
+                <h4>Спеціалізації:</h4>
+                <div className="specializations">
+                  {teamMembers[0].specializations.map((spec, index) => (
+                    <span key={index} className="specialization-tag">
+                      {spec}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
-          
+        </div>
+      </div>
+
+      {/* Values Section */}
+      <div className="values-section">
+        <div className="container">
+          <h2>{t("about.values.title")}</h2>
           <div className="values-grid">
-            <div className="value-card">
-              <h3>Excellence</h3>
-              <p>Delivering the highest standard of dental care using cutting-edge technology</p>
-            </div>
-            <div className="value-card">
-              <h3>Compassion</h3>
-              <p>Treating every patient with empathy, understanding, and respect</p>
-            </div>
-            <div className="value-card">
-              <h3>Integrity</h3>
-              <p>Maintaining honest and transparent relationships with our patients</p>
-            </div>
-            <div className="value-card">
-              <h3>Innovation</h3>
-              <p>Staying current with the latest dental techniques and technologies</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="team-section">
-        <div className="container">
-          <h2>Meet Our Team</h2>
-          <div className="team-grid">
-            {teamMembers.map(member => (
-              <TeamMember key={member.id} {...member} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="clinic-tour">
-        <div className="container">
-          <h2>Tour Our Facility</h2>
-          <div className="clinic-gallery">
-            {clinicImages.map(image => (
-              <div key={image.id} className="gallery-item">
-                <img src={image.url} alt={image.alt} />
-                <p>{image.description}</p>
+            {["quality", "innovation", "care"].map((value) => (
+              <div key={value} className="value-card">
+                <h3>{t(`about.values.${value}.title`)}</h3>
+                <p>{t(`about.values.${value}.description`)}</p>
               </div>
             ))}
           </div>
         </div>
-      </section>
-    </>
-  )
-}
+      </div>
 
-const teamMembers = [
-  {
-    id: 1,
-    name: 'Dr. Sarah Herbie',
-    role: 'Lead Dentist',
-    image: '/images/team/dr-sarah.jpg',
-    qualifications: 'DDS, FICOI',
-    description: 'Dr. Sarah brings over 15 years of experience in general and cosmetic dentistry.'
-  },
-  {
-    id: 2,
-    name: 'Dr. James Wilson',
-    role: 'Orthodontist',
-    image: '/images/team/dr-james.jpg',
-    qualifications: 'DMD, MS',
-    description: 'Specializing in orthodontics with expertise in modern bracing techniques.'
-  },
-  // Add more team members...
-]
+      {/* Team Section */}
+      <div className="team-section">
+        <div className="container">
+          <h2>Наша Команда</h2>
+          <p className="team-intro">
+            Наша команда складається з висококваліфікованих спеціалістів, які
+            постійно вдосконалюють свої навички для надання найкращої
+            стоматологічної допомоги.
+          </p>
+          <div className="team-grid">
+            {teamMembers.map((member) => (
+              <div key={member.id} className="team-card">
+                <div className="team-image">
+                  <img src={member.image} alt={member.name} />
+                </div>
+                <div className="team-info">
+                  <h3>{member.name}</h3>
+                  <h4>{member.role}</h4>
+                  <p>{member.description}</p>
+                  <div className="specializations">
+                    {member.specializations.map((spec, index) => (
+                      <span key={index} className="specialization-tag">
+                        {spec}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
-const clinicImages = [
-  {
-    id: 1,
-    url: '/images/clinic/reception.jpg',
-    alt: 'Modern reception area',
-    description: 'Our welcoming reception area'
-  },
-  {
-    id: 2,
-    url: '/images/clinic/treatment-room.jpg',
-    alt: 'State-of-the-art treatment room',
-    description: 'Advanced treatment rooms equipped with the latest technology'
-  },
-  // Add more clinic images...
-]
+      {/* CTA Section */}
+      <div className="cta-section">
+        <div className="container">
+          <h2>Ready to schedule your visit?</h2>
+          <p>Experience professional dental care with Dr. Yurii Herbei</p>
+          <a href="/appointments" className="cta-button">
+            Book Appointment
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-export default About 
+export default About;

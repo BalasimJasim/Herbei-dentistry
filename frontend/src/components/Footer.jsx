@@ -1,57 +1,55 @@
-import { Link } from 'react-router-dom'
-import './Footer.css'
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import "./Footer.css";
 
 const Footer = () => {
+  const { t } = useTranslation();
+
   return (
     <footer className="footer">
-      <div className="container">
-        <div className="footer-grid">
-          <div className="footer-section">
-            <h3>Herbie Dental Clinic</h3>
-            <p>Your trusted partner in dental health and beautiful smiles.</p>
-            <div className="social-links">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
-            </div>
+      <div className="footer-container">
+        <div className="footer-brand">
+          <div className="footer-logo">
+            <img src="/images/logo-white.png" alt="Herbie Dental" />
           </div>
-          
-          <div className="footer-section">
-            <h4>Quick Links</h4>
-            <ul>
-              <li><Link to="/about">About Us</Link></li>
-              <li><Link to="/services">Services</Link></li>
-              <li><Link to="/appointments">Book Appointment</Link></li>
-              <li><Link to="/contact">Contact</Link></li>
-            </ul>
-          </div>
-          
-          <div className="footer-section">
-            <h4>Contact Info</h4>
-            <address>
-              <p>123 Dental Street</p>
-              <p>City, State 12345</p>
-              <p>Phone: (555) 123-4567</p>
-              <p>Email: info@herbiedental.com</p>
-            </address>
-          </div>
-          
-          <div className="footer-section">
-            <h4>Office Hours</h4>
-            <ul className="hours-list">
-              <li>Monday - Friday: 9:00 AM - 6:00 PM</li>
-              <li>Saturday: 9:00 AM - 2:00 PM</li>
-              <li>Sunday: Closed</li>
-            </ul>
-          </div>
+          <p className="footer-description">{t("footer.description")}</p>
+          <div className="social-links">{/* Social links */}</div>
         </div>
-        
-        <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} Herbie Dental Clinic. All rights reserved.</p>
+
+        <div className="footer-section">
+          <h3>{t("footer.quickLinks")}</h3>
+          <ul className="footer-links">
+            <li className="footer-link">
+              <Link to="/services">{t("footer.services")}</Link>
+            </li>
+            {/* More links */}
+          </ul>
+        </div>
+
+        <div className="footer-section">
+          <h3>{t("footer.services")}</h3>
+          <ul className="footer-links">{/* Service links */}</ul>
+        </div>
+
+        <div className="footer-section">
+          <h3>{t("footer.contact")}</h3>
+          <div className="contact-info">
+            <div className="contact-item">
+              <FaPhone />
+              <span>123-456-7890</span>
+            </div>
+            {/* More contact info */}
+          </div>
         </div>
       </div>
-    </footer>
-  )
-}
 
-export default Footer 
+      <div className="bottom-bar">
+        <p>&copy; 2024 Herbie Dental. {t("footer.rights")}</p>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;

@@ -1,164 +1,133 @@
-import nodemailer from 'nodemailer'
-import twilio from 'twilio'
-import dotenv from 'dotenv'
+import { sendEmail } from "../utils/email.js";
+import { sendSMS } from "../utils/sendSMS.js";
 
-dotenv.config()
-
-// Email transporter
-let emailTransporter = null
-try {
-  emailTransporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    secure: true,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASSWORD
-    }
-  })
-} catch (error) {
-  console.error('Failed to initialize email transporter:', error)
-}
-
-// Twilio client
-let twilioClient = null
-try {
-  if (process.env.TWILIO_ACCOUNT_SID?.startsWith('AC') && process.env.TWILIO_AUTH_TOKEN) {
-    twilioClient = twilio(
-      process.env.TWILIO_ACCOUNT_SID,
-      process.env.TWILIO_AUTH_TOKEN
-    )
-  } else {
-    console.warn('Invalid or missing Twilio credentials')
-  }
-} catch (error) {
-  console.error('Failed to initialize Twilio client:', error)
-}
-
-// Email templates
-const emailTemplates = {
-  'appointment-confirmation': (data) => ({
-    subject: 'Your Appointment Confirmation',
-    html: `
-      <h2>Appointment Confirmation</h2>
-      <p>Dear ${data.firstName} ${data.lastName},</p>
-      <p>Your appointment has been confirmed for:</p>
-      <p>Date: ${data.date}</p>
-      <p>Time: ${data.time}</p>
-      <p>Service: ${data.service}</p>
-      <p>Thank you for choosing our dental clinic!</p>
-    `
-  }),
-  'appointment-reminder': (data) => ({
-    subject: 'Appointment Reminder',
-    html: `
-      <h2>Appointment Reminder</h2>
-      <p>Dear ${data.firstName},</p>
-      <p>This is a reminder of your upcoming appointment:</p>
-      <p>Date: ${data.date}</p>
-      <p>Time: ${data.time}</p>
-      <p>Please arrive 10 minutes before your scheduled time.</p>
-    `
-  })
-}
-
-// SMS templates
-const smsTemplates = {
-  'appointment-confirmation': (data) => `
-    Hi ${data.firstName}! Your appointment is confirmed for ${data.date} at ${data.time}. 
-    Reply Y to confirm or call us to reschedule.
-  `,
-  'appointment-reminder': (data) => `
-    Hi ${data.firstName}! Reminder: Your appointment is tomorrow at ${data.time}.
-    Please arrive 10 minutes early.
-  `
-}
-
-export const sendAppointmentNotifications = {
-  // Send email notification
-  sendEmail: async ({ to, template, data }) => {
-    if (!emailTransporter) {
-      console.warn('Email service not configured')
-      return false
-    }
-
-    try {
-      const emailContent = emailTemplates[template](data)
-      await emailTransporter.sendMail({
-        from: process.env.EMAIL_FROM,
-        to,
-        subject: emailContent.subject,
-        html: emailContent.html
-      })
-      console.log('Email sent successfully to:', to)
-      return true
-    } catch (error) {
-      console.error('Failed to send email:', error)
-      return false
-    }
-  },
-
-  // Send SMS notification
-  sendSMS: async ({ to, template, data }) => {
-    if (!twilioClient) {
-      console.warn('SMS service not configured')
-      return false
-    }
-
-    try {
-      const message = smsTemplates[template](data)
-      await twilioClient.messages.create({
-        body: message,
-        from: process.env.TWILIO_PHONE_NUMBER,
-        to
-      })
-      console.log('SMS sent successfully to:', to)
-      return true
-    } catch (error) {
-      console.error('Failed to send SMS:', error)
-      return false
-    }
-  }
-}
-
-// Schedule reminders
-export const scheduleReminders = async (appointment) => {
+export const sendAppointmentNotifications = async (appointment) => {
   try {
-    const reminderTime = new Date(appointment.dateTime)
-    reminderTime.setHours(reminderTime.getHours() - 24) // 24 hours before appointment
-    const delay = reminderTime.getTime() - Date.now()
+    console.log("Starting notification process for appointment:", {
+      email: appointment.email,
+      phone: appointment.phone,
+      dateTime: appointment.dateTime,
+    });
 
-    // Only schedule if the reminder time is in the future
-    if (delay > 0) {
-      // Schedule email reminder
-      setTimeout(async () => {
-        await sendAppointmentNotifications.sendEmail({
-          to: appointment.email,
-          template: 'appointment-reminder',
-          data: {
-            firstName: appointment.firstName,
-            date: appointment.dateTime.toLocaleDateString(),
-            time: appointment.dateTime.toLocaleTimeString()
-          }
-        })
-      }, delay)
+    const appointmentDate = new Date(appointment.dateTime).toLocaleString();
+    let emailSent = false;
+    let smsSent = false;
 
-      // Schedule SMS reminder
-      setTimeout(async () => {
-        await sendAppointmentNotifications.sendSMS({
-          to: appointment.phone,
-          template: 'appointment-reminder',
-          data: {
-            firstName: appointment.firstName,
-            date: appointment.dateTime.toLocaleDateString(),
-            time: appointment.dateTime.toLocaleTimeString()
-          }
-        })
-      }, delay)
+    // Send email if email is provided
+    if (appointment.email) {
+      const emailContent = {
+        to: appointment.email,
+        subject: "Appointment Confirmation - Herbie Dental",
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h1 style="color: #2563eb;">Appointment Confirmation</h1>
+            <p>Dear ${appointment.firstName},</p>
+            <p>Your appointment has been successfully scheduled.</p>
+            <div style="background-color: #f3f4f6; padding: 15px; border-radius: 5px; margin: 20px 0;">
+              <p><strong>Date and Time:</strong> ${appointmentDate}</p>
+            </div>
+            <p>Thank you for choosing Herbie Dental. We look forward to seeing you!</p>
+          </div>
+        `,
+      };
+
+      emailSent = await sendEmail(emailContent);
+      console.log("Email notification status:", emailSent ? "sent" : "failed");
     }
-  } catch (error) {
-    console.error('Error scheduling reminders:', error)
-  }
-}
 
-export default sendAppointmentNotifications 
+    // Send SMS if phone number is provided
+    if (appointment.phone) {
+      const smsContent = {
+        to: appointment.phone,
+        message: `Hi ${appointment.firstName}, your appointment at Herbie Dental is confirmed for ${appointmentDate}. We look forward to seeing you!`,
+      };
+
+      smsSent = await sendSMS(smsContent);
+      console.log("SMS notification status:", smsSent ? "sent" : "failed");
+    }
+
+    return {
+      emailSent,
+      smsSent,
+    };
+  } catch (error) {
+    console.error("Error in sendAppointmentNotifications:", error);
+    return {
+      emailSent: false,
+      smsSent: false,
+      error: error.message,
+    };
+  }
+};
+
+export const scheduleReminders = async (appointment) => {
+  // Implementation for scheduling reminders
+  return true;
+};
+
+export const sendCancellationNotifications = async (appointment) => {
+  try {
+    console.log("Starting cancellation notification process for appointment:", {
+      email: appointment.email,
+      phone: appointment.phone,
+      dateTime: appointment.dateTime,
+    });
+
+    const appointmentDate = new Date(appointment.dateTime).toLocaleString();
+    let emailSent = false;
+    let smsSent = false;
+
+    // Send email if email is provided
+    if (appointment.email) {
+      const emailContent = {
+        to: appointment.email,
+        subject: "Appointment Cancellation - Herbie Dental",
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h1 style="color: #2563eb;">Appointment Cancellation</h1>
+            <p>Dear ${appointment.firstName},</p>
+            <p>Your appointment has been cancelled as requested.</p>
+            <div style="background-color: #f3f4f6; padding: 15px; border-radius: 5px; margin: 20px 0;">
+              <p><strong>Cancelled Appointment Details:</strong></p>
+              <p><strong>Date and Time:</strong> ${appointmentDate}</p>
+            </div>
+            <p>If you would like to schedule a new appointment, please visit our website.</p>
+            <p>Thank you for choosing Herbie Dental.</p>
+          </div>
+        `,
+      };
+
+      emailSent = await sendEmail(emailContent);
+      console.log(
+        "Cancellation email notification status:",
+        emailSent ? "sent" : "failed"
+      );
+    }
+
+    // Send SMS if phone number is provided
+    if (appointment.phone) {
+      const smsContent = {
+        to: appointment.phone,
+        message: `Hi ${appointment.firstName}, your appointment at Herbie Dental for ${appointmentDate} has been cancelled. Visit our website to schedule a new appointment.`,
+      };
+
+      smsSent = await sendSMS(smsContent);
+      console.log(
+        "Cancellation SMS notification status:",
+        smsSent ? "sent" : "failed"
+      );
+    }
+
+    return {
+      emailSent,
+      smsSent,
+    };
+  } catch (error) {
+    console.error("Error in sendCancellationNotifications:", error);
+    return {
+      emailSent: false,
+      smsSent: false,
+      error: error.message,
+    };
+  }
+};

@@ -85,40 +85,38 @@ const AppointmentCalendar = ({
   };
 
   const renderTimeSlots = () => {
-    if (!selectedDate) return null;
-    if (loading)
+    if (loading) {
       return <div className="loading-slots">Loading available times...</div>;
+    }
 
-    const slots = generateTimeSlots();
-
-    if (slots.length === 0) {
+    if (!availableSlots.length) {
       return (
         <div className="no-slots">No available time slots for this date</div>
       );
     }
 
     return (
-      <div className="time-slots">
-        {slots.map((slot) => {
-          const timeString = format(new Date(slot.time), "HH:mm");
-          const isSelected = selectedTime === new Date(slot.time).toISOString();
+      <div className="time-slots-container">
+        <h3 className="time-slots-title">Available Times</h3>
+        <div className="time-slots-grid">
+          {availableSlots.map((slot) => {
+            const time = new Date(slot.time);
+            const isSelected = selectedTime?.getTime() === time.getTime();
 
-          return (
-            <button
-              key={slot.time}
-              className={`time-slot ${isSelected ? "selected" : ""} ${
-                !slot.available ? "disabled" : ""
-              }`}
-              onClick={() =>
-                slot.available &&
-                onTimeSelect(new Date(slot.time).toISOString())
-              }
-              disabled={!slot.available}
-            >
-              {timeString}
-            </button>
-          );
-        })}
+            return (
+              <button
+                key={slot.time}
+                className={`time-slot ${isSelected ? "selected" : ""} ${
+                  !slot.available || slot.isPast ? "unavailable" : ""
+                }`}
+                onClick={() => onTimeSelect(time)}
+                disabled={!slot.available || slot.isPast}
+              >
+                {format(time, "HH:mm")}
+              </button>
+            );
+          })}
+        </div>
       </div>
     );
   };

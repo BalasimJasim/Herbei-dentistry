@@ -9,6 +9,8 @@ import { testEmailConfig } from './utils/email.js';
 import { testSMSConfig } from './utils/sendSMS.js';
 import adminRoutes from './routes/admin.js';
 import serviceRoutes from './routes/services.js';
+import { validateEnv } from "./config/validateEnv.js";
+import { validateCredentials } from "./config/validateCredentials.js";
 
 // Load env vars
 dotenv.config();
@@ -33,15 +35,53 @@ const initializeServices = async () => {
   }
 };
 
+const checkRequiredEnvVars = () => {
+  const required = [
+    "TWILIO_ACCOUNT_SID",
+    "TWILIO_AUTH_TOKEN",
+    "TWILIO_PHONE_NUMBER",
+    "EMAIL_USER",
+    "EMAIL_PASSWORD",
+  ];
+
+  const missing = required.filter((key) => !process.env[key]);
+
+  if (missing.length > 0) {
+    console.error("Missing required environment variables:", missing);
+    return false;
+  }
+
+  console.log("All required environment variables are present");
+  return true;
+};
+
+const envVars = validateEnv();
+
+const { email: emailConfigured, twilio: twilioConfigured } =
+  validateCredentials();
+
+if (!emailConfigured) {
+  console.warn("Email service will be disabled - missing credentials");
+}
+
+if (!twilioConfigured) {
+  console.warn("SMS service will be disabled - missing credentials");
+}
+
 const startServer = async () => {
   try {
-    // Connect to database
-    const dbConnected = await connectDB()
-    if (!dbConnected) {
-      throw new Error('Database connection failed')
+    // Check environment variables first
+    if (!checkRequiredEnvVars()) {
+      throw new Error("Missing required environment variables");
     }
 
-    const app = express()
+    // Connect to database
+    const dbConnected = await connectDB();
+    if (!dbConnected) {
+      throw new Error("Database connection failed");
+    }
+
+    const app = express();
 
     // Body parser
     app.use(express.json());
@@ -51,32 +91,35 @@ const startServer = async () => {
 
     // CORS configuration
     const corsOptions = {
-      origin: process.env.NODE_ENV === 'production' 
-        ? 'https://herbiedental.com' 
-        : 'http://localhost:5173',
+      origin:
+        process.env.NODE_ENV === "production"
+          ? "https://herbiedental.com"
+          : "http://localhost:5173",
       credentials: true,
-      optionsSuccessStatus: 200
+      optionsSuccessStatus: 200,
     };
     app.use(cors(corsOptions));
 
     // Mount routers
-    app.use('/api/services', serviceRoutes);
-    app.use('/api/appointments', appointmentRoutes);
-    app.use('/api/admin', adminRoutes);
+    app.use("/api/services", serviceRoutes);
+    app.use("/api/appointments", appointmentRoutes);
+    app.use("/api/admin", adminRoutes);
 
     // Health check endpoint
-    app.get('/health', (req, res) => {
-      res.status(200).json({ status: 'ok' });
+    app.get("/health", (req, res) => {
+      res.status(200).json({ status: "ok" });
     });
 
     // Error Handler
     app.use(errorHandler);
 
-    const PORT = process.env.PORT || 5000
+    const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => {
-      console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
-      initializeServices()
-    })
+      console.log(
+        `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`
+      );
+      initializeServices();
+    });
   } catch (error) {
     console.error('Failed to start server:', error)
     process.exit(1)
