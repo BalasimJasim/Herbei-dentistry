@@ -426,4 +426,18 @@
 
 .navbar-brand a:hover .navbar-logo {
   transform: scale(1.05);
+}
+
+.admin-link {
+  color: var(--primary-600);
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--primary-600);
+  border-radius: var(--radius-md);
+  transition: all 0.3s ease;
+}
+
+.admin-link:hover {
+  background-color: var(--primary-600);
+  color: white;
 } 

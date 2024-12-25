@@ -1,68 +1,55 @@
-import { createContext, useContext, useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
-import axios from 'axios'
+import React, { createContext, useContext, useState, useEffect } from "react";
 
-const AuthContext = createContext(null)
+const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+export function useAuth() {
+  return useContext(AuthContext);
+}
+
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const initAuth = async () => {
-      const token = localStorage.getItem('adminToken')
-      if (token) {
-        try {
-          const response = await axios.get('http://localhost:5000/api/admin/me', {
-            headers: { Authorization: `Bearer ${token}` }
-          })
-          setUser(response.data)
-        } catch (error) {
-          console.error('Auth initialization error:', error)
-          localStorage.removeItem('adminToken')
-        }
+    // Check for existing admin session
+    const storedUser = localStorage.getItem("admin");
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error("Error parsing stored user:", error);
+        localStorage.removeItem("admin");
       }
-      setLoading(false)
     }
+    setLoading(false);
+  }, []);
 
-    initAuth()
-  }, [])
-
-  const login = async (credentials) => {
-    const response = await axios.post('http://localhost:5000/api/admin/login', credentials)
-    const { token, user } = response.data
-    localStorage.setItem('adminToken', token)
-    setUser(user)
-    return user
-  }
+  const login = async (email, password) => {
+    // Demo admin credentials
+    if (email === "admin@herbiedental.com" && password === "admin123") {
+      const userData = { email, role: "admin" };
+      localStorage.setItem("admin", JSON.stringify(userData));
+      setUser(userData);
+    } else {
+      throw new Error("Invalid credentials");
+    }
+  };
 
   const logout = () => {
-    localStorage.removeItem('adminToken')
-    setUser(null)
-  }
+    localStorage.removeItem("admin");
+    setUser(null);
+  };
 
   const value = {
     user,
-    loading,
     login,
-    logout
+    logout,
+    loading,
+  };
+
+  if (loading) {
+    return null;
   }
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  )
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
-
-AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired
-}
-
-export const useAuth = () => {
-  const context = useContext(AuthContext)
-  if (context === null) {
-    throw new Error('useAuth must be used within an AuthProvider')
-  }
-  return context
-} 

@@ -1,25 +1,25 @@
-.admin-login {
+.admin-login-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
   padding: 2rem;
-  background: var(--bg-secondary);
 }
 
-.login-card {
-  background: var(--bg-primary);
+.admin-login-card {
+  background: white;
   padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
 }
 
-.login-card h2 {
+.admin-login-card h2 {
+  color: var(--primary-600);
+  margin-bottom: 1.5rem;
   text-align: center;
-  margin-bottom: 2rem;
-  color: var(--primary-700);
 }
 
 .form-group {
@@ -29,97 +29,66 @@
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: var(--text-primary);
+  color: var(--neutral-700);
 }
 
 .form-group input {
   width: 100%;
   padding: 0.75rem;
-  border: 2px solid var(--border-light);
-  border-radius: 5px;
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius-md);
   font-size: 1rem;
-  transition: border-color 0.3s ease;
-  color: var(--text-primary);
-  background: var(--bg-primary);
-}
-
-.form-group input::placeholder {
-  color: var(--text-secondary);
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: var(--primary-500);
-  background: var(--bg-primary);
+  border-color: var(--primary-400);
+  box-shadow: 0 0 0 2px var(--primary-100);
 }
 
-.submit-button {
+.error-message {
+  background: var(--error-50);
+  color: var(--error-600);
+  padding: 0.75rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+}
+
+button {
   width: 100%;
-  padding: 1rem;
+  padding: 0.75rem;
   background: var(--primary-600);
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: var(--radius-md);
   font-size: 1rem;
-  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.2s;
 }
 
-.submit-button:hover:not(:disabled) {
+button:hover {
   background: var(--primary-700);
 }
 
-.submit-button:disabled {
+button:disabled {
   background: var(--neutral-400);
   cursor: not-allowed;
 }
 
-.error-message {
-  background-color: var(--error-light);
-  color: var(--error);
-  padding: 1rem;
-  border-radius: 5px;
-  margin-bottom: 1rem;
+.admin-login-footer {
+  margin-top: 1.5rem;
   text-align: center;
+  border-top: 1px solid var(--neutral-200);
+  padding-top: 1rem;
 }
 
-.password-requirements {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  margin-top: 0.5rem;
+.back-link {
+  color: var(--neutral-600);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s;
 }
 
-.strength-meter {
-  height: 4px;
-  background: #ddd;
-  margin-top: 0.5rem;
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.strength-meter-fill {
-  height: 100%;
-  transition: width 0.3s ease;
-  border-radius: 2px;
-}
-
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .strength-meter-fill {
-    transition: none;
-  }
+.back-link:hover {
+  color: var(--primary-600);
 } 
