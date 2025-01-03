@@ -1,12 +1,24 @@
 import axios from 'axios'
-import { toast } from 'react-hot-toast'
+import API_URL from "../api/config";
+import { toast } from "react-toastify";
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000',
+  baseURL: API_URL,
+  withCredentials: true,
   headers: {
-    'Content-Type': 'application/json'
-  }
-})
+    "Content-Type": "application/json",
+  },
+});
+
+// Add request interceptor for debugging
+api.interceptors.request.use((config) => {
+  console.log("API Request:", {
+    url: config.url,
+    baseURL: config.baseURL,
+    method: config.method,
+  });
+  return config;
+});
 
 // Add response interceptor
 api.interceptors.response.use(
