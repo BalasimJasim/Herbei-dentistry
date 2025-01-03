@@ -7,7 +7,8 @@
 }
 
 .appointment-hero {
-  background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
+  /* Temporary test background */
+  background: red !important;  /* We'll remove this after verifying deployment */
   padding: 6rem 1.5rem;
   text-align: center;
   position: relative;
