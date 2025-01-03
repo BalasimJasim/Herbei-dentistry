@@ -8,15 +8,21 @@
 
 .appointment-hero {
   background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
-  padding: 3rem 1.5rem;
+  padding: 4rem 1.5rem;
   text-align: center;
   position: relative;
   margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .hero-content {
   max-width: 800px;
   margin: 0 auto;
+  width: 100%;
+  padding: 0 1rem;
 }
 
 .hero-content h1 {
@@ -24,12 +30,14 @@
   color: var(--neutral-900);
   margin-bottom: 1rem;
   font-weight: 700;
+  text-align: center;
 }
 
 .hero-content .lead {
   font-size: 1.25rem;
   color: var(--neutral-700);
   margin-bottom: 2rem;
+  text-align: center;
 }
 
 .appointment-content {

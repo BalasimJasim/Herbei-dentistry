@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import './ManageAppointments.css';
+import api from "../utils/axios";
+import { toast } from "react-toastify";
+import "./ManageAppointments.css";
 
 const ManageAppointments = ({ userEmail }) => {
   const [appointments, setAppointments] = useState([]);
@@ -13,10 +13,12 @@ const ManageAppointments = ({ userEmail }) => {
 
   const fetchAppointments = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/appointments/user?email=${userEmail}`);
+      const response = await api.get(
+        `/api/appointments/user?email=${userEmail}`
+      );
       setAppointments(response.data);
     } catch (error) {
-      toast.error('Failed to fetch appointments');
+      toast.error("Failed to fetch appointments");
     } finally {
       setLoading(false);
     }
@@ -24,14 +26,16 @@ const ManageAppointments = ({ userEmail }) => {
 
   const handleCancel = async (appointmentId) => {
     try {
-      await axios.patch(`http://localhost:5000/api/appointments/${appointmentId}/cancel`, {
-        email: userEmail
+      await api.patch(`/api/appointments/${appointmentId}/cancel`, {
+        email: userEmail,
       });
-      
-      toast.success('Appointment cancelled successfully');
-      fetchAppointments(); // Refresh the list
+
+      toast.success("Appointment cancelled successfully");
+      fetchAppointments();
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to cancel appointment');
+      toast.error(
+        error.response?.data?.message || "Failed to cancel appointment"
+      );
     }
   };
 
@@ -44,16 +48,20 @@ const ManageAppointments = ({ userEmail }) => {
         <p>No upcoming appointments</p>
       ) : (
         <div className="appointments-list">
-          {appointments.map(appointment => (
+          {appointments.map((appointment) => (
             <div key={appointment._id} className="appointment-card">
               <div className="appointment-info">
                 <h3>{appointment.service}</h3>
-                <p>Date: {new Date(appointment.dateTime).toLocaleDateString()}</p>
-                <p>Time: {new Date(appointment.dateTime).toLocaleTimeString()}</p>
+                <p>
+                  Date: {new Date(appointment.dateTime).toLocaleDateString()}
+                </p>
+                <p>
+                  Time: {new Date(appointment.dateTime).toLocaleTimeString()}
+                </p>
                 <p>Status: {appointment.status}</p>
               </div>
-              {appointment.status !== 'cancelled' && (
-                <button 
+              {appointment.status !== "cancelled" && (
+                <button
                   onClick={() => handleCancel(appointment._id)}
                   className="cancel-button"
                 >
