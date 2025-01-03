@@ -90,15 +90,15 @@ const startServer = async () => {
     app.use(sanitizeData);
 
     // CORS configuration
-    const corsOptions = {
-      origin:
-        process.env.NODE_ENV === "production"
-          ? "https://herbiedental.com"
-          : "http://localhost:5173",
-      credentials: true,
-      optionsSuccessStatus: 200,
-    };
-    app.use(cors(corsOptions));
+    app.use(
+      cors({
+        origin: [
+          "https://your-frontend-domain.vercel.app",
+          "http://localhost:5173", // for local development
+        ],
+        credentials: true,
+      })
+    );
 
     // Mount routers
     app.use("/api/services", serviceRoutes);
