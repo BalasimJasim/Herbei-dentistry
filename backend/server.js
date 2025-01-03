@@ -95,6 +95,8 @@ const startServer = async () => {
         origin: [
           "https://herbei-dentistry.vercel.app",
           "http://localhost:5173",
+          "https://herbei-dentistry.vercel.app",
+          "http://localhost:3000",
         ],
         credentials: true,
       })
