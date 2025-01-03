@@ -5,8 +5,9 @@
       "destination": "/index.html"
     }
   ],
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "framework": "vite",
-  "installCommand": "npm install"
+  "build": {
+    "env": {
+      "VITE_API_URL": "https://herbei-dentistry.onrender.com"
+    }
+  }
 } 
