@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 const api = axios.create({
   baseURL: API_URL,
-  withCredentials: true,
+  withCredentials: false,
   headers: {
     "Content-Type": "application/json",
   },
@@ -12,8 +12,6 @@ const api = axios.create({
 
 // Add request interceptor for debugging
 api.interceptors.request.use((config) => {
-  // Remove withCredentials for now to test if that's causing issues
-  config.withCredentials = false;
   console.log("API Request:", {
     url: config.url,
     baseURL: config.baseURL,

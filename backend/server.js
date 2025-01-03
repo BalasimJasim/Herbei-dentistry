@@ -93,7 +93,7 @@ const startServer = async () => {
     app.use(
       cors({
         origin: [
-          "https://dentalis-24th3ter8-balasim-jasim-s-projects.vercel.app",
+          "https://dentalis-k4x6w70g0-balasim-jasim-s-projects.vercel.app",
           "https://dentalis-two.vercel.app",
           "http://localhost:5173",
           "http://localhost:3000",
