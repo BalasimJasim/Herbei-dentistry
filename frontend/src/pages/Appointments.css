@@ -1,23 +1,67 @@
 @import '../styles/variables.css';
 
 /* Hero Section */
-.appointments-hero {
+.appointments-page {
+  min-height: 100vh;
+  background: var(--neutral-50);
+}
+
+.appointment-hero {
   background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
-  padding: var(--spacing-20) 0;
+  padding: 3rem 1.5rem;
   text-align: center;
+  position: relative;
+  margin-bottom: 2rem;
 }
 
-.appointments-hero h1 {
-  font-size: var(--text-5xl);
-  color: var(--neutral-900);
-  margin-bottom: var(--spacing-4);
-}
-
-.appointments-hero p {
-  font-size: var(--text-xl);
-  color: var(--neutral-600);
-  max-width: 600px;
+.hero-content {
+  max-width: 800px;
   margin: 0 auto;
+}
+
+.hero-content h1 {
+  font-size: 2.5rem;
+  color: var(--neutral-900);
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.hero-content .lead {
+  font-size: 1.25rem;
+  color: var(--neutral-700);
+  margin-bottom: 2rem;
+}
+
+.appointment-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.booking-container {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .appointment-hero {
+    padding: 2rem 1rem;
+  }
+
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .hero-content .lead {
+    font-size: 1.125rem;
+  }
+
+  .booking-container {
+    padding: 1.5rem;
+  }
 }
 
 /* Appointments Content */
