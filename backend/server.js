@@ -93,8 +93,8 @@ const startServer = async () => {
     app.use(
       cors({
         origin: [
-          "https://your-frontend-domain.vercel.app",
-          "http://localhost:5173", // for local development
+          "https://herbei-dentistry.vercel.app",
+          "http://localhost:5173",
         ],
         credentials: true,
       })
