@@ -93,12 +93,14 @@ const startServer = async () => {
     app.use(
       cors({
         origin: [
+          "https://dentalis-24th3ter8-balasim-jasim-s-projects.vercel.app",
           "https://dentalis-two.vercel.app",
-          "https://herbei-dentistry.vercel.app",
           "http://localhost:5173",
           "http://localhost:3000",
         ],
         credentials: true,
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
       })
     );
 
