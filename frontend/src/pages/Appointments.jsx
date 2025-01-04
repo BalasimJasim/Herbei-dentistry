@@ -3,7 +3,6 @@ import { Helmet } from "react-helmet-async";
 import { useSearchParams } from "react-router-dom";
 import AppointmentForm from "../components/AppointmentForm";
 import styles from "./Appointments.module.css";
-console.log("Loaded styles:", styles); // Temporary debug line
 
 const Appointments = () => {
   const [searchParams] = useSearchParams();
@@ -12,7 +11,7 @@ const Appointments = () => {
   const preSelectedService = searchParams.get("service");
 
   return (
-    <div className={styles.appointmentsPage}>
+    <div className="appointments-page">
       <Helmet>
         <title>Book Appointment - Herbie Dental Clinic</title>
         <meta
@@ -21,7 +20,7 @@ const Appointments = () => {
         />
       </Helmet>
 
-      <section className={styles.appointmentHero}>
+      <section className="appointment-hero">
         <div className={styles.heroContent}>
           <h1>Book Your Appointment</h1>
           <p className={styles.lead}>

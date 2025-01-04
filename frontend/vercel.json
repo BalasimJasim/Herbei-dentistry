@@ -9,5 +9,10 @@
     "env": {
       "VITE_API_URL": "https://herbei-dentistry.onrender.com"
     }
+  },
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "github": {
+    "silent": true
   }
 } 

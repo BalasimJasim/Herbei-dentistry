@@ -8,7 +8,7 @@ export default defineConfig({
   css: {
     modules: {
       localsConvention: "camelCase",
-      generateScopedName: "[name]-module__[local]___[hash:base64:5]",
+      generateScopedName: "[local]__[hash:base64:5]",
     },
   },
   define: {
