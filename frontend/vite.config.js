@@ -5,6 +5,7 @@ import path from "path";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: "/",
   css: {
     modules: {
       localsConvention: "camelCase",
@@ -21,6 +22,11 @@ export default defineConfig({
     assetsDir: "assets",
     emptyOutDir: true,
     cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
   },
   publicDir: "public",
   resolve: {
