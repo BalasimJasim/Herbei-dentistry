@@ -11,7 +11,7 @@ const Appointments = () => {
   const preSelectedService = searchParams.get("service");
 
   return (
-    <div className="appointments-page">
+    <div className={styles.appointmentsPage}>
       <Helmet>
         <title>Book Appointment - Herbie Dental Clinic</title>
         <meta
@@ -20,7 +20,7 @@ const Appointments = () => {
         />
       </Helmet>
 
-      <section className="appointment-hero">
+      <section className={styles.appointmentHero}>
         <div className={styles.heroContent}>
           <h1>Book Your Appointment</h1>
           <p className={styles.lead}>
