@@ -5,17 +5,16 @@
       "destination": "/index.html"
     }
   ],
-  "build": {
-    "env": {
-      "VITE_API_URL": "https://herbei-dentistry.onrender.com"
-    }
-  },
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "github": {
-    "silent": true
-  },
   "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    },
     {
       "source": "/assets/(.*)",
       "headers": [
@@ -25,5 +24,7 @@
         }
       ]
     }
-  ]
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false
 } 
