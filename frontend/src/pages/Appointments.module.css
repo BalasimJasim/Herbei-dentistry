@@ -1,0 +1,13 @@
+.appointment-hero {
+  composes: hero from '../styles/common.css';
+  background: purple !important;
+  padding: 6rem 1.5rem;
+  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+  overflow: hidden;
+} 
