@@ -1,5 +1,8 @@
 :root {
   /* Your CSS variables */
+  --neutral-50: #f9fafb;
+  --neutral-100: #f3f4f6;
+  --neutral-200: #e5e7eb;
 }
 
 * {
@@ -13,4 +16,5 @@ body {
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  background: var(--neutral-50);
 }

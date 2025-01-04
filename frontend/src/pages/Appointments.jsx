@@ -11,15 +11,6 @@ const Appointments = () => {
   const [selectedTime, setSelectedTime] = useState(null);
   const preSelectedService = searchParams.get("service");
 
-  const handleDateSelect = (date) => {
-    setSelectedDate(date);
-    setSelectedTime(null);
-  };
-
-  const handleTimeSelect = (time) => {
-    setSelectedTime(time);
-  };
-
   return (
     <div className={styles.appointmentsPage}>
       <Helmet>
@@ -39,17 +30,15 @@ const Appointments = () => {
         </div>
       </section>
 
-      <section className="appointment-content">
-        <div className={styles.container}>
-          <AppointmentForm
-            selectedDate={selectedDate}
-            selectedTime={selectedTime}
-            preSelectedService={preSelectedService}
-            onDateSelect={handleDateSelect}
-            onTimeSelect={handleTimeSelect}
-          />
-        </div>
-      </section>
+      <div className={styles.container}>
+        <AppointmentForm
+          selectedDate={selectedDate}
+          selectedTime={selectedTime}
+          preSelectedService={preSelectedService}
+          onDateSelect={setSelectedDate}
+          onTimeSelect={setSelectedTime}
+        />
+      </div>
     </div>
   );
 };
