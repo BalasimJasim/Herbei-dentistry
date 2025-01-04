@@ -8,8 +8,9 @@ export default defineConfig({
   css: {
     modules: {
       localsConvention: "camelCase",
-      generateScopedName: "[local]__[hash:base64:5]",
+      generateScopedName: "[name]__[local]___[hash:base64:5]",
     },
+    postcss: "./postcss.config.js",
   },
   define: {
     "process.env.VITE_API_URL": JSON.stringify(process.env.VITE_API_URL),
@@ -19,6 +20,7 @@ export default defineConfig({
     outDir: "dist",
     assetsDir: "assets",
     emptyOutDir: true,
+    cssCodeSplit: true,
   },
   publicDir: "public",
   resolve: {

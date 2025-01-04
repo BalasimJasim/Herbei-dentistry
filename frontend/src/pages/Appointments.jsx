@@ -5,6 +5,7 @@ import AppointmentForm from "../components/AppointmentForm";
 import styles from "./Appointments.module.css";
 
 const Appointments = () => {
+  console.log("Styles loaded:", styles);
   const [searchParams] = useSearchParams();
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
