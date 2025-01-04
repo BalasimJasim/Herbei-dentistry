@@ -1,5 +1,4 @@
-.appointment-hero {
-  composes: hero from '../styles/common.css';
+.appointmentHero {
   background: purple !important;
   padding: 6rem 1.5rem;
   text-align: center;
@@ -10,4 +9,21 @@
   justify-content: center;
   min-height: 40vh;
   overflow: hidden;
+}
+
+.heroContent {
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.lead {
+  font-size: 1.5rem;
+  color: var(--neutral-700);
+  margin-bottom: 2rem;
+  text-align: center;
+  line-height: 1.5;
 } 

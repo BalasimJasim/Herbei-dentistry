@@ -29,10 +29,10 @@ const Appointments = () => {
         />
       </Helmet>
 
-      <section className={styles.appointment_hero}>
-        <div className="hero-content">
+      <section className={styles.appointmentHero}>
+        <div className={styles.heroContent}>
           <h1>Book Your Appointment</h1>
-          <p className="lead">
+          <p className={styles.lead}>
             Schedule your visit with our experienced dental professionals
           </p>
         </div>
