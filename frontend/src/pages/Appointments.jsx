@@ -1,23 +1,24 @@
-import { useState } from 'react'
-import { Helmet } from 'react-helmet-async'
-import { useSearchParams } from 'react-router-dom'
-import AppointmentForm from '../components/AppointmentForm'
+import { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
+import { useSearchParams } from "react-router-dom";
+import AppointmentForm from "../components/AppointmentForm";
 import styles from "./Appointments.module.css";
+console.log("Loaded styles:", styles); // Temporary debug line
 
 const Appointments = () => {
-  const [searchParams] = useSearchParams()
-  const [selectedDate, setSelectedDate] = useState(null)
-  const [selectedTime, setSelectedTime] = useState(null)
-  const preSelectedService = searchParams.get('service')
+  const [searchParams] = useSearchParams();
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
+  const preSelectedService = searchParams.get("service");
 
   const handleDateSelect = (date) => {
-    setSelectedDate(date)
-    setSelectedTime(null)
-  }
+    setSelectedDate(date);
+    setSelectedTime(null);
+  };
 
   const handleTimeSelect = (time) => {
-    setSelectedTime(time)
-  }
+    setSelectedTime(time);
+  };
 
   return (
     <div className="appointments-page">
@@ -51,6 +52,6 @@ const Appointments = () => {
       </section>
     </div>
   );
-}
+};
 
-export default Appointments 
+export default Appointments;

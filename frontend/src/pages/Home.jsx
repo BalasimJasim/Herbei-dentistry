@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { FaTooth, FaCalendarAlt, FaUserMd } from "react-icons/fa";
-import "./Home.css";
+import styles from "./Home.module.css";
 
 const Home = () => {
   const { t } = useTranslation();

@@ -5,7 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import LanguageSwitcher from "./LanguageSwitcher";
 import logo from "../assets/images/logo1.jpeg";
 
-import "./Navbar.css";
+import styles from "./Navbar.module.css";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
