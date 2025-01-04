@@ -1,5 +1,5 @@
 .appointmentHero {
-  background: purple !important;
+  background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
   padding: 6rem 1.5rem;
   text-align: center;
   position: relative;
