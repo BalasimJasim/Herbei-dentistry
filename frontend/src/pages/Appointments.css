@@ -27,7 +27,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url('../assets/images/hero-pattern.svg');
+  background-image: url('/images/hero-pattern.svg');
   background-size: cover;
   opacity: 0.1;
   pointer-events: none;
