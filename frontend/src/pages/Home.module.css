@@ -1,7 +1,7 @@
 @import '../styles/variables.css';
 
 /* Hero Section */
-.hero-section {
+.heroSection {
   background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
   padding: var(--spacing-16) var(--spacing-8);
   text-align: center;
@@ -14,7 +14,7 @@
   overflow: hidden;
 }
 
-.hero-section::before {
+.heroSection::before {
   content: '';
   position: absolute;
   top: 0;
@@ -27,7 +27,7 @@
   pointer-events: none;
 }
 
-.hero-section h1 {
+.heroSection h1 {
   font-size: var(--text-4xl);
   color: var(--neutral-900);
   margin-bottom: var(--spacing-4);
@@ -35,7 +35,7 @@
   z-index: 1;
 }
 
-.hero-section .subtitle {
+.heroSection .subtitle {
   font-size: var(--text-xl);
   color: var(--neutral-700);
   max-width: 800px;
@@ -44,7 +44,7 @@
   z-index: 1;
 }
 
-.hero-container {
+.heroContainer {
   max-width: var(--container-width);
   margin: 0 auto;
   padding: var(--spacing-8) var(--spacing-4);
@@ -54,21 +54,19 @@
   align-items: center;
 }
 
-.hero-content {
-
+.heroContent {
   animation: fadeIn 0.8s ease-out;
 }
 
-.hero-content h1 {
+.heroContent h1 {
   font-size: clamp(2.5rem, 5vw, var(--text-5xl));
   color: var(--neutral-900);
   font-weight: 800;
-
   line-height: 1.2;
   margin-bottom: var(--spacing-6);
 }
 
-.hero-content p {
+.heroContent p {
   font-size: var(--text-xl);
   color: var(--neutral-600);
   line-height: 1.6;
@@ -76,12 +74,12 @@
   max-width: 540px;
 }
 
-.hero-buttons {
+.heroButtons {
   display: flex;
   gap: var(--spacing-4);
 }
 
-.hero-button {
+.heroButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -93,33 +91,33 @@
   text-decoration: none;
 }
 
-.hero-button.primary {
+.heroButton.primary {
   background: var(--primary-600);
   color: white;
 }
 
-.hero-button.primary:hover {
+.heroButton.primary:hover {
   background: var(--primary-700);
   transform: translateY(-2px);
 }
 
-.hero-button.secondary {
+.heroButton.secondary {
   background: white;
   color: var(--primary-600);
   border: 2px solid var(--primary-600);
 }
 
-.hero-button.secondary:hover {
+.heroButton.secondary:hover {
   background: var(--primary-50);
   transform: translateY(-2px);
 }
 
-.hero-image-wrapper {
+.heroImageWrapper {
   position: relative;
   animation: fadeIn 0.8s ease-out 0.2s backwards;
 }
 
-.hero-image {
+.heroImage {
   width: 100%;
   height: auto;
   border-radius: var(--radius-2xl);
@@ -127,46 +125,43 @@
 }
 
 /* Features Section */
-.features-section {
+.featuresSection {
   padding: var(--spacing-20) 0;
   background: white;
 }
 
-.section-container {
+.sectionContainer {
   max-width: var(--container-width);
   margin: 0 auto;
   padding: 0 var(--spacing-4);
 }
 
-.section-header {
+.sectionHeader {
   text-align: center;
   max-width: 700px;
   margin: 0 auto var(--spacing-16);
 }
 
-.section-header h2 {
+.sectionHeader h2 {
   font-size: clamp(2rem, 4vw, var(--text-4xl));
   color: var(--neutral-900);
   font-weight: 700;
   margin-bottom: var(--spacing-4);
 }
 
-.section-header p {
+.sectionHeader p {
   font-size: var(--text-lg);
   color: var(--neutral-600);
   line-height: 1.6;
-
-
 }
 
-.features-grid {
+.featuresGrid {
   display: grid;
-
   grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-8);
 }
 
-.feature-card {
+.featureCard {
   background: white;
   padding: var(--spacing-8);
   border-radius: var(--radius-xl);
@@ -175,78 +170,78 @@
   text-align: center;
 }
 
-.feature-card:hover {
+.featureCard:hover {
   transform: translateY(-5px);
   box-shadow: var(--shadow-lg);
 }
 
-.feature-icon {
+.featureIcon {
   font-size: var(--text-4xl);
   color: var(--primary-600);
   margin-bottom: var(--spacing-4);
 }
 
-.feature-card h3 {
+.featureCard h3 {
   font-size: var(--text-2xl);
   color: var(--neutral-900);
   margin-bottom: var(--spacing-3);
   font-weight: 600;
 }
 
-.feature-card p {
+.featureCard p {
   color: var(--neutral-600);
   line-height: 1.6;
 }
 
 /* Services Preview */
-.services-preview {
+.servicesPreview {
   padding: var(--spacing-20) 0;
   background: var(--neutral-50);
 }
 
-.services-grid {
+.servicesGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: var(--spacing-8);
 }
 
 /* Testimonials Section */
-.testimonials-section {
+.testimonialsSection {
   padding: var(--spacing-20) 0;
   background: white;
 }
 
-.testimonials-grid {
+.testimonialsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: var(--spacing-8);
 }
 
 /* CTA Section */
-.cta-section {
+.ctaSection {
   padding: var(--spacing-20) 0;
   background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
   color: white;
   text-align: center;
 }
 
-.cta-content {
+.ctaContent {
   max-width: 700px;
   margin: 0 auto;
 }
 
-.cta-content h2 {
+.ctaContent h2 {
   font-size: clamp(2rem, 4vw, var(--text-4xl));
   margin-bottom: var(--spacing-6);
 }
 
-.cta-content p {
+.ctaContent p {
   font-size: var(--text-lg);
   opacity: 0.9;
   margin-bottom: var(--spacing-8);
 }
 
-.cta-button {
+.ctaButton {
   display: inline-flex;
   align-items: center;
   background: white;
@@ -258,7 +253,7 @@
   transition: var(--transition-all);
 }
 
-.cta-button:hover {
+.ctaButton:hover {
   transform: translateY(-2px);
   background: var(--neutral-100);
 }
@@ -277,47 +272,43 @@
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .features-grid {
+  .featuresGrid {
     grid-template-columns: repeat(2, 1fr);
-
   }
 }
 
-
 @media (max-width: 768px) {
-  .hero-container {
+  .heroContainer {
     grid-template-columns: 1fr;
     text-align: center;
     gap: var(--spacing-8);
   }
 
-  .hero-content p {
+  .heroContent p {
     margin-left: auto;
     margin-right: auto;
   }
 
-  .hero-buttons {
+  .heroButtons {
     justify-content: center;
   }
 
-  .features-grid {
+  .featuresGrid {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 480px) {
-  .hero-buttons {
+  .heroButtons {
     flex-direction: column;
   }
 
-  .hero-button {
+  .heroButton {
     width: 100%;
   }
 
-  .section-header {
+  .sectionHeader {
     padding: 0 var(--spacing-4);
-
- 
   }
 } 
 

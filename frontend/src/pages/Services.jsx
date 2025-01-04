@@ -1,4 +1,3 @@
-import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
@@ -22,28 +21,32 @@ const Services = () => {
   };
 
   return (
-    <div className="services-page">
+    <div className={styles.servicesPage}>
       <Helmet>
         <title>{t("services.title")} - Herbie Dental</title>
         <meta name="description" content={t("services.subtitle")} />
       </Helmet>
 
-      <section className="services-hero">
-        <div className="hero-content">
+      <section className={styles.servicesHero}>
+        <div className={styles.heroContent}>
           <h1>{t("services.title")}</h1>
-          <p className="lead">{t("services.subtitle")}</p>
+          <p className={styles.lead}>{t("services.subtitle")}</p>
         </div>
       </section>
 
-      <section className="services-grid">
+      <section className={styles.servicesGrid}>
         {serviceCategories.map((category) => {
           const services = getServicesArray(category);
 
           return (
-            <div key={category} className="service-category" id={category}>
+            <div
+              key={category}
+              className={styles.serviceCategory}
+              id={category}
+            >
               <h2>{t(`services.categories.${category}.title`)}</h2>
               <p>{t(`services.categories.${category}.description`)}</p>
-              <ul className="services-list">
+              <ul className={styles.servicesList}>
                 {Array.isArray(services) &&
                   services.map((service, index) => (
                     <li key={index}>{service}</li>
@@ -54,11 +57,11 @@ const Services = () => {
         })}
       </section>
 
-      <section className="services-cta">
-        <div className="cta-content">
+      <section className={styles.servicesCta}>
+        <div className={styles.ctaContent}>
           <h2>{t("services.cta.title")}</h2>
           <p>{t("services.cta.description")}</p>
-          <Link to="/appointments" className="cta-button">
+          <Link to="/appointments" className={styles.ctaButton}>
             {t("services.cta.button")}
           </Link>
         </div>

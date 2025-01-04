@@ -1,0 +1,175 @@
+.educationPage {
+  padding: 6rem 0 4rem;
+  min-height: 100vh;
+  background: #fafafa;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.content {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.section {
+  margin-bottom: 2.5rem;
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: var(--neutral-900);
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+h2 {
+  font-size: 1.5rem;
+  color: var(--neutral-800);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+p {
+  color: var(--neutral-700);
+  line-height: 1.7;
+  font-size: 1.0625rem;
+  margin-bottom: 1rem;
+}
+
+.tipsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tipsList li {
+  padding: 1rem;
+  border-bottom: 1px solid var(--neutral-100);
+  color: var(--neutral-700);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.tipsList li:last-child {
+  border-bottom: none;
+}
+
+.tipsList li::before {
+  content: '•';
+  color: var(--primary-500);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.benefitsList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+}
+
+.checkmark {
+  color: #0056b3;
+  font-size: 1.25rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.processSteps {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.stepItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+
+.stepItem:hover {
+  transform: translateY(-2px);
+}
+
+.stepNumber {
+  width: 32px;
+  height: 32px;
+  background: #0056b3;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.ctaSection {
+  text-align: center;
+  padding: 2.5rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  margin-top: 3rem;
+}
+
+.ctaSection h3 {
+  color: #333;
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+}
+
+.ctaButton {
+  background: #0056b3;
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 1.5rem;
+}
+
+.ctaButton:hover {
+  background: #004494;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 86, 179, 0.15);
+}
+
+@media (max-width: 768px) {
+  .educationPage {
+    padding: 5rem 0 3rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .content {
+    padding: 1.5rem;
+  }
+
+  .stepItem {
+    padding: 1rem;
+  }
+
+  .ctaSection {
+    padding: 2rem 1.5rem;
+  }
+} 

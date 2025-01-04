@@ -1,0 +1,107 @@
+{
+  "education": {
+    "nav": {
+      "oralHygiene": "Oral Hygiene",
+      "procedures": "Dental Procedures",
+      "implants": "Dental Implants",
+      "allOnX": "All-on-X Solutions"
+    },
+    "oralHygiene": {
+      "title": "Oral Hygiene",
+      "dailyRoutine": {
+        "title": "Daily Dental Care Routine",
+        "description": "Maintaining good oral hygiene is essential for your dental health. A proper daily routine helps prevent cavities and gum disease."
+      },
+      "tips": {
+        "title": "Essential Oral Hygiene Tips",
+        "list": [
+          "Brush your teeth twice a day with fluoride toothpaste",
+          "Floss daily to clean between teeth",
+          "Use an antiseptic mouthwash",
+          "Replace your toothbrush every 3-4 months",
+          "Schedule regular dental check-ups",
+          "Limit sugary foods and drinks"
+        ]
+      }
+    },
+    "implants": {
+      "title": "Dental Implants",
+      "overview": {
+        "title": "What are Dental Implants?",
+        "description": "Dental implants are titanium posts that serve as artificial tooth roots, providing a permanent foundation for replacement teeth. This modern solution offers a long-lasting alternative that looks, feels, and functions just like natural teeth, helping restore both your smile and confidence."
+      },
+      "benefits": {
+        "title": "Benefits of Dental Implants",
+        "list": [
+          "Natural appearance and functionality identical to real teeth",
+          "Lifetime durability with proper maintenance",
+          "Preserves jawbone health and facial structure",
+          "Preserves adjacent healthy teeth",
+          "Enhanced speech clarity and eating comfort",
+          "Unrestricted diet - enjoy all your favorite foods",
+          "Improved self-confidence and quality of life"
+        ]
+      },
+      "process": {
+        "title": "Implant Process",
+        "description": "The dental implant process is a well-planned journey to your new smile, typically completed in several phases to ensure optimal results.",
+        "steps": [
+          "Comprehensive evaluation and personalized treatment planning",
+          "Precise implant placement using advanced surgical techniques",
+          "Healing period for osseointegration (3-6 months)",
+          "Custom crown design and placement",
+          "Long-term care and maintenance support"
+        ]
+      }
+    },
+    "procedures": {
+      "title": "Dental Procedures",
+      "preventive": {
+        "title": "Preventive Care",
+        "description": "Regular preventive care is essential for maintaining optimal oral health and preventing dental problems before they start.",
+        "list": [
+          "Professional dental cleaning",
+          "Dental examinations and X-rays",
+          "Fluoride treatments",
+          "Dental sealants",
+          "Oral cancer screenings",
+          "Periodontal disease prevention"
+        ]
+      },
+      "restorative": {
+        "title": "Restorative Treatments",
+        "description": "When dental problems occur, we offer a range of restorative procedures to repair damage and restore your oral health.",
+        "list": [
+          "Dental fillings",
+          "Root canal therapy",
+          "Dental crowns and bridges",
+          "Inlays and onlays",
+          "Full and partial dentures",
+          "Tooth extractions"
+        ]
+      }
+    },
+    "allOnX": {
+      "title": "All-on-X Solutions",
+      "overview": {
+        "title": "Understanding All-on-X",
+        "description": "All-on-X is an innovative full-arch dental implant solution that provides a permanent replacement for all teeth using just 4-6 strategically placed implants."
+      },
+      "advantages": {
+        "title": "Advantages of All-on-X",
+        "list": [
+          "Immediate function with temporary teeth",
+          "Fewer implants needed compared to traditional approaches",
+          "Reduced need for bone grafting",
+          "Fixed, permanent solution",
+          "Natural-looking results",
+          "Improved quality of life"
+        ]
+      },
+      "candidates": {
+        "title": "Is All-on-X Right for You?",
+        "description": "All-on-X is ideal for patients who have lost or are about to lose all their teeth in either the upper or lower jaw. It's also suitable for those who want to replace unstable dentures with a fixed solution."
+      }
+    }
+  }
+} 

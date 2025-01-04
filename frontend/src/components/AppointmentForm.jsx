@@ -5,6 +5,7 @@ import './AppointmentForm.css'
 import { useTranslation } from 'react-i18next'
 import api from '../utils/axios'
 import AppointmentCalendar from './AppointmentCalendar'
+import styles from "./AppointmentForm.module.css";
 
 const AppointmentForm = () => {
   const navigate = useNavigate()
@@ -211,14 +212,13 @@ const AppointmentForm = () => {
         </button>
 
         {isServiceModalOpen && (
-          <div className="service-modal-overlay">
-            <div className="service-modal">
-              <div className="service-modal-header">
-                <h3>{t("Select a Service")}</h3>
+          <div className={styles.serviceModalOverlay}>
+            <div className={styles.serviceModal}>
+              <div className={styles.modalHeader}>
+                <h2 className={styles.modalTitle}>Select a Service</h2>
                 <button
-                  className="close-modal"
+                  className={styles.closeButton}
                   onClick={() => setIsServiceModalOpen(false)}
-                  aria-label="Close modal"
                 >
                   ×
                 </button>
@@ -233,9 +233,9 @@ const AppointmentForm = () => {
                           {categoryServices.services.map((service) => (
                             <button
                               key={service.id}
-                              className={`service-option ${
+                              className={`${styles.serviceOption} ${
                                 formData.serviceId === service.id
-                                  ? "selected"
+                                  ? styles.selected
                                   : ""
                               }`}
                               onClick={() => {
@@ -247,19 +247,17 @@ const AppointmentForm = () => {
                                 setCurrentStep(2);
                               }}
                             >
-                              <div className="service-option-header">
-                                <span className="service-name">
+                              <div className={styles.serviceInfo}>
+                                <div className={styles.serviceName}>
                                   {service.name}
-                                </span>
-                                <span className="service-duration">
-                                  {service.duration} min
-                                </span>
-                              </div>
-                              {service.description && (
-                                <p className="service-description">
+                                </div>
+                                <div className={styles.serviceDescription}>
                                   {service.description}
-                                </p>
-                              )}
+                                </div>
+                              </div>
+                              <div className={styles.serviceDuration}>
+                                {service.duration} min
+                              </div>
                             </button>
                           ))}
                         </div>

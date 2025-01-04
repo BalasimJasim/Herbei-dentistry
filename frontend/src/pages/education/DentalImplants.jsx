@@ -1,80 +1,61 @@
-import React from "react";
+import styles from "./Education.module.css";
 import { useTranslation } from "react-i18next";
-import "./Education.css";
 
 const DentalImplants = () => {
   const { t } = useTranslation();
+  const benefits = t("education.implants.benefits.list", {
+    returnObjects: true,
+    defaultValue: [],
+  });
+  const steps = t("education.implants.process.steps", {
+    returnObjects: true,
+    defaultValue: [],
+  });
 
   return (
-    <div className="education-page">
-      <div className="hero-section">
+    <div className={styles.educationPage}>
+      <div className={styles.container}>
         <h1>{t("education.implants.title")}</h1>
-        <p className="subtitle">{t("education.implants.subtitle")}</p>
-      </div>
+        <div className={styles.content}>
+          <section className={styles.section}>
+            <h2>{t("education.implants.overview.title")}</h2>
+            <p>{t("education.implants.overview.description")}</p>
+          </section>
 
-      <div className="content-section">
-        {/* What Are Implants Section */}
-        <div className="info-card">
-          <div className="icon-wrapper">
-            <i className="fas fa-tooth"></i>
-          </div>
-          <h2>{t("education.implants.what.title")}</h2>
-          <p>{t("education.implants.what.description")}</p>
-          <ul className="tips-list">
-            {t("education.implants.what.points", { returnObjects: true }).map(
-              (point, index) => (
-                <li key={index}>{point}</li>
-              )
-            )}
-          </ul>
-        </div>
+          <section className={styles.section}>
+            <h2>{t("education.implants.benefits.title")}</h2>
+            <ul className={`${styles.tipsList} ${styles.benefitsList}`}>
+              {Array.isArray(benefits) &&
+                benefits.map((benefit, index) => (
+                  <li key={index}>
+                    <span className={styles.checkmark}>✓</span>
+                    {benefit}
+                  </li>
+                ))}
+            </ul>
+          </section>
 
-        {/* Benefits Section */}
-        <div className="info-card">
-          <div className="icon-wrapper">
-            <i className="fas fa-check-circle"></i>
-          </div>
-          <h2>{t("education.implants.benefits.title")}</h2>
-          <p>{t("education.implants.benefits.description")}</p>
-          <ul className="tips-list">
-            {t("education.implants.benefits.points", {
-              returnObjects: true,
-            }).map((point, index) => (
-              <li key={index}>{point}</li>
-            ))}
-          </ul>
-        </div>
+          <section className={styles.section}>
+            <h2>{t("education.implants.process.title")}</h2>
+            <p>{t("education.implants.process.description")}</p>
+            <div className={styles.processSteps}>
+              {Array.isArray(steps) &&
+                steps.map((step, index) => (
+                  <div key={index} className={styles.stepItem}>
+                    <div className={styles.stepNumber}>{index + 1}</div>
+                    <p>{step}</p>
+                  </div>
+                ))}
+            </div>
+          </section>
 
-        {/* Procedure Section */}
-        <div className="info-card">
-          <div className="icon-wrapper">
-            <i className="fas fa-procedures"></i>
-          </div>
-          <h2>{t("education.implants.procedure.title")}</h2>
-          <p>{t("education.implants.procedure.description")}</p>
-          <ul className="tips-list">
-            {t("education.implants.procedure.steps", {
-              returnObjects: true,
-            }).map((step, index) => (
-              <li key={index}>{step}</li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Candidacy Section */}
-        <div className="info-card">
-          <div className="icon-wrapper">
-            <i className="fas fa-user-check"></i>
-          </div>
-          <h2>{t("education.implants.candidacy.title")}</h2>
-          <p>{t("education.implants.candidacy.description")}</p>
-          <ul className="tips-list">
-            {t("education.implants.candidacy.points", {
-              returnObjects: true,
-            }).map((point, index) => (
-              <li key={index}>{point}</li>
-            ))}
-          </ul>
+          <section className={styles.ctaSection}>
+            <h3>{t("common.readyToStart")}</h3>
+            <p>{t("common.ctaText")}</p>
+            <button className={styles.ctaButton}>
+              {t("common.bookConsultation")}
+            </button>
+          </section>
         </div>
       </div>
     </div>
