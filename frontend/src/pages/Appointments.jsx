@@ -21,7 +21,7 @@ const Appointments = () => {
   };
 
   return (
-    <div className="appointments-page">
+    <div className={styles.appointmentsPage}>
       <Helmet>
         <title>Book Appointment - Herbie Dental Clinic</title>
         <meta
@@ -40,7 +40,7 @@ const Appointments = () => {
       </section>
 
       <section className="appointment-content">
-        <div className="booking-container">
+        <div className={styles.container}>
           <AppointmentForm
             selectedDate={selectedDate}
             selectedTime={selectedTime}

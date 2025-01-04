@@ -26,4 +26,16 @@
   margin-bottom: 2rem;
   text-align: center;
   line-height: 1.5;
+}
+
+.appointmentsPage {
+  padding-top: 70px;
+  min-height: 100vh;
+  background: #fafafa;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
 } 
