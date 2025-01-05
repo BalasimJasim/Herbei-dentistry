@@ -1,39 +1,30 @@
 {
-  "rewrites": [
-    { 
-      "source": "/en/:path*",
-      "destination": "/index.html"
-    },
-    { 
-      "source": "/uk/:path*",
-      "destination": "/index.html"
-    },
-    { 
-      "source": "/:path*",
-      "destination": "/index.html"
-    }
-  ],
-  "headers": [
+  "version": 2,
+  "routes": [
     {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
-        }
-      ]
+      "src": "^/assets/(.*)",
+      "headers": { "cache-control": "public, max-age=31536000, immutable" },
+      "dest": "/assets/$1"
     },
     {
-      "source": "/assets/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
-        }
-      ]
+      "src": "^/manifest.json",
+      "dest": "/manifest.json"
+    },
+    {
+      "src": "^/favicon.ico",
+      "dest": "/favicon.ico"
+    },
+    {
+      "src": "^/(.*).png",
+      "dest": "/$1.png"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "^/.*",
+      "dest": "/index.html"
     }
   ],
-  "cleanUrls": true,
-  "trailingSlash": false,
   "framework": "vite"
 } 

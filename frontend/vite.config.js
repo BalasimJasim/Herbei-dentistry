@@ -35,12 +35,6 @@ export default defineConfig({
     },
   },
   server: {
-    historyApiFallback: {
-      rewrites: [
-        { from: /^\/en\/.*$/, to: "/index.html" },
-        { from: /^\/uk\/.*$/, to: "/index.html" },
-        { from: /./, to: "/index.html" },
-      ],
-    },
+    historyApiFallback: true,
   },
 });

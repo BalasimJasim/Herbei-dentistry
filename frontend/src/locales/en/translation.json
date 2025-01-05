@@ -103,5 +103,17 @@
         "description": "All-on-X is ideal for patients who have lost or are about to lose all their teeth in either the upper or lower jaw. It's also suitable for those who want to replace unstable dentures with a fixed solution."
       }
     }
+  },
+  "about": {
+    "pageTitle": "About Us",
+    "pageDescription": "Learn about Herbie Dental Clinic and our commitment to exceptional dental care",
+    "title": "About Herbie Dental",
+    "subtitle": "Providing exceptional dental care with expertise and compassion",
+    "founder": {
+      "subtitle": "ABOUT.FOUNDER.SUBTITLE",
+      "name": "Dr. Yurii Herbei",
+      "role": "Oral Surgeon & Orthopedic Specialist",
+      "description": "With over 5 years of specialized experience in oral surgery and orthopedics, Dr. Herbei is committed to providing the highest quality dental care. His expertise in modern dental techniques and dedication to patient comfort has established Herbie Dental as a trusted name in dental healthcare."
+    }
   }
 } 

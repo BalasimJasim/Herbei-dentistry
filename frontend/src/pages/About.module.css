@@ -1,0 +1,128 @@
+.aboutPage {
+  min-height: 100vh;
+  padding-top: 70px;
+}
+
+.heroSection {
+  background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%);
+  padding: 6rem 2rem;
+  text-align: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+}
+
+.heroContent {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.heroContent h1 {
+  font-size: 3.5rem;
+  color: var(--neutral-900);
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: var(--neutral-700);
+  line-height: 1.6;
+}
+
+.founderSection {
+  padding: 6rem 0;
+  background: white;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.founderGrid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.founderImage {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.founderImage img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.founderContent {
+  padding-right: 2rem;
+}
+
+.founderContent .subtitle {
+  color: var(--primary-600);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.founderContent h2 {
+  font-size: 2.5rem;
+  color: var(--neutral-900);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.founderContent h3 {
+  font-size: 1.5rem;
+  color: var(--primary-600);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.founderContent p {
+  font-size: 1.125rem;
+  color: var(--neutral-700);
+  line-height: 1.8;
+}
+
+@media (max-width: 1024px) {
+  .founderGrid {
+    gap: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroSection {
+    padding: 4rem 1.5rem;
+  }
+
+  .heroContent h1 {
+    font-size: 2.5rem;
+  }
+
+  .founderGrid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .founderContent {
+    padding-right: 0;
+  }
+
+  .founderContent h2 {
+    font-size: 2rem;
+  }
+} 
