@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../utils/axios";
-import styles from "./PatientPortal.module.css?module";
+import styles from "./PatientPortal.module.css";
 
 const PatientPortal = () => {
   const { t } = useTranslation();
@@ -18,6 +18,23 @@ const PatientPortal = () => {
     confirmPassword: "",
   });
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    console.log("CSS Module classes:", {
+      portalPage: styles.portalPage,
+      heroSection: styles.heroSection,
+    });
+    // Check if styles are actually being applied
+    const element = document.querySelector(`[data-testid="portal-page"]`);
+    if (element) {
+      const computedStyle = window.getComputedStyle(element);
+      console.log("Applied styles:", {
+        minHeight: computedStyle.minHeight,
+        paddingTop: computedStyle.paddingTop,
+        backgroundColor: computedStyle.backgroundColor,
+      });
+    }
+  }, []);
 
   const handleChange = (e) => {
     setFormData({

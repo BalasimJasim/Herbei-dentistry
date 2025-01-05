@@ -2,6 +2,7 @@
   min-height: 100vh;
   padding-top: 70px;
   background-color: var(--neutral-50) !important;
+  position: relative;
 }
 
 .heroSection {

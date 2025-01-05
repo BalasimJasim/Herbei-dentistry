@@ -9,8 +9,9 @@ export default defineConfig({
   css: {
     modules: {
       localsConvention: "camelCase",
-      generateScopedName: "[local]_[hash:base64:5]",
-      scopeBehaviour: "local",
+      generateScopedName: (name, filename) => {
+        return `${path.basename(filename, ".module.css")}_${name}`;
+      },
     },
     postcss: "./postcss.config.js",
   },
@@ -23,11 +24,13 @@ export default defineConfig({
     assetsDir: "assets",
     emptyOutDir: true,
     cssCodeSplit: false,
+    minify: false,
     rollupOptions: {
       output: {
-        assetFileNames: (assetInfo) => {
-          return `assets/[name]-[hash][extname]`;
-        },
+        assetFileNames: "assets/[name].[hash][extname]",
+      },
+      input: {
+        main: path.resolve(__dirname, "index.html"),
       },
     },
   },

@@ -7,12 +7,13 @@
   padding: 0;
 }
 
-body {
+/* Temporarily comment out to check for conflicts */
+/* body {
   font-family: var(--font-family-base);
   color: var(--neutral-800);
   line-height: 1.5;
   background-color: var(--neutral-50);
-}
+} */
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
@@ -132,4 +133,37 @@ h1, h2, h3, h4, h5, h6 {
 
 .animate-fade-in {
   animation: fadeIn 0.6s ease-out forwards;
+}
+
+/* Add or update these styles */
+.hamburger-menu {
+  display: none;
+  cursor: pointer;
+  margin-right: 1rem; /* Add space from the right edge */
+  padding: 0.5rem;    /* Add some padding around the button */
+}
+
+.hamburger-icon,
+.close-icon {
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;      /* Fixed width */
+  height: 24px;     /* Fixed height */
+}
+
+@media (max-width: 768px) {
+  .hamburger-menu {
+    display: block;
+    position: relative;
+    z-index: 1000;    /* Ensure it's above other elements */
+  }
+
+  /* Improve close icon positioning */
+  .close-icon {
+    position: fixed;
+    top: 1.25rem;    /* Match header spacing */
+    right: 1rem;     /* Space from the right */
+  }
 } 
