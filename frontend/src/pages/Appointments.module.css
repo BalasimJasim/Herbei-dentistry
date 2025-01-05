@@ -1,14 +1,15 @@
 .appointmentsPage {
   min-height: 100vh;
-  padding-bottom: 2rem;
+  padding-top: 70px;
+  background-color: var(--neutral-50) !important;
 }
 
 .appointmentHero {
-  background-color: var(--primary-color);
-  color: white;
-  padding: 4rem 2rem;
+  background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%) !important;
+  padding: 4rem 2rem !important;
   text-align: center;
-  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .heroContent {

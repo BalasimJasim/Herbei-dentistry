@@ -1,7 +1,7 @@
 .portalPage {
   min-height: 100vh;
   padding-top: 70px;
-  background-color: var(--neutral-50);
+  background-color: var(--neutral-50) !important;
 }
 
 .heroSection {
@@ -12,6 +12,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1;
 }
 
 .heroContent {
