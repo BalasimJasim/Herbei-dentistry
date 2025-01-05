@@ -1,6 +1,17 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { 
+      "source": "/en/:path*",
+      "destination": "/index.html"
+    },
+    { 
+      "source": "/uk/:path*",
+      "destination": "/index.html"
+    },
+    { 
+      "source": "/:path*",
+      "destination": "/index.html"
+    }
   ],
   "headers": [
     {
