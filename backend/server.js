@@ -11,6 +11,7 @@ import adminRoutes from './routes/admin.js';
 import serviceRoutes from './routes/services.js';
 import { validateEnv } from "./config/validateEnv.js";
 import { validateCredentials } from "./config/validateCredentials.js";
+import authRoutes from "./routes/auth.js";
 
 // Load env vars
 dotenv.config();
@@ -22,16 +23,22 @@ connectDB();
 const initializeServices = async () => {
   try {
     const emailConfigured = await testEmailConfig();
-    console.log('Email service status:', emailConfigured ? 'configured' : 'disabled');
+    console.log(
+      "Email service status:",
+      emailConfigured ? "configured" : "disabled"
+    );
   } catch (error) {
-    console.warn('Email service initialization warning:', error.message);
+    console.warn("Email service initialization warning:", error.message);
   }
 
   try {
     const smsConfigured = await testSMSConfig();
-    console.log('SMS service status:', smsConfigured ? 'configured' : 'disabled');
+    console.log(
+      "SMS service status:",
+      smsConfigured ? "configured" : "disabled"
+    );
   } catch (error) {
-    console.warn('SMS service initialization warning:', error.message);
+    console.warn("SMS service initialization warning:", error.message);
   }
 };
 
@@ -147,6 +154,7 @@ const startServer = async () => {
     app.use("/api/services", serviceRoutes);
     app.use("/api/appointments", appointmentRoutes);
     app.use("/api/admin", adminRoutes);
+    app.use("/api/auth", authRoutes);
 
     // Health check endpoint
     app.get("/health", (req, res) => {
@@ -164,10 +172,10 @@ const startServer = async () => {
       initializeServices();
     });
   } catch (error) {
-    console.error('Failed to start server:', error)
-    process.exit(1)
+    console.error("Failed to start server:", error);
+    process.exit(1);
   }
-}
+};
 
 startServer()
 
