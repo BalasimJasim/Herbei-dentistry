@@ -27,11 +27,9 @@ const About = () => {
               <img src="/images/founder.jpg" alt="Dr. Yurii Herbei" />
             </div>
             <div className={styles.founderContent}>
-              <span className={styles.subtitle}>
-                {t("about.founder.subtitle")}
-              </span>
-              <h2>{t("about.founder.name")}</h2>
-              <h3>{t("about.founder.role")}</h3>
+              <span className={styles.subtitle}>ABOUT.FOUNDER.SUBTITLE</span>
+              <h2>Dr. Yurii Herbei</h2>
+              <h3>about.founder.role</h3>
               <p>{t("about.founder.description")}</p>
             </div>
           </div>
