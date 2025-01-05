@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../utils/axios";
-import styles from "./PatientPortal.module.css";
+import styles from "./PatientPortal.module.css?module";
 
 const PatientPortal = () => {
   const { t } = useTranslation();

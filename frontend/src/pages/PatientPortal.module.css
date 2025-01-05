@@ -1,11 +1,12 @@
 .portalPage {
   min-height: 100vh;
   padding-top: 70px;
+  background-color: var(--neutral-50);
 }
 
 .heroSection {
-  background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%);
-  padding: 4rem 2rem;
+  background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%) !important;
+  padding: 4rem 2rem !important;
   text-align: center;
   position: relative;
   display: flex;

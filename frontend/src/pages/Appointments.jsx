@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useSearchParams } from "react-router-dom";
 import AppointmentForm from "../components/AppointmentForm";
-import styles from "./Appointments.module.css";
+import styles from "./Appointments.module.css?module";
 
 const Appointments = () => {
   const [searchParams] = useSearchParams();
