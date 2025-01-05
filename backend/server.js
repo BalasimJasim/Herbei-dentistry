@@ -85,10 +85,8 @@ const startServer = async () => {
 
     // Configure CORS with specific origins
     const allowedOrigins = [
-      "https://dentalis-k0toggmwd-balasim-jasim-s-projects.vercel.app",
-      "https://dentalis-jw6vkflxv-balasim-jasim-s-projects.vercel.app",
-      "https://dentalis.vercel.app",
       "https://dentalis-*.vercel.app",
+      "https://*.vercel.app",
       "https://herbei-dentistry.vercel.app",
       "http://localhost:5173",
       "http://localhost:4173",
@@ -111,7 +109,10 @@ const startServer = async () => {
           // Check against allowed origins including wildcard matches
           const isAllowed = allowedOrigins.some((allowed) => {
             if (allowed.includes("*")) {
-              const pattern = new RegExp(allowed.replace("*", ".*"));
+              // Convert wildcard pattern to regex pattern
+              const pattern = new RegExp(
+                "^" + allowed.replace(/\*/g, ".*") + "$"
+              );
               return pattern.test(origin);
             }
             return allowed === origin;
@@ -119,6 +120,7 @@ const startServer = async () => {
           if (isAllowed) {
             callback(null, true);
           } else {
+            console.log(`Blocked origin: ${origin}`);
             callback(new Error(`Origin ${origin} not allowed by CORS`));
           }
         },
@@ -130,6 +132,8 @@ const startServer = async () => {
           "Access-Control-Allow-Origin",
         ],
         exposedHeaders: ["Access-Control-Allow-Origin"],
+        preflightContinue: false,
+        optionsSuccessStatus: 204,
       })
     );
 
