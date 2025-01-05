@@ -152,6 +152,14 @@
   border-color: var(--primary-400);
 }
 
+.formGroup input[type="tel"] {
+  letter-spacing: 1px;
+}
+
+.formGroup input::placeholder {
+  color: var(--neutral-400);
+}
+
 .submitButton {
   padding: 1rem;
   background: var(--primary-600);
@@ -162,14 +170,15 @@
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  &:disabled {
-    background: var(--neutral-400);
-    cursor: not-allowed;
-  }
 }
 
 .submitButton:hover {
   background: var(--primary-700);
+}
+
+.submitButton:disabled {
+  background: var(--neutral-400);
+  cursor: not-allowed;
 }
 
 .forgotPassword {
@@ -213,14 +222,5 @@
 
   .container {
     padding: 0 1.5rem;
-  }
-}
-
-.formGroup input {
-  &[type="tel"] {
-    letter-spacing: 1px;
-  }
-  &::placeholder {
-    color: var(--neutral-400);
   }
 } 

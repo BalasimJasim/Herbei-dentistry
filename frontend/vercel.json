@@ -19,6 +19,14 @@
       "dest": "/$1.png"
     },
     {
+      "src": "^/patient-portal",
+      "dest": "/index.html"
+    },
+    {
+      "src": "^/dashboard",
+      "dest": "/index.html"
+    },
+    {
       "handle": "filesystem"
     },
     {

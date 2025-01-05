@@ -10,8 +10,14 @@ export default defineConfig({
     modules: {
       localsConvention: "camelCase",
       generateScopedName: "[name]__[local]___[hash:base64:5]",
+      hashPrefix: "prefix",
     },
     postcss: "./postcss.config.js",
+    preprocessorOptions: {
+      less: {
+        javascriptEnabled: true,
+      },
+    },
   },
   define: {
     "process.env.VITE_API_URL": JSON.stringify(process.env.VITE_API_URL),
