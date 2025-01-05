@@ -1,8 +1,12 @@
 {
   "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "routes": [
     {
-      "source": "/:path*",
-      "destination": "/index.html"
+      "src": "/[^.]+",
+      "dest": "/",
+      "status": 200
     }
   ],
   "headers": [
@@ -27,7 +31,5 @@
   ],
   "cleanUrls": true,
   "trailingSlash": false,
-  "framework": "vite",
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist"
+  "framework": "vite"
 } 

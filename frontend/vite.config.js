@@ -5,7 +5,7 @@ import path from "path";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: "/",
+  base: "",
   css: {
     modules: {
       localsConvention: "camelCase",
@@ -33,5 +33,8 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "src"),
     },
+  },
+  server: {
+    historyApiFallback: true,
   },
 });
