@@ -1,0 +1,226 @@
+.portalPage {
+  min-height: 100vh;
+  padding-top: 70px;
+}
+
+.heroSection {
+  background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%);
+  padding: 4rem 2rem;
+  text-align: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heroContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.heroContent h1 {
+  font-size: 3rem;
+  color: var(--neutral-900);
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: var(--neutral-700);
+  line-height: 1.6;
+}
+
+.portalSection {
+  padding: 4rem 0;
+  background: var(--neutral-50);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.portalGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.portalFeatures h2 {
+  font-size: 2rem;
+  color: var(--neutral-900);
+  margin-bottom: 2rem;
+}
+
+.featuresList {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.feature {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.feature:hover {
+  transform: translateY(-5px);
+}
+
+.featureIcon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.feature h3 {
+  font-size: 1.25rem;
+  color: var(--neutral-900);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.feature p {
+  font-size: 0.875rem;
+  color: var(--neutral-600);
+  line-height: 1.6;
+}
+
+.portalAccess {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.tabButtons {
+  display: flex;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid var(--neutral-100);
+}
+
+.tabButton {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--neutral-600);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tabButton.active {
+  color: var(--primary-600);
+  border-bottom: 2px solid var(--primary-600);
+  margin-bottom: -2px;
+}
+
+.portalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formGroup label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--neutral-700);
+}
+
+.formGroup input {
+  padding: 0.75rem;
+  border: 1px solid var(--neutral-200);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: var(--primary-400);
+}
+
+.submitButton {
+  padding: 1rem;
+  background: var(--primary-600);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  &:disabled {
+    background: var(--neutral-400);
+    cursor: not-allowed;
+  }
+}
+
+.submitButton:hover {
+  background: var(--primary-700);
+}
+
+.forgotPassword {
+  text-align: center;
+  color: var(--primary-600);
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.forgotPassword:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 1024px) {
+  .portalGrid {
+    gap: 3rem;
+  }
+  
+  .featuresList {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroSection {
+    padding: 3rem 1.5rem;
+  }
+
+  .heroContent h1 {
+    font-size: 2.5rem;
+  }
+
+  .portalGrid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .featuresList {
+    grid-template-columns: 1fr;
+  }
+
+  .container {
+    padding: 0 1.5rem;
+  }
+}
+
+.formGroup input {
+  &[type="tel"] {
+    letter-spacing: 1px;
+  }
+  &::placeholder {
+    color: var(--neutral-400);
+  }
+} 

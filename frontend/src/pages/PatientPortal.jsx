@@ -1,214 +1,279 @@
-import { useState } from 'react'
-import { Helmet } from 'react-helmet-async'
-import { toast } from 'react-toastify'
-import ManageAppointments from '../components/ManageAppointments'
-import './PatientPortal.css'
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet-async";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import api from "../utils/axios";
+import styles from "./PatientPortal.module.css";
 
 const PatientPortal = () => {
-  const [isLogin, setIsLogin] = useState(true)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [userEmail, setUserEmail] = useState('')
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("login");
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    firstName: '',
-    lastName: ''
-  })
+    email: "",
+    password: "",
+    name: "",
+    phone: "",
+    confirmPassword: "",
+  });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    
-    if (!isLogin && formData.password !== formData.confirmPassword) {
-      toast.error('Passwords do not match')
-      return
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const response = await api.post("/api/auth/login", {
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (response.data?.token) {
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        toast.success("Login successful!");
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Login failed. Please check your credentials.";
+      toast.error(errorMessage);
+      console.error("Login error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match");
+      setLoading(false);
+      return;
     }
 
     try {
-      // Simulate authentication
-      setIsAuthenticated(true)
-      setUserEmail(formData.email)
-      toast.success(isLogin ? 'Login successful!' : 'Account created successfully!')
-    } catch {
-      toast.error(isLogin ? 'Login failed' : 'Registration failed')
+      const response = await api.post("/api/auth/register", {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone,
+      });
+
+      if (response.data) {
+        toast.success("Registration successful! Please login.");
+        setActiveTab("login");
+        setFormData({
+          email: "",
+          password: "",
+          name: "",
+          phone: "",
+          confirmPassword: "",
+        });
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Registration failed. Please try again later.";
+      toast.error(errorMessage);
+      console.error("Registration error:", error);
+    } finally {
+      setLoading(false);
     }
-  }
-
-  if (isAuthenticated) {
-    return (
-      <>
-        <Helmet>
-          <title>Patient Portal - Herbie Dental Clinic</title>
-          <meta 
-            name="description" 
-            content="Manage your dental appointments and records through our secure patient portal."
-          />
-        </Helmet>
-
-        <section className="portal-hero">
-          <div className="container">
-            <h1>Welcome to Your Patient Portal</h1>
-            <p className="lead">Manage your appointments and dental care</p>
-          </div>
-        </section>
-
-        <section className="portal-content">
-          <div className="container">
-            <div className="portal-grid">
-              <div className="portal-sidebar">
-                <button 
-                  className="logout-button"
-                  onClick={() => {
-                    setIsAuthenticated(false)
-                    setUserEmail('')
-                    setFormData({
-                      email: '',
-                      password: '',
-                      confirmPassword: '',
-                      firstName: '',
-                      lastName: ''
-                    })
-                  }}
-                >
-                  Logout
-                </button>
-              </div>
-
-              <div className="portal-main">
-                <ManageAppointments userEmail={userEmail} />
-              </div>
-            </div>
-          </div>
-        </section>
-      </>
-    )
-  }
+  };
 
   return (
-    <>
+    <div className={styles.portalPage}>
       <Helmet>
-        <title>Patient Portal - Herbie Dental Clinic</title>
-        <meta 
-          name="description" 
+        <title>Patient Portal - Herbie Dental</title>
+        <meta
+          name="description"
           content="Access your dental records, appointments, and more through our secure patient portal."
         />
       </Helmet>
 
-      <section className="portal-hero">
-        <div className="container">
+      <section className={styles.heroSection}>
+        <div className={styles.heroContent}>
           <h1>Patient Portal</h1>
-          <p className="lead">Access your dental care information securely</p>
+          <p className={styles.subtitle}>
+            Manage your dental care journey with our secure online portal
+          </p>
         </div>
       </section>
 
-      <section className="portal-content">
-        <div className="container">
-          <div className="auth-container">
-            <div className="auth-tabs">
-              <button 
-                className={`auth-tab ${isLogin ? 'active' : ''}`}
-                onClick={() => setIsLogin(true)}
-              >
-                Login
-              </button>
-              <button 
-                className={`auth-tab ${!isLogin ? 'active' : ''}`}
-                onClick={() => setIsLogin(false)}
-              >
-                Sign Up
-              </button>
+      <section className={styles.portalSection}>
+        <div className={styles.container}>
+          <div className={styles.portalGrid}>
+            <div className={styles.portalFeatures}>
+              <h2>Portal Features</h2>
+              <div className={styles.featuresList}>
+                <div className={styles.feature}>
+                  <div className={styles.featureIcon}>📅</div>
+                  <h3>Appointment Management</h3>
+                  <p>View upcoming appointments and request new ones online</p>
+                </div>
+
+                <div className={styles.feature}>
+                  <div className={styles.featureIcon}>📋</div>
+                  <h3>Medical Records</h3>
+                  <p>Access your dental history and treatment plans securely</p>
+                </div>
+
+                <div className={styles.feature}>
+                  <div className={styles.featureIcon}>💬</div>
+                  <h3>Secure Messaging</h3>
+                  <p>Communicate directly with your dental care team</p>
+                </div>
+
+                <div className={styles.feature}>
+                  <div className={styles.featureIcon}>💳</div>
+                  <h3>Billing & Payments</h3>
+                  <p>View and pay bills online with ease</p>
+                </div>
+              </div>
             </div>
 
-            <form className="auth-form" onSubmit={handleSubmit}>
-              {!isLogin && (
-                <>
-                  <div className="form-group">
-                    <label htmlFor="firstName">First Name *</label>
-                    <input
-                      type="text"
-                      id="firstName"
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={handleChange}
-                      required={!isLogin}
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="lastName">Last Name *</label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleChange}
-                      required={!isLogin}
-                    />
-                  </div>
-                </>
-              )}
-
-              <div className="form-group">
-                <label htmlFor="email">Email *</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
+            <div className={styles.portalAccess}>
+              <div className={styles.tabButtons}>
+                <button
+                  className={`${styles.tabButton} ${
+                    activeTab === "login" ? styles.active : ""
+                  }`}
+                  onClick={() => setActiveTab("login")}
+                >
+                  Login
+                </button>
+                <button
+                  className={`${styles.tabButton} ${
+                    activeTab === "register" ? styles.active : ""
+                  }`}
+                  onClick={() => setActiveTab("register")}
+                >
+                  Register
+                </button>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="password">Password *</label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                />
+              <div className={styles.formContainer}>
+                {activeTab === "login" ? (
+                  <form className={styles.portalForm} onSubmit={handleLogin}>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="email">Email</label>
+                      <input
+                        type="email"
+                        id="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="password">Password</label>
+                      <input
+                        type="password"
+                        id="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className={styles.submitButton}
+                      disabled={loading}
+                    >
+                      {loading ? "Logging in..." : "Login"}
+                    </button>
+                    <Link
+                      to="/forgot-password"
+                      className={styles.forgotPassword}
+                    >
+                      Forgot Password?
+                    </Link>
+                  </form>
+                ) : (
+                  <form className={styles.portalForm} onSubmit={handleRegister}>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="name">Full Name</label>
+                      <input
+                        type="text"
+                        id="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="phone">Phone Number</label>
+                      <input
+                        type="tel"
+                        id="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        required
+                        pattern="[0-9]{10}"
+                        placeholder="0123456789"
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="email">Email</label>
+                      <input
+                        type="email"
+                        id="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="password">Password</label>
+                      <input
+                        type="password"
+                        id="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                        minLength={6}
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="confirmPassword">Confirm Password</label>
+                      <input
+                        type="password"
+                        id="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className={styles.submitButton}
+                      disabled={loading}
+                    >
+                      {loading ? "Registering..." : "Register"}
+                    </button>
+                  </form>
+                )}
               </div>
-
-              {!isLogin && (
-                <div className="form-group">
-                  <label htmlFor="confirmPassword">Confirm Password *</label>
-                  <input
-                    type="password"
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    required={!isLogin}
-                  />
-                </div>
-              )}
-
-              <button type="submit" className="submit-button">
-                {isLogin ? 'Login' : 'Create Account'}
-              </button>
-            </form>
-
-            {isLogin && (
-              <p className="forgot-password">
-                <a href="/forgot-password">Forgot your password?</a>
-              </p>
-            )}
+            </div>
           </div>
         </div>
       </section>
-    </>
-  )
-}
+    </div>
+  );
+};
 
-export default PatientPortal 
+export default PatientPortal;
