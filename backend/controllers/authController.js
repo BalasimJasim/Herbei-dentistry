@@ -39,18 +39,24 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    console.log("Login attempt for email:", email);
+
     // Find user
     const user = await User.findOne({ email });
     if (!user) {
+      console.log("User not found:", email);
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
+    console.log("User found, verifying password");
     // Verify password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      console.log("Password mismatch for user:", email);
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
+    console.log("Password verified, generating token");
     // Create token
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
@@ -64,9 +70,14 @@ export const login = async (req, res) => {
       phone: user.phone,
     };
 
+    console.log("Login successful for user:", email);
     res.json({ token, user: userResponse });
   } catch (error) {
-    console.error("Login error:", error);
+    console.error("Login error details:", {
+      error: error.message,
+      stack: error.stack,
+      body: req.body
+    });
     res.status(500).json({ message: "Server error during login" });
   }
 };
