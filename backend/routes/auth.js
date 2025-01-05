@@ -4,10 +4,11 @@ import {
   loginValidation,
   registerValidation,
 } from "../middleware/validateRequest.js";
+import { handleValidationErrors } from "../middleware/validateResults.js";
 
 const router = express.Router();
 
-router.post("/register", registerValidation, register);
-router.post("/login", loginValidation, login);
+router.post("/register", registerValidation, handleValidationErrors, register);
+router.post("/login", loginValidation, handleValidationErrors, login);
 
 export default router;
