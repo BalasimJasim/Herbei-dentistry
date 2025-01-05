@@ -86,6 +86,9 @@ const startServer = async () => {
     // Configure CORS with specific origins
     const allowedOrigins = [
       "https://dentalis-k0toggmwd-balasim-jasim-s-projects.vercel.app",
+      "https://dentalis-jw6vkflxv-balasim-jasim-s-projects.vercel.app",
+      "https://dentalis.vercel.app",
+      "https://dentalis-*.vercel.app",
       "https://herbei-dentistry.vercel.app",
       "http://localhost:5173",
       "http://localhost:4173",
@@ -105,8 +108,15 @@ const startServer = async () => {
             callback(null, true);
             return;
           }
-          // Check against allowed origins
-          if (allowedOrigins.includes(origin)) {
+          // Check against allowed origins including wildcard matches
+          const isAllowed = allowedOrigins.some((allowed) => {
+            if (allowed.includes("*")) {
+              const pattern = new RegExp(allowed.replace("*", ".*"));
+              return pattern.test(origin);
+            }
+            return allowed === origin;
+          });
+          if (isAllowed) {
             callback(null, true);
           } else {
             callback(new Error(`Origin ${origin} not allowed by CORS`));
@@ -114,7 +124,12 @@ const startServer = async () => {
         },
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization"],
+        allowedHeaders: [
+          "Content-Type",
+          "Authorization",
+          "Access-Control-Allow-Origin",
+        ],
+        exposedHeaders: ["Access-Control-Allow-Origin"],
       })
     );
 
