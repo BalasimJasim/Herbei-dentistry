@@ -1,3 +1,4 @@
+import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
@@ -87,7 +88,10 @@ const startServer = async () => {
       throw new Error("Database connection failed");
     }
 
+    // Create express app
     const app = express();
+    // Store app in global scope for cleanup
+    global.server = app;
 
     // Configure CORS with specific origins
     const allowedOrigins = [
@@ -182,7 +186,11 @@ startServer();
 process.on("unhandledRejection", (err) => {
   console.error(`Error: ${err.message}`);
   // Close server & exit process
-  server.close(() => process.exit(1));
+  if (global.server) {
+    global.server.close(() => process.exit(1));
+  } else {
+    process.exit(1);
+  }
 });
 
 // Handle uncaught exceptions
