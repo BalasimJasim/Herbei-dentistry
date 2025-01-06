@@ -91,28 +91,40 @@ export const login = async (req, res) => {
     console.log("Password verified, checking JWT_SECRET");
     // Verify JWT_SECRET exists
     if (!process.env.JWT_SECRET) {
-      console.error("JWT_SECRET not configured");
+      console.error("JWT_SECRET missing in environment");
       return res.status(500).json({
-        message: "Server configuration error",
+        message: "Authentication service temporarily unavailable",
       });
     }
 
     console.log("Creating JWT token");
     // Create token
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
+    try {
+      const token = jwt.sign(
+        {
+          userId: user._id,
+          email: user.email,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRE || "1d" }
+      );
 
-    // Remove password from response
-    const userResponse = {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
-    };
+      // Remove password from response
+      const userResponse = {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+      };
 
-    console.log("Login successful for user:", email);
-    res.json({ token, user: userResponse });
+      console.log("Login successful for user:", email);
+      return res.json({ token, user: userResponse });
+    } catch (jwtError) {
+      console.error("JWT signing error:", jwtError);
+      return res.status(500).json({
+        message: "Error generating authentication token",
+      });
+    }
   } catch (error) {
     console.error("Login error details:", {
       error: error.message,

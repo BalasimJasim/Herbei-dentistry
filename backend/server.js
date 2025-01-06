@@ -1,14 +1,13 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import cors from 'cors';
-import connectDB from './config/db.js';
-import appointmentRoutes from './routes/appointments.js';
-import { errorHandler } from './middleware/errorHandler.js';
-import { sanitizeData } from './middleware/auth.js';
-import { testEmailConfig } from './utils/email.js';
-import { testSMSConfig } from './utils/sendSMS.js';
-import adminRoutes from './routes/admin.js';
-import serviceRoutes from './routes/services.js';
+import dotenv from "dotenv";
+import cors from "cors";
+import connectDB from "./config/db.js";
+import appointmentRoutes from "./routes/appointments.js";
+import { errorHandler } from "./middleware/errorHandler.js";
+import { sanitizeData } from "./middleware/auth.js";
+import { testEmailConfig } from "./utils/email.js";
+import { testSMSConfig } from "./utils/sendSMS.js";
+import adminRoutes from "./routes/admin.js";
+import serviceRoutes from "./routes/services.js";
 import { validateEnv } from "./config/validateEnv.js";
 import { validateCredentials } from "./config/validateCredentials.js";
 import authRoutes from "./routes/auth.js";
@@ -177,18 +176,18 @@ const startServer = async () => {
   }
 };
 
-startServer()
+startServer();
 
 // Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
+process.on("unhandledRejection", (err) => {
   console.error(`Error: ${err.message}`);
   // Close server & exit process
   server.close(() => process.exit(1));
 });
 
 // Handle uncaught exceptions
-process.on('uncaughtException', (err) => {
+process.on("uncaughtException", (err) => {
   console.error(`Error: ${err.message}`);
   // Exit process
   process.exit(1);
-}); 
+});
