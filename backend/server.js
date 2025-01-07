@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import appointmentRoutes from "./routes/appointments.js";
+import authRoutes from "./routes/auth.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { sanitizeData } from "./middleware/sanitize.js";
 
@@ -77,7 +78,10 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
-// Routes with middleware
+// Auth routes
+app.use("/api/auth", authRoutes);
+
+// Appointment routes
 app.use(
   "/api/appointments",
   (req, res, next) => {
