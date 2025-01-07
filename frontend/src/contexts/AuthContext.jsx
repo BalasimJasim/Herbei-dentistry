@@ -32,14 +32,23 @@ export const AuthProvider = ({ children }) => {
     initializeAuth();
   }, []);
 
-  const login = async (userData, token) => {
+  const login = async (response) => {
     try {
       console.log("Login attempt with:", {
-        userData,
-        hasToken: !!token,
+        response,
+        hasToken: !!response?.token,
       });
 
-      if (!userData.email || !userData.userId) {
+      // Validate response structure
+      if (!response?.success || !response?.token || !response?.user) {
+        throw new Error("Invalid login response format");
+      }
+
+      const { token, user: userData } = response;
+
+      // Validate user data
+      if (!userData?.userId || !userData?.email) {
+        console.error("Invalid user data:", userData);
         throw new Error("Missing required user data");
       }
 
@@ -50,8 +59,9 @@ export const AuthProvider = ({ children }) => {
       const normalizedUserData = {
         userId: userData.userId,
         email: userData.email,
-        name: userData.name,
-        phone: userData.phone,
+        name: userData.name || "",
+        phone: userData.phone || "",
+        role: userData.role || "user",
       };
 
       console.log("Storing auth data:", {

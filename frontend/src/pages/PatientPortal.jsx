@@ -50,49 +50,22 @@ const PatientPortal = () => {
     });
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
+  const handleLogin = async (formData) => {
     try {
-      console.log("Attempting login with:", {
-        email: formData.email,
-        hasPassword: !!formData.password,
-      });
+      console.log("Attempting login with:", formData);
 
-      const response = await api.post("/api/auth/login", {
-        email: formData.email,
-        password: formData.password,
-      });
-
+      const response = await api.post("/api/auth/login", formData);
       console.log("Login response:", response.data);
 
-      if (!response.data.token || !response.data.user) {
-        throw new Error("Invalid login response");
+      if (!response.data.success) {
+        throw new Error(response.data.message || "Login failed");
       }
 
-      // Transform user data
-      const userData = {
-        userId: response.data.user._id,
-        email: response.data.user.email,
-        name: response.data.user.name,
-        phone: response.data.user.phone,
-      };
-
-      await login(userData, response.data.token);
-      toast.success(t("messages.loginSuccess"));
-
-      // Wait a moment for the auth state to update
-      setTimeout(() => {
-        navigate(lang ? `/${lang}/portal-dashboard` : "/portal-dashboard");
-      }, 100);
+      await login(response.data);
+      navigate("/portal-dashboard");
     } catch (error) {
       console.error("Login error details:", error);
-      const errorMessage =
-        error.response?.data?.message || t("errors.loginFailed");
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
+      toast.error(error.message || "Failed to login");
     }
   };
 
