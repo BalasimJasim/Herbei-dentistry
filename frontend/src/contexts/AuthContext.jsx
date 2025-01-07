@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const AuthContext = createContext(null);
 
@@ -46,8 +47,8 @@ export const AuthProvider = ({ children }) => {
 
       const { token, user: userData } = response;
 
-      // Validate user data
-      if (!userData?.userId || !userData?.email) {
+      // Validate user data and handle _id as userId
+      if (!userData?._id || !userData?.email) {
         console.error("Invalid user data:", userData);
         throw new Error("Missing required user data");
       }
@@ -57,7 +58,7 @@ export const AuthProvider = ({ children }) => {
 
       // Store normalized user data
       const normalizedUserData = {
-        userId: userData.userId,
+        userId: userData._id, // Convert _id to userId
         email: userData.email,
         name: userData.name || "",
         phone: userData.phone || "",
@@ -100,6 +101,10 @@ export const AuthProvider = ({ children }) => {
       {!loading && children}
     </AuthContext.Provider>
   );
+};
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export const useAuth = () => {

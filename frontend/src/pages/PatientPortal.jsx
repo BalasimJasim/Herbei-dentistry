@@ -50,11 +50,21 @@ const PatientPortal = () => {
     });
   };
 
-  const handleLogin = async (formData) => {
-    try {
-      console.log("Attempting login with:", formData);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-      const response = await api.post("/api/auth/login", formData);
+    try {
+      console.log("Attempting login with:", {
+        email: formData.email,
+        hasPassword: !!formData.password,
+      });
+
+      const response = await api.post("/api/auth/login", {
+        email: formData.email,
+        password: formData.password,
+      });
+
       console.log("Login response:", response.data);
 
       if (!response.data.success) {
@@ -62,10 +72,12 @@ const PatientPortal = () => {
       }
 
       await login(response.data);
-      navigate("/portal-dashboard");
+      navigate(lang ? `/${lang}/portal-dashboard` : "/portal-dashboard");
     } catch (error) {
       console.error("Login error details:", error);
       toast.error(error.message || "Failed to login");
+    } finally {
+      setLoading(false);
     }
   };
 
