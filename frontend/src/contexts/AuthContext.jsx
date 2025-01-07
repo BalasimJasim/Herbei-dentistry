@@ -1,55 +1,101 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
-export function useAuth() {
-  return useContext(AuthContext);
-}
-
-export function AuthProvider({ children }) {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
+  // Check for existing session on mount
   useEffect(() => {
-    // Check for existing admin session
-    const storedUser = localStorage.getItem("admin");
-    if (storedUser) {
+    const initializeAuth = () => {
       try {
-        setUser(JSON.parse(storedUser));
+        const token = localStorage.getItem("token");
+        const savedUser = localStorage.getItem("user");
+
+        if (token && savedUser) {
+          const userData = JSON.parse(savedUser);
+          setUser(userData);
+          console.log("Restored auth state:", { userData });
+        }
       } catch (error) {
-        console.error("Error parsing stored user:", error);
-        localStorage.removeItem("admin");
+        console.error("Error initializing auth:", error);
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+      } finally {
+        setLoading(false);
       }
-    }
-    setLoading(false);
+    };
+
+    initializeAuth();
   }, []);
 
-  const login = async (email, password) => {
-    // Demo admin credentials
-    if (email === "admin@herbiedental.com" && password === "admin123") {
-      const userData = { email, role: "admin" };
-      localStorage.setItem("admin", JSON.stringify(userData));
-      setUser(userData);
-    } else {
-      throw new Error("Invalid credentials");
+  const login = async (userData, token) => {
+    try {
+      console.log("Login attempt with:", {
+        userData,
+        hasToken: !!token,
+      });
+
+      if (!userData.email || !userData.userId) {
+        throw new Error("Missing required user data");
+      }
+
+      // Store token
+      localStorage.setItem("token", token);
+
+      // Store normalized user data
+      const normalizedUserData = {
+        userId: userData.userId,
+        email: userData.email,
+        name: userData.name,
+        phone: userData.phone,
+      };
+
+      console.log("Storing auth data:", {
+        user: normalizedUserData,
+        tokenPrefix: token.substring(0, 20),
+      });
+
+      localStorage.setItem("user", JSON.stringify(normalizedUserData));
+      setUser(normalizedUserData);
+
+      return true;
+    } catch (error) {
+      console.error("Login error in context:", error);
+      await logout();
+      throw error;
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem("admin");
+  const logout = async () => {
     setUser(null);
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/patient-portal");
   };
 
   const value = {
     user,
     login,
     logout,
+    isAuthenticated: !!user,
     loading,
   };
 
-  if (loading) {
-    return null;
-  }
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
+};
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};

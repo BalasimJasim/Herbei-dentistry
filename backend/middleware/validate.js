@@ -1,6 +1,15 @@
 import { body, validationResult } from 'express-validator';
 
 export const validateAppointment = [
+  // Skip validation for GET requests
+  (req, res, next) => {
+    if (req.method === "GET") {
+      return next();
+    }
+    next();
+  },
+
+  // Validation rules for non-GET requests
   body("firstName").trim().notEmpty().withMessage("First name is required"),
   body("lastName").trim().notEmpty().withMessage("Last name is required"),
   body("email").optional().isEmail().withMessage("Please enter a valid email"),
@@ -12,7 +21,11 @@ export const validateAppointment = [
     .isISO8601()
     .withMessage("Please enter a valid date and time"),
 
+  // Handle validation results
   (req, res, next) => {
+    if (req.method === "GET") {
+      return next();
+    }
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });

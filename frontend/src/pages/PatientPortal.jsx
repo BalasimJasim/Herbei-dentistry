@@ -1,23 +1,23 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet-async";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../utils/axios";
+import { useAuth } from "../contexts/AuthContext";
 import styles from "./PatientPortal.module.css";
 
 const PatientPortal = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { login, isAuthenticated } = useAuth();
+  const { lang } = useParams();
   const [activeTab, setActiveTab] = useState("login");
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    name: "",
-    phone: "",
-    confirmPassword: "",
   });
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     console.log("CSS Module classes:", {
@@ -36,6 +36,13 @@ const PatientPortal = () => {
     }
   }, []);
 
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(lang ? `/${lang}/portal-dashboard` : "/portal-dashboard");
+    }
+  }, [isAuthenticated, navigate, lang]);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -48,24 +55,42 @@ const PatientPortal = () => {
     setLoading(true);
 
     try {
+      console.log("Attempting login with:", {
+        email: formData.email,
+        hasPassword: !!formData.password,
+      });
+
       const response = await api.post("/api/auth/login", {
         email: formData.email,
         password: formData.password,
       });
 
-      if (response.data?.token) {
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        toast.success("Login successful!");
-        navigate("/dashboard");
+      console.log("Login response:", response.data);
+
+      if (!response.data.token || !response.data.user) {
+        throw new Error("Invalid login response");
       }
+
+      // Transform user data
+      const userData = {
+        userId: response.data.user._id,
+        email: response.data.user.email,
+        name: response.data.user.name,
+        phone: response.data.user.phone,
+      };
+
+      await login(userData, response.data.token);
+      toast.success(t("messages.loginSuccess"));
+
+      // Wait a moment for the auth state to update
+      setTimeout(() => {
+        navigate(lang ? `/${lang}/portal-dashboard` : "/portal-dashboard");
+      }, 100);
     } catch (error) {
+      console.error("Login error details:", error);
       const errorMessage =
-        error.response?.data?.message ||
-        error.response?.data?.error ||
-        "Login failed. Please check your credentials.";
+        error.response?.data?.message || t("errors.loginFailed");
       toast.error(errorMessage);
-      console.error("Login error:", error);
     } finally {
       setLoading(false);
     }

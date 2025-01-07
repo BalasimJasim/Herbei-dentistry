@@ -1,0 +1,180 @@
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid var(--neutral-100);
+  padding-bottom: 0.5rem;
+}
+
+.tabButton {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: none;
+  font-size: 1rem;
+  color: var(--neutral-600);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -0.5rem;
+  transition: all 0.2s ease;
+}
+
+.tabButton.active {
+  color: var(--primary-600);
+  border-bottom-color: var(--primary-600);
+}
+
+.appointmentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.appointmentCard {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.appointmentCard:hover {
+  transform: translateY(-2px);
+}
+
+.appointmentInfo h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--neutral-900);
+  font-size: 1.1rem;
+}
+
+.dateTime {
+  display: flex;
+  gap: 1rem;
+  color: var(--neutral-600);
+  margin: 0.5rem 0;
+}
+
+.status {
+  color: var(--neutral-600);
+  margin: 0.5rem 0 0 0;
+}
+
+.appointmentActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.cancelButton,
+.deleteButton {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.cancelButton {
+  background: var(--error-50);
+  color: var(--error-600);
+}
+
+.cancelButton:hover {
+  background: var(--error-100);
+}
+
+.deleteButton {
+  background: var(--neutral-100);
+  color: var(--neutral-600);
+}
+
+.deleteButton:hover {
+  background: var(--neutral-200);
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--neutral-600);
+}
+
+.emptyState {
+  text-align: center;
+  padding: 2rem;
+  color: var(--neutral-500);
+  background: var(--neutral-50);
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .appointmentCard {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .appointmentActions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .tabs {
+    overflow-x: auto;
+    padding-bottom: 1rem;
+  }
+
+  .tabButton {
+    white-space: nowrap;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.actionButton {
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  border: none;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.actionButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.editButton {
+  background-color: #28a745;
+  color: white;
+}
+
+.editButton:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.cancelButton {
+  background-color: #dc3545;
+  color: white;
+}
+
+.cancelButton:hover:not(:disabled) {
+  background-color: #c82333;
+}

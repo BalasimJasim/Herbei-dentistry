@@ -40,106 +40,43 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    console.log("Login attempt:", {
-      email,
-      hasPassword: !!password,
-      body: req.body,
-    });
-
-    // Validate input
-    if (!email || !password) {
-      console.log("Missing credentials");
-      return res.status(400).json({
-        message: "Please provide both email and password",
-      });
-    }
-
-    // Find user
-    console.log("Searching for user with email:", email);
     const user = await User.findOne({ email });
-    console.log("User query result:", user ? "Found" : "Not found");
-
-    if (!user) {
-      console.log("User not found:", email);
-      return res.status(400).json({ message: "Invalid credentials" });
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid credentials",
+      });
     }
 
-    console.log("User found:", {
-      id: user._id,
-      hasPassword: !!user.password,
+    // Create token with complete user data
+    const tokenPayload = {
+      userId: user._id,
       email: user.email,
+      name: user.name,
+      role: user.role || "user", // Include role with default
+    };
+
+    const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
+      expiresIn: "24h",
     });
 
-    // Verify password exists
-    if (!user.password) {
-      console.error("User has no password set:", email);
-      return res.status(500).json({
-        message: "Account configuration error",
-      });
-    }
-
-    // Verify password
-    console.log("Comparing passwords");
-    const isMatch = await bcrypt.compare(password, user.password);
-    console.log("Password comparison result:", isMatch);
-
-    if (!isMatch) {
-      console.log("Password mismatch for user:", email);
-      return res.status(400).json({ message: "Invalid credentials" });
-    }
-
-    console.log("Password verified, checking JWT_SECRET");
-    // Verify JWT_SECRET exists
-    if (!process.env.JWT_SECRET) {
-      console.error("JWT_SECRET missing in environment");
-      return res.status(500).json({
-        message: "Authentication service temporarily unavailable",
-      });
-    }
-
-    console.log("Creating JWT token");
-    // Create token
-    try {
-      const token = jwt.sign(
-        {
-          userId: user._id,
-          email: user.email,
-        },
-        process.env.JWT_SECRET,
-        { expiresIn: process.env.JWT_EXPIRE || "1d" }
-      );
-
-      // Remove password from response
-      const userResponse = {
-        _id: user._id,
-        name: user.name,
+    // Return complete user data
+    return res.json({
+      success: true,
+      token,
+      user: {
+        userId: user._id,
         email: user.email,
+        name: user.name,
         phone: user.phone,
-      };
-
-      console.log("Login successful for user:", email);
-      return res.json({ token, user: userResponse });
-    } catch (jwtError) {
-      console.error("JWT signing error:", jwtError);
-      return res.status(500).json({
-        message: "Error generating authentication token",
-      });
-    }
-  } catch (error) {
-    console.error("Login error details:", {
-      error: error.message,
-      stack: error.stack,
-      body: req.body,
-      env: {
-        hasJwtSecret: !!process.env.JWT_SECRET,
-        nodeEnv: process.env.NODE_ENV,
-        mongoConnected: !!mongoose.connection.readyState,
+        role: user.role || "user",
       },
     });
-    res.status(500).json({
-      message: "Server error during login",
-      details:
-        process.env.NODE_ENV === "development" ? error.message : undefined,
+  } catch (error) {
+    console.error("Login error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error during login"
     });
   }
 };

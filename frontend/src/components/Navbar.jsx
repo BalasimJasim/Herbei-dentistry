@@ -12,7 +12,7 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const { t, i18n } = useTranslation();
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const [activeDropdown, setActiveDropdown] = useState(null);
   const { lang } = useParams();
   const menuRef = useRef(null);
@@ -129,14 +129,28 @@ const Navbar = () => {
               </li>
             )}
             <li>
-              <Link
-                to="/patient-portal"
-                className={`${styles.portalBtn} ${
-                  isActive("/patient-portal") ? styles.active : ""
-                }`}
-              >
-                {t("nav.patientPortal")}
-              </Link>
+              {user ? (
+                <div className={styles.userMenu}>
+                  <button className={styles.userButton}>
+                    <span>{user.name}</span>
+                  </button>
+                  <div className={styles.userDropdown}>
+                    <Link to={`/${currentLang}/portal-dashboard`}>
+                      {t("My Dashboard")}
+                    </Link>
+                    <button onClick={logout}>{t("Logout")}</button>
+                  </div>
+                </div>
+              ) : (
+                <Link
+                  to="/patient-portal"
+                  className={`${styles.portalBtn} ${
+                    isActive("/patient-portal") ? styles.active : ""
+                  }`}
+                >
+                  {t("nav.patientPortal")}
+                </Link>
+              )}
             </li>
             <div className={styles.dropdownContainer}>
               <button

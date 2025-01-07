@@ -1,33 +1,42 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
-import './AppointmentForm.css'
-import { useTranslation } from 'react-i18next'
-import api from '../utils/axios'
-import AppointmentCalendar from './AppointmentCalendar'
+import { useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
+import "./AppointmentForm.css";
+import { useTranslation } from "react-i18next";
+import api from "../utils/axios";
+import AppointmentCalendar from "./AppointmentCalendar";
 import styles from "./AppointmentForm.module.css";
 
 const AppointmentForm = () => {
-  const navigate = useNavigate()
-  const { t } = useTranslation()
-  
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { t } = useTranslation();
+
   // Form state
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    notes: '',
-    serviceId: ''
-  })
+    name: location.state?.autofill ? location.state.userData?.name || "" : "",
+    email: location.state?.autofill ? location.state.userData?.email || "" : "",
+    phone: location.state?.autofill ? location.state.userData?.phone || "" : "",
+    service: "",
+    date: "",
+    time: "",
+  });
 
   // Step management
-  const [currentStep, setCurrentStep] = useState(1)
-  const [services, setServices] = useState([])
-  const [selectedDate, setSelectedDate] = useState(null)
-  const [selectedTime, setSelectedTime] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [currentStep, setCurrentStep] = useState(1);
+  const [services, setServices] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [isServiceModalOpen, setIsServiceModalOpen] = useState(false);
+
+  // Disable editing of autofilled fields if user is logged in
+  const isFieldDisabled = (fieldName) => {
+    return (
+      location.state?.autofill &&
+      (fieldName === "name" || fieldName === "email" || fieldName === "phone")
+    );
+  };
 
   // Fetch services on mount
   useEffect(() => {
@@ -98,28 +107,24 @@ const AppointmentForm = () => {
 
     setLoading(true);
     try {
-      // Debug logs
-      console.log("Selected Date:", selectedDate);
-      console.log("Selected Time:", selectedTime);
-
-      // Create a new date object from the selected date
       const appointmentDate = new Date(selectedDate);
-
-      // Parse the time from the ISO string
       const timeDate = new Date(selectedTime);
-
-      // Set the hours and minutes from the selected time
       appointmentDate.setHours(
         timeDate.getHours(),
         timeDate.getMinutes(),
-        0, // seconds
-        0 // milliseconds
+        0,
+        0
       );
 
-      // Debug log
-      console.log("Combined DateTime:", appointmentDate);
+      // Get user data if logged in
+      const token = localStorage.getItem("token");
+      const userData = token ? JSON.parse(localStorage.getItem("user")) : null;
 
-      // Format the data for submission
+      console.log("AppointmentForm - Creating appointment", {
+        hasToken: !!token,
+        userData,
+      });
+
       const appointmentData = {
         firstName: formData.firstName,
         lastName: formData.lastName,
@@ -129,29 +134,39 @@ const AppointmentForm = () => {
         serviceId: formData.serviceId,
         dateTime: appointmentDate.toISOString(),
         status: "scheduled",
+        userId: userData?.userId,
       };
 
-      // Debug log
-      console.log("Submitting appointment data:", appointmentData);
+      console.log("AppointmentForm - Appointment data:", appointmentData);
 
-      const response = await api.post("/api/appointments", appointmentData);
+      const config = {
+        headers: {
+          Authorization: token ? `Bearer ${token}` : undefined,
+        },
+      };
+
+      const response = await api.post(
+        "/api/appointments",
+        appointmentData,
+        config
+      );
+      console.log("AppointmentForm - Response:", response.data);
 
       if (response.data.success) {
         toast.success("Appointment booked successfully!");
-        navigate("/appointments/confirmation", {
-          state: { appointment: response.data.data },
-        });
+        if (userData?.userId) {
+          navigate("/portal-dashboard");
+        } else {
+          navigate("/appointments/confirmation", {
+            state: { appointment: response.data.data },
+          });
+        }
       }
     } catch (error) {
-      console.error("Booking error details:", {
-        error,
-        selectedDate,
-        selectedTime,
-        formData,
-      });
-      const errorMessage =
-        error.response?.data?.message || "Failed to book appointment";
-      toast.error(errorMessage);
+      console.error("AppointmentForm - Error:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to book appointment"
+      );
     } finally {
       setLoading(false);
     }
@@ -409,6 +424,6 @@ const AppointmentForm = () => {
       </div>
     </div>
   );
-}
+};
 
 export default AppointmentForm

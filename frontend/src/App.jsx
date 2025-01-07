@@ -9,7 +9,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LanguageProvider from "./providers/LanguageProvider";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -37,12 +37,15 @@ import { I18nextProvider } from "react-i18next";
 import AdminKeyboardShortcut from "./components/AdminKeyboardShortcut";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import ProtectedRoute from "./components/ProtectedRoute";
+import PortalDashboard from "./pages/PortalDashboard";
 
 // Create a separate component for the app content
 const AppContent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
   const { i18n } = useTranslation();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     console.log("Current route:", location.pathname);
@@ -60,6 +63,16 @@ const AppContent = () => {
             <Route path="/admin/register" element={<AdminRegistration />} />
           </Route>
 
+          <Route path="/patient-portal" element={<PatientPortal />} />
+          <Route
+            path="/portal-dashboard"
+            element={
+              <ProtectedRoute>
+                <PortalDashboard />
+              </ProtectedRoute>
+            }
+          />
+
           <Route path="/" element={<Navigate to={`/${i18n.language}`} />} />
 
           <Route path="/:lang">
@@ -75,6 +88,14 @@ const AppContent = () => {
             </Route>
             <Route path="contact" element={<Contact />} />
             <Route path="patient-portal" element={<PatientPortal />} />
+            <Route
+              path="portal-dashboard"
+              element={
+                <ProtectedRoute>
+                  <PortalDashboard />
+                </ProtectedRoute>
+              }
+            />
 
             <Route path="education">
               <Route path="oral-hygiene" element={<OralHygiene />} />

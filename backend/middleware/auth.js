@@ -1,34 +1,81 @@
 import jwt from 'jsonwebtoken';
-import { ApiError } from './errorHandler.js';
-import User from '../models/User.js';
+import mongoose from "mongoose";
+import { ApiError } from "./errorHandler.js";
+import User from "../models/User.js";
 
 export const protect = async (req, res, next) => {
   try {
-    let token;
+    console.log("=== Auth Middleware Start ===");
+    console.log("Headers:", req.headers);
+    console.log("Original Query:", req.query);
 
-    // Get token from header
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer")
-    ) {
-      token = req.headers.authorization.split(" ")[1];
+    if (!req.headers.authorization?.startsWith("Bearer")) {
+      return res.status(401).json({
+        success: false,
+        message: "No token provided",
+      });
     }
 
-    // Check if no token
-    if (!token) {
-      throw new ApiError(401, "Not authorized to access this route");
-    }
+    const token = req.headers.authorization.split(" ")[1];
+    console.log("Token:", token.substring(0, 20) + "...");
 
     try {
-      // Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = decoded;
+      console.log("Decoded token:", decoded);
+
+      // Validate token payload
+      if (!decoded.userId || !decoded.email) {
+        console.error("Invalid token payload:", decoded);
+        return res.status(401).json({
+          success: false,
+          message: "Invalid token format - missing required fields",
+        });
+      }
+
+      // Set user data directly from token
+      req.user = {
+        userId: decoded.userId,
+        email: decoded.email,
+        name: decoded.name,
+        role: decoded.role || "user",
+      };
+
+      // Add token data to query if not already present
+      if (!req.query.email) {
+        req.query.email = decoded.email;
+      }
+      if (!req.query.userId) {
+        req.query.userId = decoded.userId;
+      }
+
+      console.log("Final request state:", {
+        user: req.user,
+        query: req.query,
+      });
+
       next();
     } catch (err) {
-      throw new ApiError(401, "Not authorized to access this route");
+      console.error("Token verification failed:", {
+        error: err.message,
+        name: err.name,
+        stack: err.stack,
+      });
+      return res.status(401).json({
+        success: false,
+        message: "Invalid token",
+        error: err.message,
+      });
     }
   } catch (error) {
-    next(error);
+    console.error("Auth middleware error:", {
+      error: error.message,
+      stack: error.stack,
+    });
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message,
+    });
   }
 };
 
@@ -36,21 +83,10 @@ export const protect = async (req, res, next) => {
 export const authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
-      return next(new ApiError(403, 'User role is not authorized to access this route'));
+      return next(
+        new ApiError(403, "User role is not authorized to access this route")
+      );
     }
     next();
   };
-};
-
-// Sanitize data middleware
-export const sanitizeData = (req, res, next) => {
-  // Remove any potential XSS attacks from req.body
-  if (req.body) {
-    for (let key in req.body) {
-      if (typeof req.body[key] === 'string') {
-        req.body[key] = req.body[key].replace(/<[^>]*>/g, '');
-      }
-    }
-  }
-  next();
 }; 

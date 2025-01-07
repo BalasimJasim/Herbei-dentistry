@@ -11,6 +11,10 @@ import {
 } from "../services/appointmentService.js";
 import { SERVICES } from "../config/servicesConfig.js";
 import Specialist from "../models/Specialist.js";
+import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
+import User from "../models/User.js";
+import { Types } from "mongoose";
 
 const validatePhoneNumber = (phone) => {
   // Remove all non-digit characters
@@ -31,8 +35,8 @@ export const createAppointment = async (req, res) => {
   try {
     const appointmentData = req.body;
 
-    // Check slot availability before creating appointment
-    const { available, reason, message } = await checkTimeSlotAvailability(
+    // Check slot availability
+    const { available, message } = await checkTimeSlotAvailability(
       appointmentData.dateTime,
       appointmentData.serviceId
     );
@@ -44,24 +48,30 @@ export const createAppointment = async (req, res) => {
       });
     }
 
+    // If userId is provided (logged in user), validate and convert it
+    if (appointmentData.userId) {
+      try {
+        appointmentData.userId = new mongoose.Types.ObjectId(
+          appointmentData.userId
+        );
+      } catch (error) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid user ID format",
+        });
+      }
+    }
+
     // Calculate end time based on service duration
     const service = SERVICES.find((s) => s.id === appointmentData.serviceId);
     const endTime = new Date(appointmentData.dateTime);
-    endTime.setMinutes(endTime.getMinutes() + service.duration);
+    endTime.setMinutes(endTime.getMinutes() + (service?.duration || 60));
 
     // Create the appointment
     const appointment = await Appointment.create({
       ...appointmentData,
       endTime,
     });
-
-    // Send notifications
-    try {
-      await sendAppointmentNotifications(appointment);
-    } catch (notificationError) {
-      console.error("Failed to send notifications:", notificationError);
-      // Continue with the appointment creation even if notifications fail
-    }
 
     res.status(201).json({
       success: true,
@@ -202,31 +212,66 @@ export const cancelAppointment = async (req, res) => {
 // @access  Public
 export const getUserAppointments = async (req, res) => {
   try {
-    const { email } = req.query;
+    console.log("=== getUserAppointments Start ===");
+    console.log("Request user:", req.user);
+    console.log("Request query:", req.query);
 
-    if (!email) {
+    // Get email from either query params or user object
+    const email = req.query.email || req.user?.email;
+    const userId = req.query.userId || req.user?.userId;
+
+    if (!email || !userId) {
+      console.error("Missing required data:", { email, userId });
       return res.status(400).json({
         success: false,
-        message: "Email is required",
+        message: "Email and userId are required",
       });
     }
 
-    console.log("Fetching appointments for email:", email); // Debug log
+    const userIdObj = new mongoose.Types.ObjectId(userId);
+    console.log("Looking for appointments with:", {
+      email,
+      userId: userIdObj.toString(),
+    });
 
+    // Find appointments with either userId or email
     const appointments = await Appointment.find({
-      email: email,
-      // Optionally filter out old appointments
-      dateTime: { $gte: new Date() },
-    }).sort({ dateTime: 1 });
+      $or: [{ userId: userIdObj }, { email: email }],
+    })
+      .sort({ dateTime: -1 })
+      .populate("serviceId", "name duration")
+      .lean();
 
-    console.log("Found appointments:", appointments); // Debug log
+    console.log("Found appointments:", appointments.length);
 
-    res.json(appointments); // This will be an array, even if empty
+    // Split appointments into upcoming and past
+    const now = new Date();
+    const { upcoming, past } = appointments.reduce(
+      (acc, apt) => {
+        if (new Date(apt.dateTime) > now) {
+          acc.upcoming.push(apt);
+        } else {
+          acc.past.push(apt);
+        }
+        return acc;
+      },
+      { upcoming: [], past: [] }
+    );
+
+    console.log("Processed appointments:", {
+      upcoming: upcoming.length,
+      past: past.length,
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: { upcoming, past },
+    });
   } catch (error) {
-    console.error("Error in getUserAppointments:", error);
-    res.status(500).json({
+    console.error("getUserAppointments error:", error);
+    return res.status(500).json({
       success: false,
-      message: "Error fetching appointments",
+      message: "Failed to fetch appointments",
       error: error.message,
     });
   }
@@ -259,6 +304,52 @@ export const getSpecialistsByService = async (req, res) => {
       success: false,
       message: "Failed to fetch specialists",
       error: error.message,
+    });
+  }
+};
+
+// @desc    Delete appointment record (only for past appointments)
+// @route   DELETE /api/appointments/:id
+// @access  Private
+export const deleteAppointmentRecord = async (req, res) => {
+  try {
+    const appointment = await Appointment.findById(req.params.id);
+
+    if (!appointment) {
+      return res.status(404).json({
+        success: false,
+        message: "Appointment not found",
+      });
+    }
+
+    // Check if user owns this appointment
+    if (appointment.userId.toString() !== req.user.userId) {
+      return res.status(403).json({
+        success: false,
+        message: "Not authorized to delete this appointment",
+      });
+    }
+
+    // Check if appointment is in the past
+    if (new Date(appointment.dateTime) > new Date()) {
+      return res.status(400).json({
+        success: false,
+        message: "Cannot delete future appointments. Use cancel instead.",
+      });
+    }
+
+    await appointment.remove();
+
+    res.json({
+      success: true,
+      message: "Appointment record deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting appointment record:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error deleting appointment record",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
 };
