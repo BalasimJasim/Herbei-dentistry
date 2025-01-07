@@ -4,8 +4,9 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000",
   headers: {
     "Content-Type": "application/json",
+    Accept: "application/json",
   },
-  timeout: 10000, // 10 second timeout
+  timeout: 10000,
   withCredentials: true,
 });
 
@@ -13,7 +14,9 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
-    console.log("Request with token:", {
+
+    // Log request details
+    console.log("Request details:", {
       url: config.url,
       method: config.method,
       headers: config.headers,
@@ -24,8 +27,8 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-    // Ensure CORS headers are handled properly
-    config.headers["Access-Control-Allow-Credentials"] = true;
+    // Remove problematic header
+    delete config.headers["Access-Control-Allow-Credentials"];
 
     return config;
   },
@@ -42,26 +45,29 @@ api.interceptors.request.use(
 // Response interceptor
 api.interceptors.response.use(
   (response) => {
-    console.log("Response interceptor:", {
+    console.log("Response success:", {
       url: response.config.url,
       status: response.status,
-      success: response.data?.success,
+      data: response.data,
     });
     return response;
   },
   (error) => {
-    console.error("Response interceptor error:", {
+    // Log the full error details
+    console.error("Response error:", {
       message: error.message,
       code: error.code,
       response: error.response
         ? {
             status: error.response.status,
             data: error.response.data,
+            headers: error.response.headers,
           }
         : "No response",
       config: {
         url: error.config?.url,
         method: error.config?.method,
+        headers: error.config?.headers,
       },
     });
 

@@ -32,20 +32,48 @@ app.use((req, res, next) => {
 // CORS configuration
 const corsOptions = {
   origin: [
-    'http://localhost:5173',
-    'http://localhost:3000',
-    'https://dentalis-utyh02dip-balasim-jasim-s-projects.vercel.app',
-    'https://dentalis.vercel.app',
-    /\.vercel\.app$/  // Allow all subdomains of vercel.app
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://dentalis-utyh02dip-balasim-jasim-s-projects.vercel.app",
+    "https://dentalis-1re7nkt3e-balasim-jasim-s-projects.vercel.app",
+    "https://dentalis.vercel.app",
+    /\.vercel\.app$/,
   ],
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  exposedHeaders: ['Content-Range', 'X-Content-Range'],
-  maxAge: 86400 // 24 hours
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "X-Requested-With",
+    "Accept",
+    "Origin",
+    "Access-Control-Allow-Headers",
+    "Access-Control-Allow-Origin",
+    "Access-Control-Allow-Credentials",
+  ],
+  exposedHeaders: ["Content-Range", "X-Content-Range"],
+  maxAge: 86400,
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
 };
 
+// Apply CORS middleware
 app.use(cors(corsOptions));
+
+// Additional headers middleware
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  res.header("Access-Control-Allow-Credentials", true);
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Credentials"
+  );
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+  );
+  next();
+});
 
 app.use(express.json());
 
