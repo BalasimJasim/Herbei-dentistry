@@ -24,6 +24,9 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
+    // Ensure CORS headers are handled properly
+    config.headers["Access-Control-Allow-Credentials"] = true;
+
     return config;
   },
   (error) => {
