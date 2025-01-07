@@ -1,10 +1,7 @@
 import express from "express";
 import { protect } from "../middleware/auth.js";
 import { sanitizeData } from "../middleware/sanitize.js";
-import {
-  appointmentValidation,
-  skipValidation,
-} from "../middleware/validateRequest.js";
+import validations from "../middleware/validateRequest.js";
 import {
   getUserAppointments,
   createAppointment,
@@ -45,12 +42,17 @@ router.get(
 router.put(
   "/:id/cancel",
   protect,
-  appointmentValidation.cancel,
+  validations.appointmentValidation.cancel,
   sanitizeData,
   cancelAppointment
 );
 
 // Public routes
-router.post("/", appointmentValidation.create, sanitizeData, createAppointment);
+router.post(
+  "/",
+  validations.appointmentValidation.create,
+  sanitizeData,
+  createAppointment
+);
 
 export default router;
