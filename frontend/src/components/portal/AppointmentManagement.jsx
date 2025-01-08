@@ -1,62 +1,48 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import classNames from "./AppointmentManagement.module.css";
+import AppointmentViewModal from "./AppointmentViewModal";
+import EditAppointmentModal from "./EditAppointmentModal";
 import api from "../../utils/axios";
-import { useAuth } from "../../contexts/AuthContext";
-import styles from "./AppointmentManagement.module.css";
-
-console.log("Loaded styles:", styles); // Debug line to check styles
-
-// Define class names map for better organization
-const classNames = {
-  container: `${styles.container || ""}`,
-  section: `${styles.section || ""}`,
-  appointmentsList: `${styles.appointmentsList || ""}`,
-  appointmentItem: `${styles.appointmentItem || ""}`,
-  serviceInfo: `${styles.serviceInfo || ""}`,
-  status: `${styles.status || ""}`,
-  dateTime: `${styles.dateTime || ""}`,
-  actions: `${styles.actions || ""}`,
-  actionButton: `${styles.actionButton || ""}`,
-  cancelButton: `${styles.cancelButton || ""}`,
-  emptyState: `${styles.emptyState || ""}`,
-  loading: `${styles.loading || ""}`,
-  error: `${styles.error || ""}`,
-};
-
-// Ensure styles are loaded
-if (!styles || Object.keys(styles).length === 0) {
-  console.error("CSS Module failed to load:", styles);
-}
 
 const AppointmentManagement = () => {
   const [appointments, setAppointments] = useState({ upcoming: [], past: [] });
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const { user, logout } = useAuth();
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const formatDateTime = (dateString) => {
+  useEffect(() => {
+    loadAppointments();
+  }, []);
+
+  const loadAppointments = async () => {
     try {
-      if (!dateString) {
-        return "Date not available";
+      setLoading(true);
+      const response = await api.get("/api/appointments/user");
+      if (response.data.success) {
+        setAppointments(response.data.data);
+      } else {
+        throw new Error(response.data.message);
       }
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) {
-        return "Invalid date";
-      }
-      return new Intl.DateTimeFormat("en-US", {
-        dateStyle: "medium",
-        timeStyle: "short",
-      }).format(date);
     } catch (error) {
-      return "Date error";
+      console.error("Error loading appointments:", error);
+      toast.error("Failed to load appointments");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleCancel = async (appointmentId) => {
-    if (!window.confirm("Are you sure you want to cancel this appointment?")) {
-      return;
-    }
+  const handleViewAppointment = (appointment) => {
+    setSelectedAppointment(appointment);
+    setIsViewModalOpen(true);
+  };
 
+  const handleEditAppointment = (appointment) => {
+    setIsEditModalOpen(true);
+  };
+
+  const handleCancelAppointment = async (appointmentId) => {
     try {
       const response = await api.patch(
         `/api/appointments/${appointmentId}/cancel`
@@ -65,123 +51,66 @@ const AppointmentManagement = () => {
         toast.success("Appointment cancelled successfully");
         loadAppointments();
       } else {
-        throw new Error(
-          response.data.message || "Failed to cancel appointment"
-        );
+        throw new Error(response.data.message);
       }
     } catch (error) {
-      console.error("Cancel appointment error:", error);
-      toast.error(
-        error.response?.data?.message || "Failed to cancel appointment"
-      );
+      console.error("Error cancelling appointment:", error);
+      toast.error("Failed to cancel appointment");
     }
   };
 
-  const loadAppointments = async () => {
+  const handleUpdateAppointment = async (appointmentId, updatedData) => {
     try {
-      if (!user?.userId || !user?.email) {
-        throw new Error("Missing user data");
-      }
-
-      const response = await api.get("/api/appointments/user");
-
-      if (response.data.success && response.data.data) {
-        setAppointments({
-          upcoming: response.data.data.upcoming || [],
-          past: response.data.data.past || [],
-        });
+      const response = await api.patch(
+        `/api/appointments/${appointmentId}`,
+        updatedData
+      );
+      if (response.data.success) {
+        toast.success("Appointment updated successfully");
+        loadAppointments();
+        setIsEditModalOpen(false);
       } else {
-        throw new Error("Invalid response format");
+        throw new Error(response.data.message);
       }
-
-      setError(null);
     } catch (error) {
-      if (error.response?.status === 401) {
-        toast.error("Session expired. Please log in again");
-        logout();
-      } else {
-        const errorMessage =
-          error.response?.data?.message ||
-          error.message ||
-          "Failed to load appointments";
-        toast.error(errorMessage);
-        setError(errorMessage);
-      }
-    } finally {
-      setLoading(false);
+      console.error("Error updating appointment:", error);
+      toast.error("Failed to update appointment");
     }
   };
 
-  useEffect(() => {
-    if (user?.userId) {
-      loadAppointments();
-    } else {
-      setLoading(false);
-    }
-  }, [user]);
+  const formatDateTime = (dateTime) => {
+    return new Date(dateTime).toLocaleString();
+  };
 
   if (loading) {
     return <div className={classNames.loading}>Loading appointments...</div>;
   }
 
-  if (error) {
-    return (
-      <div className={classNames.error}>
-        {error}
-        <button onClick={loadAppointments} className={classNames.actionButton}>
-          Try Again
-        </button>
-      </div>
-    );
-  }
-
-  const canModifyAppointment = (appointment) => {
-    const appointmentDate = new Date(appointment.date || appointment.dateTime);
-    const now = new Date();
-    // Allow modifications up to 24 hours before the appointment
-    const hoursDifference = (appointmentDate - now) / (1000 * 60 * 60);
-    return hoursDifference > 24;
-  };
-
   return (
     <div className={classNames.container}>
       <section className={classNames.section}>
         <h2>Upcoming Appointments</h2>
-        {!appointments.upcoming ? (
-          <div className={classNames.emptyState}>
-            <p>Loading appointments...</p>
-          </div>
-        ) : appointments.upcoming.length === 0 ? (
+        {appointments.upcoming.length === 0 ? (
           <div className={classNames.emptyState}>
             <p>No upcoming appointments</p>
           </div>
         ) : (
           <div className={classNames.appointmentsList}>
-            {appointments.upcoming.map((apt) => (
-              <div key={apt._id} className={classNames.appointmentItem}>
+            {appointments.upcoming.map((appointment) => (
+              <div
+                key={appointment._id}
+                className={classNames.appointmentItem}
+                onClick={() => handleViewAppointment(appointment)}
+              >
                 <div className={classNames.serviceInfo}>
-                  <h3>
-                    {apt.service?.name ||
-                      apt.serviceId?.name ||
-                      "Unnamed Service"}
-                  </h3>
+                  <h3>{appointment.serviceId?.name || "Unnamed Service"}</h3>
                   <span className={classNames.status}>
-                    {apt.status || "scheduled"}
+                    {appointment.status}
                   </span>
                 </div>
                 <div className={classNames.dateTime}>
-                  {formatDateTime(apt.date || apt.dateTime)}
+                  {formatDateTime(appointment.dateTime)}
                 </div>
-                {canModifyAppointment(apt) && apt.status !== "cancelled" && (
-                  <div className={classNames.actions}>
-                    <button
-                      onClick={() => handleCancel(apt._id)}
-                      className={`${classNames.actionButton} ${classNames.cancelButton}`}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                )}
               </div>
             ))}
           </div>
@@ -190,36 +119,55 @@ const AppointmentManagement = () => {
 
       <section className={classNames.section}>
         <h2>Past Appointments</h2>
-        {!appointments.past ? (
-          <div className={classNames.emptyState}>
-            <p>Loading appointments...</p>
-          </div>
-        ) : appointments.past.length === 0 ? (
+        {appointments.past.length === 0 ? (
           <div className={classNames.emptyState}>
             <p>No past appointments</p>
           </div>
         ) : (
           <div className={classNames.appointmentsList}>
-            {appointments.past.map((apt) => (
-              <div key={apt._id} className={classNames.appointmentItem}>
+            {appointments.past.map((appointment) => (
+              <div
+                key={appointment._id}
+                className={classNames.appointmentItem}
+                onClick={() => handleViewAppointment(appointment)}
+              >
                 <div className={classNames.serviceInfo}>
-                  <h3>
-                    {apt.service?.name ||
-                      apt.serviceId?.name ||
-                      "Unnamed Service"}
-                  </h3>
+                  <h3>{appointment.serviceId?.name || "Unnamed Service"}</h3>
                   <span className={classNames.status}>
-                    {apt.status || "completed"}
+                    {appointment.status}
                   </span>
                 </div>
                 <div className={classNames.dateTime}>
-                  {formatDateTime(apt.date || apt.dateTime)}
+                  {formatDateTime(appointment.dateTime)}
                 </div>
               </div>
             ))}
           </div>
         )}
       </section>
+
+      {isViewModalOpen && selectedAppointment && (
+        <AppointmentViewModal
+          appointment={selectedAppointment}
+          onClose={() => {
+            setIsViewModalOpen(false);
+            setSelectedAppointment(null);
+          }}
+          onEdit={handleEditAppointment}
+          onCancel={handleCancelAppointment}
+        />
+      )}
+
+      {isEditModalOpen && selectedAppointment && (
+        <EditAppointmentModal
+          appointment={selectedAppointment}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setSelectedAppointment(null);
+          }}
+          onSubmit={handleUpdateAppointment}
+        />
+      )}
     </div>
   );
 };

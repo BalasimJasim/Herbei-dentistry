@@ -1,80 +1,83 @@
 /* Container */
 .container {
-  padding: 1rem !important;
-  max-width: 1200px !important;
-  margin: 0 auto !important;
-  width: 100% !important;
-  background-color: var(--neutral-50) !important;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
 }
 
 /* Section */
 .section {
-  margin-bottom: 2rem !important;
-  background: #ffffff !important;
-  border-radius: 8px !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
-  padding: 1.5rem !important;
+  margin-bottom: 3rem;
 }
 
 .section h2 {
-  color: #333333 !important;
-  margin-bottom: 1.5rem !important;
-  font-size: 1.5rem !important;
-  font-weight: 600 !important;
+  font-size: 1.5rem;
+  color: var(--neutral-900);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
 }
 
 /* Appointments List */
 .appointmentsList {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 1rem !important;
+  display: grid;
+  gap: 1rem;
 }
 
 /* Appointment Item */
 .appointmentItem {
-  background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 8px !important;
-  padding: 1.5rem !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
-  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  background: white;
+  border: 1px solid var(--neutral-200);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .appointmentItem:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+  border-color: var(--primary-400);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
 }
 
 /* Service Info */
 .serviceInfo {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  margin-bottom: 1rem !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
 }
 
 .serviceInfo h3 {
-  margin: 0 !important;
-  color: #2d3748 !important;
-  font-size: 1.1rem !important;
-  font-weight: 600 !important;
+  font-size: 1.125rem;
+  color: var(--neutral-900);
+  margin: 0;
+  font-weight: 600;
 }
 
 /* Status */
 .status {
-  padding: 0.25rem 0.75rem !important;
-  border-radius: 9999px !important;
-  font-size: 0.875rem !important;
-  font-weight: 500 !important;
-  background: #e2e8f0 !important;
-  color: #4a5568 !important;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  background: var(--primary-100);
+  color: var(--primary-700);
+}
+
+.status[data-status="cancelled"] {
+  background: var(--red-100);
+  color: var(--red-700);
+}
+
+.status[data-status="completed"] {
+  background: var(--green-100);
+  color: var(--green-700);
 }
 
 /* Date Time */
 .dateTime {
-  color: #4a5568 !important;
-  font-size: 0.9rem !important;
-  margin-bottom: 1rem !important;
+  font-size: 0.875rem;
+  color: var(--neutral-600);
 }
 
 /* Actions */
@@ -110,19 +113,18 @@
 
 /* Empty State */
 .emptyState {
-  text-align: center !important;
-  padding: 2rem !important;
-  background: #f7fafc !important;
-  border-radius: 8px !important;
-  color: #4a5568 !important;
-  border: 2px dashed #e2e8f0 !important;
+  text-align: center;
+  padding: 3rem;
+  background: var(--neutral-50);
+  border-radius: 12px;
+  color: var(--neutral-600);
 }
 
 /* Loading */
 .loading {
-  text-align: center !important;
-  padding: 2rem !important;
-  color: #4a5568 !important;
+  text-align: center;
+  padding: 3rem;
+  color: var(--neutral-600);
 }
 
 /* Error */
@@ -138,22 +140,19 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .container {
-    padding: 0.5rem !important;
-  }
-
-  .section {
-    padding: 1rem !important;
+    padding: 1rem;
   }
 
   .appointmentItem {
-    padding: 1rem !important;
+    padding: 1rem;
   }
 
-  .actions {
-    flex-direction: column !important;
+  .serviceInfo {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
-  .actionButton {
-    width: 100% !important;
+  .status {
+    align-self: flex-start;
   }
 }

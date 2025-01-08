@@ -1,0 +1,240 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.closeButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: var(--neutral-500);
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  background: var(--neutral-100);
+  color: var(--neutral-700);
+}
+
+.modalHeader {
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modalHeader h2 {
+  font-size: 1.5rem;
+  color: var(--neutral-900);
+  margin: 0;
+}
+
+.statusBadge {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.statusBadge[data-status="scheduled"] {
+  background: var(--primary-100);
+  color: var(--primary-700);
+}
+
+.statusBadge[data-status="cancelled"] {
+  background: var(--red-100);
+  color: var(--red-700);
+}
+
+.statusBadge[data-status="completed"] {
+  background: var(--green-100);
+  color: var(--green-700);
+}
+
+.appointmentDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.detailGroup {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.detailItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.icon {
+  color: var(--primary-500);
+  font-size: 1.25rem;
+  margin-top: 0.25rem;
+}
+
+.detailItem label {
+  font-size: 0.875rem;
+  color: var(--neutral-500);
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.detailItem p {
+  margin: 0;
+  color: var(--neutral-900);
+  font-weight: 500;
+}
+
+.serviceDetails {
+  background: var(--neutral-50);
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.serviceDetails h3 {
+  font-size: 1.125rem;
+  color: var(--neutral-900);
+  margin: 0 0 0.5rem 0;
+}
+
+.serviceDetails p {
+  margin: 0;
+  color: var(--neutral-700);
+}
+
+.notes {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--neutral-200);
+}
+
+.notes h4 {
+  font-size: 1rem;
+  color: var(--neutral-900);
+  margin: 0 0 0.5rem 0;
+}
+
+.notes p {
+  font-size: 0.875rem;
+  color: var(--neutral-600);
+  margin: 0;
+}
+
+.modalActions {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--neutral-200);
+  display: flex;
+  gap: 1rem;
+}
+
+.editButton, .cancelButton {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.editButton {
+  background: var(--primary-600);
+  color: white;
+  border: none;
+}
+
+.editButton:hover {
+  background: var(--primary-700);
+}
+
+.cancelButton {
+  background: white;
+  color: var(--red-600);
+  border: 1px solid var(--red-200);
+}
+
+.cancelButton:hover {
+  background: var(--red-50);
+  border-color: var(--red-300);
+}
+
+.confirmCancel {
+  width: 100%;
+}
+
+.confirmCancel p {
+  color: var(--neutral-900);
+  margin: 0 0 1rem 0;
+  text-align: center;
+}
+
+.confirmButtons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.confirmButton, .denyButton {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.confirmButton {
+  background: var(--red-600);
+  color: white;
+  border: none;
+}
+
+.confirmButton:hover {
+  background: var(--red-700);
+}
+
+.denyButton {
+  background: white;
+  color: var(--neutral-700);
+  border: 1px solid var(--neutral-300);
+}
+
+.denyButton:hover {
+  background: var(--neutral-50);
+  border-color: var(--neutral-400);
+} 
