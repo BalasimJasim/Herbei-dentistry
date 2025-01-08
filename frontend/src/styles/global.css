@@ -7,13 +7,12 @@
   padding: 0;
 }
 
-/* Temporarily comment out to check for conflicts */
-/* body {
+body {
   font-family: var(--font-family-base);
   color: var(--neutral-800);
   line-height: 1.5;
   background-color: var(--neutral-50);
-} */
+}
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
@@ -23,14 +22,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Common Components */
-.container {
+.global-container {
   max-width: var(--container-width);
   margin: 0 auto;
   padding: 0 var(--spacing-4);
 }
 
 /* Buttons */
-.button {
+.global-button {
   display: inline-block;
   padding: var(--spacing-4) var(--spacing-8);
   border-radius: var(--radius-lg);
@@ -40,18 +39,18 @@ h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
 }
 
-.button-primary {
+.global-button-primary {
   background-color: var(--primary-600);
   color: white;
 }
 
-.button-primary:hover {
+.global-button-primary:hover {
   background-color: var(--primary-700);
   transform: translateY(-2px);
 }
 
 /* Cards */
-.card {
+.global-card {
   background: white;
   border-radius: var(--radius-xl);
   padding: var(--spacing-6);
@@ -59,29 +58,29 @@ h1, h2, h3, h4, h5, h6 {
   transition: var(--transition-all);
 }
 
-.card:hover {
+.global-card:hover {
   transform: translateY(-5px);
   box-shadow: var(--shadow-lg);
 }
 
 /* Section Styles */
-.section {
+.global-section {
   padding: var(--spacing-20) 0;
 }
 
-.section-hero {
+.global-section-hero {
   background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
   text-align: center;
 }
 
 /* Hero Sections */
-.hero-title {
+.global-hero-title {
   font-size: var(--text-5xl);
   color: var(--neutral-900);
   margin-bottom: var(--spacing-6);
 }
 
-.hero-subtitle {
+.global-hero-subtitle {
   font-size: var(--text-xl);
   color: var(--neutral-600);
   max-width: 600px;
@@ -89,14 +88,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Features Grid */
-.features-grid {
+.global-features-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: var(--spacing-8);
 }
 
 /* CTA Sections */
-.cta-section {
+.global-cta-section {
   background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
   color: white;
   text-align: center;
@@ -105,15 +104,15 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .hero-title {
+  .global-hero-title {
     font-size: var(--text-4xl);
   }
 
-  .section {
+  .global-section {
     padding: var(--spacing-12) 0;
   }
 
-  .features-grid {
+  .global-features-grid {
     grid-template-columns: 1fr;
     gap: var(--spacing-6);
   }
@@ -135,12 +134,12 @@ h1, h2, h3, h4, h5, h6 {
   animation: fadeIn 0.6s ease-out forwards;
 }
 
-/* Add or update these styles */
+/* Navigation */
 .hamburger-menu {
   display: none;
   cursor: pointer;
-  margin-right: 1rem; /* Add space from the right edge */
-  padding: 0.5rem;    /* Add some padding around the button */
+  margin-right: 1rem;
+  padding: 0.5rem;
 }
 
 .hamburger-icon,
@@ -149,21 +148,20 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;      /* Fixed width */
-  height: 24px;     /* Fixed height */
+  width: 24px;
+  height: 24px;
 }
 
 @media (max-width: 768px) {
   .hamburger-menu {
     display: block;
     position: relative;
-    z-index: 1000;    /* Ensure it's above other elements */
+    z-index: 1000;
   }
 
-  /* Improve close icon positioning */
   .close-icon {
     position: fixed;
-    top: 1.25rem;    /* Match header spacing */
-    right: 1rem;     /* Space from the right */
+    top: 1.25rem;
+    right: 1rem;
   }
 } 

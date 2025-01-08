@@ -13,17 +13,21 @@ const AppointmentForm = () => {
 
   // Form state
   const [formData, setFormData] = useState({
-    name: location.state?.autofill ? location.state.userData?.name || "" : "",
+    firstName: location.state?.autofill
+      ? location.state.userData?.name?.split(" ")[0] || ""
+      : "",
+    lastName: location.state?.autofill
+      ? location.state.userData?.name?.split(" ")[1] || ""
+      : "",
     email: location.state?.autofill ? location.state.userData?.email || "" : "",
     phone: location.state?.autofill ? location.state.userData?.phone || "" : "",
-    service: "",
-    date: "",
-    time: "",
+    serviceId: "",
+    notes: "",
   });
 
   // Step management
   const [currentStep, setCurrentStep] = useState(1);
-  const [services, setServices] = useState([]);
+  const [services, setServices] = useState({});
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -43,9 +47,14 @@ const AppointmentForm = () => {
       setLoading(true);
       try {
         const response = await api.get("/api/services");
-        if (response.data.success) {
-          const groupedServices = groupServicesByCabinet(response.data.data);
+        console.log("Services response:", response.data); // Debug log
+        if (response.data.success && Array.isArray(response.data.services)) {
+          const groupedServices = groupServicesByCabinet(
+            response.data.services
+          );
           setServices(groupedServices);
+        } else {
+          throw new Error("Invalid services data format");
         }
       } catch (error) {
         console.error("Failed to load services:", error);
@@ -59,6 +68,11 @@ const AppointmentForm = () => {
   }, [t]);
 
   const groupServicesByCabinet = (services) => {
+    if (!Array.isArray(services)) {
+      console.error("Invalid services data:", services);
+      return {};
+    }
+
     const cabinets = {
       1: { name: "Consultation Services", services: [] },
       2: { name: "Operative Dentistry", services: [] },
@@ -69,13 +83,21 @@ const AppointmentForm = () => {
     };
 
     services.forEach((service) => {
-      if (service.cabinetNumber === 2 || service.cabinetNumber === 3) {
+      if (!service || typeof service !== "object") {
+        console.warn("Invalid service object:", service);
+        return;
+      }
+
+      const cabinetNumber = service.cabinetNumber || 1; // Default to consultation if no cabinet
+
+      if (cabinetNumber === 2 || cabinetNumber === 3) {
         cabinets[2].services.push(service);
-      } else if (cabinets[service.cabinetNumber]) {
-        cabinets[service.cabinetNumber].services.push(service);
+      } else if (cabinets[cabinetNumber]) {
+        cabinets[cabinetNumber].services.push(service);
       }
     });
 
+    // Filter out empty cabinets and cabinet 3 (merged with 2)
     const filteredCabinets = Object.entries(cabinets)
       .filter(([key, value]) => value.services.length > 0 && key !== "3")
       .reduce((acc, [key, value]) => {
@@ -208,221 +230,179 @@ const AppointmentForm = () => {
     return true;
   };
 
-  const renderServiceSelection = () => {
-    const selectedService =
-      formData.serviceId &&
-      Object.values(services)
-        .flatMap((category) => category.services)
-        .find((service) => service.id === formData.serviceId);
+  return (
+    <div className={styles.formContainer}>
+      {currentStep === 1 && (
+        <div className={styles.formStep}>
+          <h2 className={styles.formTitle}>{t("Select Your Service")}</h2>
+          <div className={styles.serviceSelection}>
+            <button
+              className={styles.serviceSelectButton}
+              onClick={() => setIsServiceModalOpen(true)}
+            >
+              {formData.serviceId
+                ? services[
+                    Object.keys(services).find((key) =>
+                      services[key].services.some(
+                        (s) => s.id === formData.serviceId
+                      )
+                    )
+                  ]?.services.find((s) => s.id === formData.serviceId)?.name
+                : t("Choose a service...")}
+            </button>
 
-    return (
-      <div className="service-selection">
-        <h2>{t("Select Your Service")}</h2>
-        <button
-          className="service-select-button"
-          onClick={() => setIsServiceModalOpen(true)}
-        >
-          {selectedService ? selectedService.name : t("Choose a service...")}
-        </button>
-
-        {isServiceModalOpen && (
-          <div className={styles.serviceModalOverlay}>
-            <div className={styles.serviceModal}>
-              <div className={styles.modalHeader}>
-                <h2 className={styles.modalTitle}>Select a Service</h2>
-                <button
-                  className={styles.closeButton}
-                  onClick={() => setIsServiceModalOpen(false)}
-                >
-                  ×
-                </button>
-              </div>
-              <div className="service-modal-content">
-                {Object.entries(services).length > 0 ? (
-                  Object.entries(services).map(
-                    ([category, categoryServices]) => (
-                      <div key={category} className="service-category">
-                        <h4>{categoryServices.name}</h4>
-                        <div className="service-options">
-                          {categoryServices.services.map((service) => (
-                            <button
-                              key={service.id}
-                              className={`${styles.serviceOption} ${
-                                formData.serviceId === service.id
-                                  ? styles.selected
-                                  : ""
-                              }`}
-                              onClick={() => {
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  serviceId: service.id,
-                                }));
-                                setIsServiceModalOpen(false);
-                                setCurrentStep(2);
-                              }}
-                            >
-                              <div className={styles.serviceInfo}>
-                                <div className={styles.serviceName}>
-                                  {service.name}
-                                </div>
-                                <div className={styles.serviceDescription}>
-                                  {service.description}
-                                </div>
+            {isServiceModalOpen && (
+              <div className={styles.serviceModalOverlay}>
+                <div className={styles.serviceModal}>
+                  <div className={styles.modalHeader}>
+                    <h2 className={styles.modalTitle}>
+                      {t("Select a Service")}
+                    </h2>
+                    <button
+                      className={styles.closeButton}
+                      onClick={() => setIsServiceModalOpen(false)}
+                    >
+                      ×
+                    </button>
+                  </div>
+                  {Object.entries(services).map(
+                    ([category, { name, services: categoryServices }]) => (
+                      <div key={category}>
+                        <h3 className={styles.categoryTitle}>{name}</h3>
+                        {categoryServices.map((service) => (
+                          <button
+                            key={service.id}
+                            className={`${styles.serviceOption} ${
+                              formData.serviceId === service.id
+                                ? styles.selected
+                                : ""
+                            }`}
+                            onClick={() => {
+                              handleServiceSelect(service.id);
+                              setIsServiceModalOpen(false);
+                            }}
+                          >
+                            <div>
+                              <div className={styles.serviceName}>
+                                {service.name}
                               </div>
-                              <div className={styles.serviceDuration}>
-                                {service.duration} min
+                              <div className={styles.serviceDescription}>
+                                {service.description}
                               </div>
-                            </button>
-                          ))}
-                        </div>
+                            </div>
+                            <div className={styles.serviceDuration}>
+                              {service.duration} min
+                            </div>
+                          </button>
+                        ))}
                       </div>
                     )
-                  )
-                ) : (
-                  <div className="service-loading">
-                    {t("Loading services...")}
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
-        )}
-      </div>
-    );
-  };
-
-  return (
-    <div className="booking-container">
-      {/* Progress Steps */}
-      <div className="booking-steps">
-        <div className={`step ${currentStep >= 1 ? "active" : ""}`}>
-          <div className="step-number">1</div>
-          <div className="step-label">Select Service</div>
         </div>
-        <div className="step-connector" />
-        <div className={`step ${currentStep >= 2 ? "active" : ""}`}>
-          <div className="step-number">2</div>
-          <div className="step-label">Choose Date & Time</div>
-        </div>
-        <div className="step-connector" />
-        <div className={`step ${currentStep >= 3 ? "active" : ""}`}>
-          <div className="step-number">3</div>
-          <div className="step-label">Personal Details</div>
-        </div>
-      </div>
+      )}
 
-      {/* Main Content */}
-      <div className="booking-content">
-        {currentStep === 1 && renderServiceSelection()}
-        {currentStep === 2 && (
-          <div className="datetime-selection">
-            <h2>Select Date & Time</h2>
-            <AppointmentCalendar
-              selectedDate={selectedDate}
-              onDateSelect={handleDateSelect}
-              onTimeSelect={handleTimeSelect}
-              selectedTime={selectedTime}
-              selectedService={formData.serviceId}
-            />
-          </div>
-        )}
+      {currentStep === 2 && (
+        <div className={styles.formStep}>
+          <h2 className={styles.formTitle}>{t("Choose Date & Time")}</h2>
+          <AppointmentCalendar
+            selectedDate={selectedDate}
+            selectedTime={selectedTime}
+            onDateSelect={handleDateSelect}
+            onTimeSelect={handleTimeSelect}
+            serviceId={formData.serviceId}
+          />
+        </div>
+      )}
 
-        {currentStep === 3 && (
-          <form onSubmit={handleSubmit} className="personal-info">
-            <h2>{t("Personal Information")}</h2>
-            <div className="form-grid">
-              <div className="form-group">
-                <label>{t("First Name")} *</label>
-                <input
-                  type="text"
-                  value={formData.firstName}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      firstName: e.target.value,
-                    }))
-                  }
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>{t("Last Name")} *</label>
-                <input
-                  type="text"
-                  value={formData.lastName}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      lastName: e.target.value,
-                    }))
-                  }
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>
-                  {t("Email")} <span className="optional">(Optional)</span>
-                </label>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, email: e.target.value }))
-                  }
-                />
-              </div>
-              <div className="form-group">
-                <label>{t("Phone")} *</label>
-                <input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, phone: e.target.value }))
-                  }
-                  placeholder="+380991234567"
-                  required
-                />
-              </div>
-              <div className="form-group full-width">
-                <label>
-                  {t("Notes")} ({t("Optional")})
-                </label>
-                <textarea
-                  value={formData.notes}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, notes: e.target.value }))
-                  }
-                  rows="3"
-                />
-              </div>
+      {currentStep === 3 && (
+        <div className={styles.formStep}>
+          <h2 className={styles.formTitle}>{t("Personal Details")}</h2>
+          <form onSubmit={handleSubmit}>
+            <div className={styles.formGroup}>
+              <label htmlFor="firstName">{t("First Name")} *</label>
+              <input
+                type="text"
+                id="firstName"
+                value={formData.firstName}
+                onChange={(e) =>
+                  setFormData({ ...formData, firstName: e.target.value })
+                }
+                disabled={isFieldDisabled("firstName")}
+                required
+              />
             </div>
-            <div className="form-actions">
-              <button
-                type="submit"
-                className="submit-button"
-                disabled={loading}
-              >
-                {loading ? t("Booking...") : t("Confirm Booking")}
-              </button>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="lastName">{t("Last Name")} *</label>
+              <input
+                type="text"
+                id="lastName"
+                value={formData.lastName}
+                onChange={(e) =>
+                  setFormData({ ...formData, lastName: e.target.value })
+                }
+                disabled={isFieldDisabled("lastName")}
+                required
+              />
             </div>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="email">{t("Email")}</label>
+              <input
+                type="email"
+                id="email"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                disabled={isFieldDisabled("email")}
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="phone">{t("Phone")} *</label>
+              <input
+                type="tel"
+                id="phone"
+                value={formData.phone}
+                onChange={(e) =>
+                  setFormData({ ...formData, phone: e.target.value })
+                }
+                disabled={isFieldDisabled("phone")}
+                required
+                placeholder="0123456789"
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="notes">{t("Notes")}</label>
+              <textarea
+                id="notes"
+                value={formData.notes}
+                onChange={(e) =>
+                  setFormData({ ...formData, notes: e.target.value })
+                }
+                rows={4}
+                placeholder={t("Any additional information...")}
+              />
+            </div>
+
+            <button
+              type="submit"
+              className={styles.submitButton}
+              disabled={loading}
+            >
+              {loading ? t("Booking...") : t("Book Appointment")}
+            </button>
           </form>
-        )}
-      </div>
-
-      {/* Navigation */}
-      <div className="booking-navigation">
-        {currentStep > 1 && (
-          <button
-            type="button"
-            className="back-button"
-            onClick={() => setCurrentStep((prev) => prev - 1)}
-          >
-            {t("Back")}
-          </button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default AppointmentForm
+export default AppointmentForm;

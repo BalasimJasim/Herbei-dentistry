@@ -1,46 +1,57 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from "path";
+import { fileURLToPath } from "url";
 
-// https://vite.dev/config/
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 export default defineConfig({
   plugins: [react()],
   base: "/",
   css: {
     modules: {
       localsConvention: "camelCase",
-      generateScopedName: (name, filename) => {
-        return `${path.basename(filename, ".module.css")}_${name}`;
+      scopeBehaviour: "local",
+      generateScopedName: "[name]__[local]___[hash:base64:5]",
+      globalModulePaths: [/global\.css$/, /reset\.css$/, /variables\.css$/],
+    },
+    preprocessorOptions: {
+      less: {
+        javascriptEnabled: true,
       },
     },
-    postcss: "./postcss.config.js",
-  },
-  define: {
-    "process.env.VITE_API_URL": JSON.stringify(process.env.VITE_API_URL),
   },
   build: {
     sourcemap: true,
     outDir: "dist",
     assetsDir: "assets",
     emptyOutDir: true,
-    cssCodeSplit: false,
-    minify: false,
+    cssCodeSplit: true,
+    minify: "terser",
     rollupOptions: {
       output: {
-        assetFileNames: "assets/[name].[hash][extname]",
+        manualChunks: undefined,
+        assetFileNames: (assetInfo) => {
+          let extType = assetInfo.name.split(".").at(1);
+          if (extType === "css") {
+            return `assets/css/[name].[hash][extname]`;
+          }
+          return `assets/[name].[hash][extname]`;
+        },
+        chunkFileNames: "assets/js/[name].[hash].js",
+        entryFileNames: "assets/js/[name].[hash].js",
       },
       input: {
         main: path.resolve(__dirname, "index.html"),
       },
     },
   },
-  publicDir: "public",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
     },
   },
-  server: {
-    historyApiFallback: true,
+  optimizeDeps: {
+    include: ["react", "react-dom"],
   },
 });
