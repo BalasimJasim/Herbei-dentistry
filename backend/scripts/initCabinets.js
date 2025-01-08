@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import Cabinet from '../models/Cabinet.js';
-import { CABINETS } from '../config/services.js';
+import { CABINETS } from "../config/servicesConfig.js";
+import Cabinet from "../models/Cabinet.js";
 
 dotenv.config();
 

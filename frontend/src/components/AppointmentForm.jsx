@@ -47,14 +47,36 @@ const AppointmentForm = () => {
       setLoading(true);
       try {
         const response = await api.get("/api/services");
-        console.log("Services response:", response.data); // Debug log
-        if (response.data.success && Array.isArray(response.data.services)) {
-          const groupedServices = groupServicesByCabinet(
-            response.data.services
+        console.log("Services response:", response.data);
+        if (response.data.success) {
+          // Group services by cabinet
+          const groupedServices = {
+            1: { name: "Consultation Services", services: [] },
+            2: { name: "Operative Dentistry", services: [] },
+            4: { name: "Orthopedic Services", services: [] },
+            5: { name: "Orthodontics & Pediatric", services: [] },
+            6: { name: "Surgery Services", services: [] },
+          };
+
+          response.data.services.forEach((service) => {
+            const cabinet = service.cabinetNumber || 1;
+            if (cabinet === 2 || cabinet === 3) {
+              if (groupedServices[2]) {
+                groupedServices[2].services.push(service);
+              }
+            } else if (groupedServices[cabinet]) {
+              groupedServices[cabinet].services.push(service);
+            }
+          });
+
+          // Filter out empty cabinets
+          const filtered = Object.fromEntries(
+            Object.entries(groupedServices).filter(
+              ([, value]) => value.services.length > 0
+            )
           );
-          setServices(groupedServices);
-        } else {
-          throw new Error("Invalid services data format");
+
+          setServices(filtered);
         }
       } catch (error) {
         console.error("Failed to load services:", error);
@@ -66,47 +88,6 @@ const AppointmentForm = () => {
 
     loadServices();
   }, [t]);
-
-  const groupServicesByCabinet = (services) => {
-    if (!Array.isArray(services)) {
-      console.error("Invalid services data:", services);
-      return {};
-    }
-
-    const cabinets = {
-      1: { name: "Consultation Services", services: [] },
-      2: { name: "Operative Dentistry", services: [] },
-      3: { name: "Operative Dentistry", services: [] },
-      4: { name: "Orthopedic Services", services: [] },
-      5: { name: "Orthodontics & Pediatric", services: [] },
-      6: { name: "Surgery Services", services: [] },
-    };
-
-    services.forEach((service) => {
-      if (!service || typeof service !== "object") {
-        console.warn("Invalid service object:", service);
-        return;
-      }
-
-      const cabinetNumber = service.cabinetNumber || 1; // Default to consultation if no cabinet
-
-      if (cabinetNumber === 2 || cabinetNumber === 3) {
-        cabinets[2].services.push(service);
-      } else if (cabinets[cabinetNumber]) {
-        cabinets[cabinetNumber].services.push(service);
-      }
-    });
-
-    // Filter out empty cabinets and cabinet 3 (merged with 2)
-    const filteredCabinets = Object.entries(cabinets)
-      .filter(([key, value]) => value.services.length > 0 && key !== "3")
-      .reduce((acc, [key, value]) => {
-        acc[key] = value;
-        return acc;
-      }, {});
-
-    return filteredCabinets;
-  };
 
   const handleServiceSelect = (serviceId) => {
     setFormData((prev) => ({ ...prev, serviceId }));
@@ -241,13 +222,9 @@ const AppointmentForm = () => {
               onClick={() => setIsServiceModalOpen(true)}
             >
               {formData.serviceId
-                ? services[
-                    Object.keys(services).find((key) =>
-                      services[key].services.some(
-                        (s) => s.id === formData.serviceId
-                      )
-                    )
-                  ]?.services.find((s) => s.id === formData.serviceId)?.name
+                ? Object.values(services)
+                    .flatMap((category) => category.services)
+                    .find((service) => service._id === formData.serviceId)?.name
                 : t("Choose a service...")}
             </button>
 
@@ -265,20 +242,24 @@ const AppointmentForm = () => {
                       ×
                     </button>
                   </div>
-                  {Object.entries(services).map(
-                    ([category, { name, services: categoryServices }]) => (
-                      <div key={category}>
-                        <h3 className={styles.categoryTitle}>{name}</h3>
-                        {categoryServices.map((service) => (
+                  {loading ? (
+                    <div>Loading services...</div>
+                  ) : (
+                    Object.entries(services).map(([categoryId, category]) => (
+                      <div key={categoryId}>
+                        <h3 className={styles.categoryTitle}>
+                          {category.name}
+                        </h3>
+                        {category.services.map((service) => (
                           <button
-                            key={service.id}
+                            key={service._id}
                             className={`${styles.serviceOption} ${
-                              formData.serviceId === service.id
+                              formData.serviceId === service._id
                                 ? styles.selected
                                 : ""
                             }`}
                             onClick={() => {
-                              handleServiceSelect(service.id);
+                              handleServiceSelect(service._id);
                               setIsServiceModalOpen(false);
                             }}
                           >
@@ -296,7 +277,7 @@ const AppointmentForm = () => {
                           </button>
                         ))}
                       </div>
-                    )
+                    ))
                   )}
                 </div>
               </div>

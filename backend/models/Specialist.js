@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { SPECIALIZATIONS } from '../config/services.js';
+import { SPECIALIZATIONS } from "../config/servicesConfig.js";
 
 const specialistSchema = new mongoose.Schema({
   name: {

@@ -26,6 +26,16 @@ const serviceSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    cabinetNumber: {
+      type: Number,
+      required: [true, "Cabinet number is required"],
+      min: [1, "Cabinet number must be at least 1"],
+    },
+    specialization: {
+      type: String,
+      required: [true, "Specialization is required"],
+      trim: true,
+    },
   },
   {
     timestamps: true,
