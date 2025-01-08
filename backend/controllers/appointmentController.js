@@ -64,8 +64,15 @@ export const createAppointment = async (req, res) => {
 
     // Calculate end time based on service duration
     const service = SERVICES.find((s) => s.id === appointmentData.serviceId);
+    if (!service) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid service ID",
+      });
+    }
+
     const endTime = new Date(appointmentData.dateTime);
-    endTime.setMinutes(endTime.getMinutes() + (service?.duration || 60));
+    endTime.setMinutes(endTime.getMinutes() + service.duration);
 
     // Create the appointment
     const appointment = await Appointment.create({
