@@ -34,11 +34,13 @@ const AppointmentManagement = () => {
   };
 
   const handleViewAppointment = (appointment) => {
+    console.log("Opening modal for appointment:", appointment);
     setSelectedAppointment(appointment);
     setIsViewModalOpen(true);
   };
 
   const handleEditAppointment = (appointment) => {
+    setSelectedAppointment(appointment);
     setIsEditModalOpen(true);
   };
 
@@ -101,10 +103,15 @@ const AppointmentManagement = () => {
                 key={appointment._id}
                 className={classNames.appointmentItem}
                 onClick={() => handleViewAppointment(appointment)}
+                role="button"
+                tabIndex={0}
               >
                 <div className={classNames.serviceInfo}>
                   <h3>{appointment.serviceId?.name || "Unnamed Service"}</h3>
-                  <span className={classNames.status}>
+                  <span
+                    className={classNames.status}
+                    data-status={appointment.status}
+                  >
                     {appointment.status}
                   </span>
                 </div>
@@ -130,10 +137,15 @@ const AppointmentManagement = () => {
                 key={appointment._id}
                 className={classNames.appointmentItem}
                 onClick={() => handleViewAppointment(appointment)}
+                role="button"
+                tabIndex={0}
               >
                 <div className={classNames.serviceInfo}>
                   <h3>{appointment.serviceId?.name || "Unnamed Service"}</h3>
-                  <span className={classNames.status}>
+                  <span
+                    className={classNames.status}
+                    data-status={appointment.status}
+                  >
                     {appointment.status}
                   </span>
                 </div>

@@ -1,48 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import PropTypes from "prop-types";
+import { format } from "date-fns";
+import { FaTimes } from "react-icons/fa";
 import styles from "./EditAppointmentModal.module.css";
-import { toast } from "react-toastify";
-import api from "../../utils/axios";
 
 const EditAppointmentModal = ({ appointment, onClose, onSubmit }) => {
-  const [loading, setLoading] = useState(false);
-  const [availableSlots, setAvailableSlots] = useState([]);
   const [selectedDateTime, setSelectedDateTime] = useState(
     appointment.dateTime
   );
-
-  useEffect(() => {
-    loadAvailableSlots();
-  }, [appointment.serviceId]);
-
-  const loadAvailableSlots = async () => {
-    try {
-      setLoading(true);
-      const date = new Date(appointment.dateTime);
-      const response = await api.get("/api/appointments/available", {
-        params: {
-          date: date.toISOString().split("T")[0],
-          serviceId: appointment.serviceId._id,
-        },
-      });
-
-      if (response.data.success) {
-        setAvailableSlots(response.data.data);
-      } else {
-        throw new Error(response.data.message);
-      }
-    } catch (error) {
-      toast.error("Failed to load available time slots");
-      console.error("Load slots error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!selectedDateTime) {
-      toast.error("Please select a date and time");
       return;
     }
 
@@ -51,53 +21,40 @@ const EditAppointmentModal = ({ appointment, onClose, onSubmit }) => {
       await onSubmit(appointment._id, {
         dateTime: selectedDateTime,
       });
-      onClose();
     } catch (error) {
-      console.error("Submit error:", error);
+      console.error("Error updating appointment:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const formatSlotTime = (dateTime) => {
-    return new Date(dateTime).toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
-  };
-
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
-        <h2>Reschedule Appointment</h2>
-        <p>
-          Current appointment: {new Date(appointment.dateTime).toLocaleString()}
-        </p>
+        <button className={styles.closeButton} onClick={onClose}>
+          <FaTimes />
+        </button>
+
+        <div className={styles.modalHeader}>
+          <h2>Edit Appointment</h2>
+        </div>
 
         <form onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
-            <label>Select New Time:</label>
-            <div className={styles.timeSlots}>
-              {loading ? (
-                <p>Loading available slots...</p>
-              ) : availableSlots.length === 0 ? (
-                <p>No available slots for this date</p>
-              ) : (
-                availableSlots.map((slot) => (
-                  <button
-                    key={slot}
-                    type="button"
-                    className={`${styles.timeSlot} ${
-                      selectedDateTime === slot ? styles.selected : ""
-                    }`}
-                    onClick={() => setSelectedDateTime(slot)}
-                  >
-                    {formatSlotTime(slot)}
-                  </button>
-                ))
-              )}
-            </div>
+            <label>Current Date & Time:</label>
+            <p>{format(new Date(appointment.dateTime), "PPpp")}</p>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="newDateTime">New Date & Time:</label>
+            <input
+              type="datetime-local"
+              id="newDateTime"
+              value={selectedDateTime}
+              onChange={(e) => setSelectedDateTime(e.target.value)}
+              min={new Date().toISOString().slice(0, 16)}
+              required
+            />
           </div>
 
           <div className={styles.modalActions}>
@@ -121,6 +78,15 @@ const EditAppointmentModal = ({ appointment, onClose, onSubmit }) => {
       </div>
     </div>
   );
+};
+
+EditAppointmentModal.propTypes = {
+  appointment: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    dateTime: PropTypes.string.isRequired,
+  }).isRequired,
+  onClose: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default EditAppointmentModal;

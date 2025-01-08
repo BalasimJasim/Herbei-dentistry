@@ -31,12 +31,18 @@
   padding: 1.5rem;
   transition: all 0.2s ease;
   cursor: pointer;
+  outline: none;
 }
 
-.appointmentItem:hover {
+.appointmentItem:hover,
+.appointmentItem:focus {
   border-color: var(--primary-400);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
+}
+
+.appointmentItem:focus {
+  box-shadow: 0 0 0 2px var(--primary-100), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 /* Service Info */

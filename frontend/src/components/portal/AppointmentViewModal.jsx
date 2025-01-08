@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import { format } from "date-fns";
 import {
   FaCalendar,
@@ -145,6 +146,25 @@ const AppointmentViewModal = ({ appointment, onClose, onEdit, onCancel }) => {
       </div>
     </div>
   );
+};
+
+AppointmentViewModal.propTypes = {
+  appointment: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    dateTime: PropTypes.string.isRequired,
+    status: PropTypes.string.isRequired,
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    phone: PropTypes.string.isRequired,
+    notes: PropTypes.string,
+    serviceId: PropTypes.shape({
+      name: PropTypes.string,
+    }),
+  }).isRequired,
+  onClose: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
 };
 
 export default AppointmentViewModal;
