@@ -1,14 +1,14 @@
 import Service from "../models/Service.js";
+import { SERVICES } from "../config/servicesConfig.js";
 
 // @desc    Get all active services
 // @route   GET /api/services
 // @access  Public
 export const getServices = async (req, res) => {
   try {
-    const services = await Service.find({ isActive: true }).sort("name");
     res.json({
       success: true,
-      services,
+      services: SERVICES,
     });
   } catch (error) {
     console.error("Error fetching services:", error);
