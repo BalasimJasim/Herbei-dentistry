@@ -90,7 +90,15 @@ const AppointmentForm = () => {
   }, [t]);
 
   const handleServiceSelect = (serviceId) => {
-    setFormData((prev) => ({ ...prev, serviceId }));
+    //Find the selected service to get its ID
+    const selectedService = Object.values(services)
+      .flatMap((category) => category.services)
+      .find((service) => service._id === serviceId);
+
+    setFormData((prev) => ({
+      ...prev,
+      serviceId: selectedService.id || selectedService._id,
+    }));
     setCurrentStep(2); // Move to date selection
   };
 

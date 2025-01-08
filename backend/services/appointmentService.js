@@ -3,10 +3,14 @@ import { SERVICES } from "../config/servicesConfig.js";
 
 // Helper function to find service by ID
 const findServiceById = (serviceId) => {
-  const service = SERVICES.find((s) => s.id === serviceId);
+  console.log("Looking for service with ID:", serviceId);
+  const service = SERVICES.find(
+    (s) => s.id === serviceId || s._id === serviceId
+  );
   if (!service) {
     throw new Error(`Service not found for ID: ${serviceId}`);
   }
+  console.log("Found service:", service);
   return service;
 };
 

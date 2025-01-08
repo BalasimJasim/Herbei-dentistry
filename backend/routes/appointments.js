@@ -6,6 +6,7 @@ import {
   getUserAppointments,
   createAppointment,
   cancelAppointment,
+  getAvailableTimeSlots,
 } from "../controllers/appointmentController.js";
 
 const router = express.Router();
@@ -24,6 +25,15 @@ router.use((req, res, next) => {
   });
   next();
 });
+
+// Public routes
+router.get("/available", getAvailableTimeSlots);
+router.post(
+  "/",
+  validations.appointmentValidation.create,
+  sanitizeData,
+  createAppointment
+);
 
 // Protected routes
 router.get(
@@ -45,14 +55,6 @@ router.put(
   validations.appointmentValidation.cancel,
   sanitizeData,
   cancelAppointment
-);
-
-// Public routes
-router.post(
-  "/",
-  validations.appointmentValidation.create,
-  sanitizeData,
-  createAppointment
 );
 
 export default router;

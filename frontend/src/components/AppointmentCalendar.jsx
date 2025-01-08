@@ -12,27 +12,29 @@ const AppointmentCalendar = ({
   onDateSelect,
   onTimeSelect,
   selectedTime,
-  selectedService,
+  serviceId,
 }) => {
   const [availableSlots, setAvailableSlots] = useState([]);
   const [loading, setLoading] = useState(false);
   const [calendarDate, setCalendarDate] = useState(new Date());
 
   useEffect(() => {
-    if (selectedDate && selectedService) {
+    if (selectedDate && serviceId) {
       fetchAvailableSlots();
     }
-  }, [selectedDate, selectedService]);
+  }, [selectedDate, serviceId]);
 
   const fetchAvailableSlots = async () => {
     setLoading(true);
     try {
+      console.log("Fetching slots for:", { date: selectedDate, serviceId });
       const response = await api.get("/api/appointments/available", {
         params: {
           date: selectedDate.toISOString(),
-          serviceId: selectedService,
+          serviceId: serviceId,
         },
       });
+      console.log("Available slots response:", response.data);
       setAvailableSlots(response.data.data || []);
     } catch (error) {
       console.error("Error fetching slots:", error);
