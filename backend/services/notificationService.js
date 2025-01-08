@@ -7,6 +7,8 @@ export const sendAppointmentNotifications = async (appointment) => {
       email: appointment.email,
       phone: appointment.phone,
       dateTime: appointment.dateTime,
+      firstName: appointment.firstName,
+      service: appointment.serviceId,
     });
 
     const appointmentDate = new Date(appointment.dateTime).toLocaleString();
@@ -15,6 +17,7 @@ export const sendAppointmentNotifications = async (appointment) => {
 
     // Send email if email is provided
     if (appointment.email) {
+      console.log("Attempting to send email notification...");
       const emailContent = {
         to: appointment.email,
         subject: "Appointment Confirmation - Herbie Dental",
@@ -37,6 +40,7 @@ export const sendAppointmentNotifications = async (appointment) => {
 
     // Send SMS if phone number is provided
     if (appointment.phone) {
+      console.log("Attempting to send SMS notification...");
       const smsContent = {
         to: appointment.phone,
         message: `Hi ${appointment.firstName}, your appointment at Herbie Dental is confirmed for ${appointmentDate}. We look forward to seeing you!`,

@@ -16,6 +16,10 @@ const transporter = nodemailer.createTransport({
 export const testEmailConfig = async () => {
   try {
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+      console.error("Email configuration error: Missing credentials", {
+        user: process.env.EMAIL_USER ? "set" : "missing",
+        pass: process.env.EMAIL_PASSWORD ? "set" : "missing"
+      });
       throw new Error("Email credentials missing");
     }
 
@@ -30,13 +34,20 @@ export const testEmailConfig = async () => {
     console.log("Email configuration is valid");
     return true;
   } catch (error) {
-    console.warn("Email configuration warning:", error.message);
+    console.error("Email configuration error:", error.message);
     return false;
   }
 };
 
 export const sendEmail = async ({ to, subject, text, html }) => {
   try {
+    console.log("Initializing email send process...");
+
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+      console.error("Email send error: Missing credentials");
+      return false;
+    }
+
     const mailOptions = {
       from: {
         name: process.env.FROM_NAME || "Herbie Dental",

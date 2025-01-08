@@ -80,9 +80,18 @@ export const createAppointment = async (req, res) => {
       endTime,
     });
 
+    // Send notifications
+    console.log("Sending appointment notifications...");
+    const notificationResult = await sendAppointmentNotifications(appointment);
+    console.log("Notification result:", notificationResult);
+
+    // Schedule reminders
+    await scheduleReminders(appointment);
+
     res.status(201).json({
       success: true,
       data: appointment,
+      notifications: notificationResult,
     });
   } catch (error) {
     console.error("Error creating appointment:", error);
