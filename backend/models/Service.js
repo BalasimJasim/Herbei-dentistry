@@ -1,32 +1,37 @@
 import mongoose from 'mongoose';
 
-const serviceSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
+const serviceSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Service name is required"],
+      trim: true,
+    },
+    description: {
+      type: String,
+      required: [true, "Service description is required"],
+      trim: true,
+    },
+    duration: {
+      type: Number,
+      required: [true, "Service duration is required"],
+      min: [15, "Duration must be at least 15 minutes"],
+    },
+    price: {
+      type: Number,
+      required: [true, "Service price is required"],
+      min: [0, "Price cannot be negative"],
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
   },
-  duration: {
-    type: Number,
-    required: true
-  },
-  price: {
-    type: Number,
-    required: true
-  },
-  description: String,
-  specialistId: {
-    type: String,
-    required: true
-  },
-  cabinetNumber: {
-    type: Number,
-    required: true
-  },
-  category: {
-    type: String,
-    enum: ['consultation', 'restorative', 'pediatric', 'prosthetic', 'surgery'],
-    required: true
+  {
+    timestamps: true,
   }
-});
+);
 
-export default mongoose.model('Service', serviceSchema); 
+const Service = mongoose.model("Service", serviceSchema);
+
+export default Service; 

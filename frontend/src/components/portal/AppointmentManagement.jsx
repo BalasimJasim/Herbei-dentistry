@@ -9,26 +9,36 @@ const AppointmentManagement = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user, logout } = useAuth();
-  const [selectedAppointment, setSelectedAppointment] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
 
   const formatDateTime = (dateString) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("en-US", {
-      dateStyle: "medium",
-      timeStyle: "short",
-    }).format(date);
+    try {
+      if (!dateString) {
+        return "Date not available";
+      }
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return "Invalid date";
+      }
+      return new Intl.DateTimeFormat("en-US", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      }).format(date);
+    } catch (error) {
+      return "Date error";
+    }
   };
 
   const handleCancel = async (appointmentId) => {
+    if (!window.confirm("Are you sure you want to cancel this appointment?")) {
+      return;
+    }
+
     try {
       const response = await api.patch(
         `/api/appointments/${appointmentId}/cancel`
       );
-
       if (response.data.success) {
         toast.success("Appointment cancelled successfully");
-        // Refresh appointments list
         loadAppointments();
       } else {
         throw new Error(
@@ -43,106 +53,25 @@ const AppointmentManagement = () => {
     }
   };
 
-  const handleEdit = (appointment) => {
-    setSelectedAppointment(appointment);
-    setIsEditing(true);
-  };
-
-  const handleEditSubmit = async (appointmentId, updatedData) => {
-    try {
-      const response = await api.patch(
-        `/api/appointments/${appointmentId}`,
-        updatedData
-      );
-
-      if (response.data.success) {
-        toast.success("Appointment updated successfully");
-        setIsEditing(false);
-        setSelectedAppointment(null);
-        // Refresh appointments list
-        loadAppointments();
-      } else {
-        throw new Error(
-          response.data.message || "Failed to update appointment"
-        );
-      }
-    } catch (error) {
-      console.error("Update appointment error:", error);
-      toast.error(
-        error.response?.data?.message || "Failed to update appointment"
-      );
-    }
-  };
-
   const loadAppointments = async () => {
     try {
       if (!user?.userId || !user?.email) {
-        console.error("Missing user data:", user);
         throw new Error("Missing user data");
       }
 
-      console.log("Debug - Request details:", {
-        userId: user.userId,
-        email: user.email,
-        token: localStorage.getItem("token")?.substring(0, 20) + "...",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await api.get("/api/appointments/user");
 
-      const response = await api.get("/api/appointments/user", {
-        params: {
-          email: user.email,
-          userId: user.userId,
-        },
-        validateStatus: function (status) {
-          return status < 500;
-        },
-      });
-
-      console.log("API Response:", {
-        status: response.status,
-        data: response.data,
-        headers: response.headers,
-      });
-
-      let appointmentsData = response.data;
-      if (Array.isArray(response.data)) {
-        const now = new Date();
-        const { upcoming, past } = response.data.reduce(
-          (acc, apt) => {
-            if (new Date(apt.dateTime) > now) {
-              acc.upcoming.push(apt);
-            } else {
-              acc.past.push(apt);
-            }
-            return acc;
-          },
-          { upcoming: [], past: [] }
-        );
-        appointmentsData = { upcoming, past };
-      } else if (response.data.data) {
-        appointmentsData = response.data.data;
-      }
-
-      if (!appointmentsData) {
+      if (response.data.success && response.data.data) {
+        setAppointments({
+          upcoming: response.data.data.upcoming || [],
+          past: response.data.data.past || [],
+        });
+      } else {
         throw new Error("Invalid response format");
       }
 
-      setAppointments(appointmentsData);
+      setError(null);
     } catch (error) {
-      console.error("Debug - Error details:", {
-        message: error.message,
-        code: error.code,
-        name: error.name,
-        stack: error.stack,
-        response: error.response?.data,
-        status: error.response?.status,
-        user: user,
-        error: error.response?.data?.error || error.response?.data?.message,
-      });
-
       if (error.response?.status === 401) {
         toast.error("Session expired. Please log in again");
         logout();
@@ -172,11 +101,18 @@ const AppointmentManagement = () => {
   }
 
   if (error) {
-    return <div className={styles.error}>{error}</div>;
+    return (
+      <div className={styles.error}>
+        {error}
+        <button onClick={loadAppointments} className={styles.actionButton}>
+          Try Again
+        </button>
+      </div>
+    );
   }
 
   const canModifyAppointment = (appointment) => {
-    const appointmentDate = new Date(appointment.dateTime);
+    const appointmentDate = new Date(appointment.date || appointment.dateTime);
     const now = new Date();
     // Allow modifications up to 24 hours before the appointment
     const hoursDifference = (appointmentDate - now) / (1000 * 60 * 60);
@@ -187,74 +123,79 @@ const AppointmentManagement = () => {
     <div className={styles.container}>
       <section className={styles.section}>
         <h2>Upcoming Appointments</h2>
-        {appointments.upcoming?.length === 0 ? (
-          <p>No upcoming appointments</p>
+        {!appointments.upcoming ? (
+          <div className={styles.emptyState}>
+            <p>Loading appointments...</p>
+          </div>
+        ) : appointments.upcoming.length === 0 ? (
+          <div className={styles.emptyState}>
+            <p>No upcoming appointments</p>
+          </div>
         ) : (
-          <ul className={styles.appointmentList}>
-            {appointments.upcoming?.map((apt) => (
-              <li key={apt._id} className={styles.appointmentItem}>
+          <div className={styles.appointmentsList}>
+            {appointments.upcoming.map((apt) => (
+              <div key={apt._id} className={styles.appointmentItem}>
                 <div className={styles.serviceInfo}>
-                  <h3>{apt.serviceId?.name}</h3>
-                  <span className={styles.status}>{apt.status}</span>
+                  <h3>
+                    {apt.service?.name ||
+                      apt.serviceId?.name ||
+                      "Unnamed Service"}
+                  </h3>
+                  <span className={styles.status}>
+                    {apt.status || "scheduled"}
+                  </span>
                 </div>
                 <div className={styles.dateTime}>
-                  {formatDateTime(apt.dateTime)}
+                  {formatDateTime(apt.date || apt.dateTime)}
                 </div>
-                {canModifyAppointment(apt) && (
+                {canModifyAppointment(apt) && apt.status !== "cancelled" && (
                   <div className={styles.actions}>
-                    <button
-                      onClick={() => handleEdit(apt)}
-                      className={`${styles.actionButton} ${styles.editButton}`}
-                      disabled={apt.status === "cancelled"}
-                    >
-                      Edit
-                    </button>
                     <button
                       onClick={() => handleCancel(apt._id)}
                       className={`${styles.actionButton} ${styles.cancelButton}`}
-                      disabled={apt.status === "cancelled"}
                     >
                       Cancel
                     </button>
                   </div>
                 )}
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </section>
 
       <section className={styles.section}>
         <h2>Past Appointments</h2>
-        {appointments.past?.length === 0 ? (
-          <p>No past appointments</p>
+        {!appointments.past ? (
+          <div className={styles.emptyState}>
+            <p>Loading appointments...</p>
+          </div>
+        ) : appointments.past.length === 0 ? (
+          <div className={styles.emptyState}>
+            <p>No past appointments</p>
+          </div>
         ) : (
-          <ul className={styles.appointmentList}>
-            {appointments.past?.map((apt) => (
-              <li key={apt._id} className={styles.appointmentItem}>
+          <div className={styles.appointmentsList}>
+            {appointments.past.map((apt) => (
+              <div key={apt._id} className={styles.appointmentItem}>
                 <div className={styles.serviceInfo}>
-                  <h3>{apt.serviceId?.name}</h3>
-                  <span className={styles.status}>{apt.status}</span>
+                  <h3>
+                    {apt.service?.name ||
+                      apt.serviceId?.name ||
+                      "Unnamed Service"}
+                  </h3>
+                  <span className={styles.status}>
+                    {apt.status || "completed"}
+                  </span>
                 </div>
                 <div className={styles.dateTime}>
-                  {formatDateTime(apt.dateTime)}
+                  {formatDateTime(apt.date || apt.dateTime)}
                 </div>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </section>
-
-      {isEditing && selectedAppointment && (
-        <EditAppointmentModal
-          appointment={selectedAppointment}
-          onClose={() => {
-            setIsEditing(false);
-            setSelectedAppointment(null);
-          }}
-          onSubmit={handleEditSubmit}
-        />
-      )}
     </div>
   );
 };

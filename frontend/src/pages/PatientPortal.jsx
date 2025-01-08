@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { Helmet } from "react-helmet-async";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Helmet } from "react-helmet-async";
 import api from "../utils/axios";
 import { useAuth } from "../contexts/AuthContext";
 import styles from "./PatientPortal.module.css";
 
 const PatientPortal = () => {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const { login, isAuthenticated } = useAuth();
   const { lang } = useParams();
@@ -55,16 +53,17 @@ const PatientPortal = () => {
     setLoading(true);
 
     try {
-      console.log("Attempting login with:", {
-        email: formData.email,
-        hasPassword: !!formData.password,
-      });
-
-      const response = await api.post("/api/auth/login", {
+      const loginData = {
         email: formData.email,
         password: formData.password,
+      };
+
+      console.log("Attempting login with:", {
+        email: loginData.email,
+        hasPassword: !!loginData.password,
       });
 
+      const response = await api.post("/api/auth/login", loginData);
       console.log("Login response:", response.data);
 
       if (!response.data.success) {

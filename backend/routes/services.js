@@ -1,31 +1,23 @@
 import express from 'express';
-import { getServices, getServiceById } from '../controllers/serviceController.js';
-import { SERVICES } from '../config/servicesConfig.js';
+import {
+  getServices,
+  getService,
+  createService,
+  updateService,
+  deleteService,
+} from "../controllers/serviceController.js";
+import { protect } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
-  console.log('Received request for services');
-  next();
-}, getServices);
-router.get('/:id', getServiceById);
-router.get('/debug', (req, res) => {
-  const uniqueIds = new Set();
-  const duplicates = [];
-  
-  SERVICES.forEach(service => {
-    if (uniqueIds.has(service.id)) {
-      duplicates.push(service.id);
-    }
-    uniqueIds.add(service.id);
-  });
+// Public routes
+router.get("/", getServices);
+router.get("/:id", getService);
 
-  res.json({
-    totalServices: SERVICES.length,
-    uniqueServices: uniqueIds.size,
-    duplicates,
-    allServices: SERVICES.map(s => ({ id: s.id, name: s.name }))
-  });
-});
+// Admin routes
+// router.use(protect, adminAuth);
+router.post("/", createService);
+router.put("/:id", updateService);
+router.delete("/:id", deleteService);
 
 export default router; 

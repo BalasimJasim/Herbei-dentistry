@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import "./AppointmentForm.css";
 import { useTranslation } from "react-i18next";
 import api from "../utils/axios";
 import AppointmentCalendar from "./AppointmentCalendar";

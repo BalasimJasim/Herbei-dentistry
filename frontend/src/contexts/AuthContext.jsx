@@ -47,8 +47,8 @@ export const AuthProvider = ({ children }) => {
 
       const { token, user: userData } = response;
 
-      // Validate user data and handle _id as userId
-      if (!userData?._id || !userData?.email) {
+      // Validate user data
+      if (!userData?.userId && !userData?.email) {
         console.error("Invalid user data:", userData);
         throw new Error("Missing required user data");
       }
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
 
       // Store normalized user data
       const normalizedUserData = {
-        userId: userData._id, // Convert _id to userId
+        userId: userData.userId,
         email: userData.email,
         name: userData.name || "",
         phone: userData.phone || "",

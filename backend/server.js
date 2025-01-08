@@ -1,13 +1,15 @@
+// Import dependencies
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import appointmentRoutes from "./routes/appointments.js";
 import authRoutes from "./routes/auth.js";
+import serviceRoutes from "./routes/services.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { sanitizeData } from "./middleware/sanitize.js";
 
-// Load env vars
+// Load environment variables
 dotenv.config();
 
 // Connect to database
@@ -35,8 +37,6 @@ const corsOptions = {
   origin: [
     "http://localhost:5173",
     "http://localhost:3000",
-    "https://dentalis-utyh02dip-balasim-jasim-s-projects.vercel.app",
-    "https://dentalis-1re7nkt3e-balasim-jasim-s-projects.vercel.app",
     "https://dentalis.vercel.app",
     /\.vercel\.app$/,
   ],
@@ -48,26 +48,22 @@ const corsOptions = {
     "X-Requested-With",
     "Accept",
     "Origin",
-    "Access-Control-Allow-Headers",
-    "Access-Control-Allow-Origin",
-    "Access-Control-Allow-Credentials",
   ],
   exposedHeaders: ["Content-Range", "X-Content-Range"],
-  maxAge: 86400,
-  preflightContinue: false,
   optionsSuccessStatus: 204,
 };
-
-// Apply CORS middleware
 app.use(cors(corsOptions));
+
+// Middleware to parse JSON requests
+app.use(express.json());
 
 // Additional headers middleware
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
-  res.header("Access-Control-Allow-Credentials", true);
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.header("Access-Control-Allow-Credentials", "true");
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Credentials"
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
   );
   res.header(
     "Access-Control-Allow-Methods",
@@ -76,12 +72,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.json());
-
-// Auth routes
+// Routes
 app.use("/api/auth", authRoutes);
-
-// Appointment routes
+app.use("/api/services", serviceRoutes);
 app.use(
   "/api/appointments",
   (req, res, next) => {
@@ -94,9 +87,10 @@ app.use(
   appointmentRoutes
 );
 
-// Error handler
+// Error handling middleware
 app.use(errorHandler);
 
+// Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
