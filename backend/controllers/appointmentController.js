@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import Appointment from "../models/appointmentModel.js";
+import Appointment from "../models/Appointment.js";
 import { validationResult } from "express-validator";
 import { isValidObjectId } from "mongoose";
 
