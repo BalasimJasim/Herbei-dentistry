@@ -43,6 +43,25 @@ const appointmentValidation = {
   delete: [param("id").isMongoId().withMessage("Invalid appointment ID")],
 };
 
+const registerValidation = [
+  body("firstName").trim().notEmpty().withMessage("First name is required"),
+  body("lastName").trim().notEmpty().withMessage("Last name is required"),
+  body("email").isEmail().withMessage("Please provide a valid email"),
+  body("password")
+    .isLength({ min: 6 })
+    .withMessage("Password must be at least 6 characters long"),
+  body("phone")
+    .matches(/^\+?[\d\s-()]+$/)
+    .withMessage("Please provide a valid phone number"),
+];
+
+const loginValidation = [
+  body("email").isEmail().withMessage("Please provide a valid email"),
+  body("password").notEmpty().withMessage("Password is required"),
+];
+
 export default {
   appointmentValidation,
+  registerValidation,
+  loginValidation,
 };

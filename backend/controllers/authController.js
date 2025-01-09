@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 // Register new user
 export const register = async (req, res) => {
   try {
-    const { name, email, password, phone } = req.body;
+    const { firstName, lastName, email, password, phone } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -20,7 +20,8 @@ export const register = async (req, res) => {
 
     // Create new user
     const user = new User({
-      name,
+      firstName,
+      lastName,
       email,
       password: hashedPassword,
       phone,
@@ -52,7 +53,8 @@ export const login = async (req, res) => {
     const tokenPayload = {
       userId: user._id,
       email: user.email,
-      name: user.name,
+      firstName: user.firstName,
+      lastName: user.lastName,
       role: user.role || "user", // Include role with default
     };
 
@@ -67,7 +69,8 @@ export const login = async (req, res) => {
       user: {
         userId: user._id,
         email: user.email,
-        name: user.name,
+        firstName: user.firstName,
+        lastName: user.lastName,
         phone: user.phone,
         role: user.role || "user",
       },
@@ -76,7 +79,7 @@ export const login = async (req, res) => {
     console.error("Login error:", error);
     return res.status(500).json({
       success: false,
-      message: "Error during login"
+      message: "Error during login",
     });
   }
 };
