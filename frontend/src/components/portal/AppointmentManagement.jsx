@@ -45,7 +45,7 @@ const AppointmentManagement = () => {
 
   const handleCancelAppointment = async (appointmentId) => {
     try {
-      const response = await api.patch(
+      const response = await api.put(
         `/api/appointments/${appointmentId}/cancel`
       );
       if (response.data.success) {
@@ -62,7 +62,7 @@ const AppointmentManagement = () => {
 
   const handleUpdateAppointment = async (appointmentId, updatedData) => {
     try {
-      const response = await api.patch(
+      const response = await api.put(
         `/api/appointments/${appointmentId}`,
         updatedData
       );
@@ -76,6 +76,23 @@ const AppointmentManagement = () => {
     } catch (error) {
       console.error("Error updating appointment:", error);
       toast.error("Failed to update appointment");
+    }
+  };
+
+  const handleDeleteAppointment = async (appointmentId) => {
+    try {
+      const response = await api.delete(`/api/appointments/${appointmentId}`);
+      if (response.data.success) {
+        toast.success("Appointment deleted successfully");
+        loadAppointments();
+      } else {
+        throw new Error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting appointment:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to delete appointment"
+      );
     }
   };
 
@@ -166,6 +183,7 @@ const AppointmentManagement = () => {
           }}
           onEdit={handleEditAppointment}
           onCancel={handleCancelAppointment}
+          onDelete={handleDeleteAppointment}
         />
       )}
 

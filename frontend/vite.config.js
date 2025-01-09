@@ -10,6 +10,8 @@ const requiredCssModules = [
   "./src/pages/PatientPortal.module.css",
   "./src/pages/Appointments.module.css",
   "./src/pages/Contact.module.css",
+  "./src/pages/Dashboard.module.css",
+  "./src/pages/PortalDashboard.module.css",
   "./src/components/portal/AppointmentManagement.module.css",
   "./src/components/portal/AppointmentViewModal.module.css",
   "./src/components/portal/EditAppointmentModal.module.css",

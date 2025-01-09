@@ -1,53 +1,48 @@
 import { body, param } from "express-validator";
 
-const validations = {
-  // Auth validation chains
-  loginValidation: [
-    body("email").trim().isEmail().withMessage("Please enter a valid email"),
-    body("password").trim().notEmpty().withMessage("Password is required"),
+const appointmentValidation = {
+  create: [
+    body("firstName").trim().notEmpty().withMessage("First name is required"),
+    body("lastName").trim().notEmpty().withMessage("Last name is required"),
+    body("email").isEmail().withMessage("Please provide a valid email"),
+    body("phone")
+      .matches(/^\+?[\d\s-()]+$/)
+      .withMessage("Please provide a valid phone number"),
+    body("dateTime")
+      .isISO8601()
+      .withMessage("Please provide a valid date and time"),
+    body("serviceId").notEmpty().withMessage("Service is required"),
   ],
-
-  registerValidation: [
-    body("name").trim().notEmpty().withMessage("Name is required"),
-    body("email").trim().isEmail().withMessage("Please enter a valid email"),
-    body("password")
+  cancel: [param("id").isMongoId().withMessage("Invalid appointment ID")],
+  update: [
+    param("id").isMongoId().withMessage("Invalid appointment ID"),
+    body("firstName")
+      .optional()
       .trim()
-      .isLength({ min: 6 })
-      .withMessage("Password must be at least 6 characters long"),
+      .notEmpty()
+      .withMessage("First name cannot be empty"),
+    body("lastName")
+      .optional()
+      .trim()
+      .notEmpty()
+      .withMessage("Last name cannot be empty"),
+    body("email")
+      .optional()
+      .isEmail()
+      .withMessage("Please provide a valid email"),
     body("phone")
       .optional()
-      .matches(/^\+?[\d\s-]{10,}$/)
-      .withMessage("Please enter a valid phone number"),
+      .matches(/^\+?[\d\s-()]+$/)
+      .withMessage("Please provide a valid phone number"),
+    body("dateTime")
+      .optional()
+      .isISO8601()
+      .withMessage("Please provide a valid date and time"),
+    body("notes").optional().trim(),
   ],
-
-  // Appointment validation chains
-  appointmentValidation: {
-    create: [
-      body("firstName").trim().notEmpty().withMessage("First name is required"),
-      body("lastName").trim().notEmpty().withMessage("Last name is required"),
-      body("email")
-        .optional()
-        .isEmail()
-        .withMessage("Please enter a valid email"),
-      body("phone")
-        .matches(/^\+?[\d\s-]{10,}$/)
-        .withMessage("Please enter a valid phone number"),
-      body("serviceId").notEmpty().withMessage("Service is required"),
-      body("dateTime")
-        .isISO8601()
-        .withMessage("Please enter a valid date and time"),
-    ],
-    get: [], // Empty array for GET requests - no validation needed
-    cancel: [param("id").isMongoId().withMessage("Invalid appointment ID")],
-  },
-
-  // Skip validation for specific routes/methods
-  skipValidation: (req, res, next) => {
-    if (req.method === "GET") {
-      return next();
-    }
-    next();
-  },
+  delete: [param("id").isMongoId().withMessage("Invalid appointment ID")],
 };
 
-export default validations;
+export default {
+  appointmentValidation,
+};

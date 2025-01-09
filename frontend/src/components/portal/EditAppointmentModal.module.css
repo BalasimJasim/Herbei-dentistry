@@ -4,36 +4,23 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 9999;
-  backdrop-filter: blur(4px);
+  align-items: center;
+  z-index: 1000;
 }
 
-.modalContent {
+.modal {
   background: white;
-  border-radius: 12px;
   padding: 2rem;
+  border-radius: 8px;
   width: 90%;
-  max-width: 500px;
+  max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  animation: modalAppear 0.3s ease-out forwards;
-}
-
-@keyframes modalAppear {
-  from {
-    opacity: 0;
-    transform: scale(0.95) translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .closeButton {
@@ -42,109 +29,143 @@
   right: 1rem;
   background: none;
   border: none;
-  font-size: 1.25rem;
-  color: var(--neutral-500);
+  font-size: 1.5rem;
   cursor: pointer;
+  color: #666;
   padding: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  transition: all 0.2s ease;
+  transition: color 0.2s;
 }
 
 .closeButton:hover {
-  background: var(--neutral-100);
-  color: var(--neutral-700);
+  color: #333;
 }
 
-.modalHeader {
-  margin-bottom: 2rem;
+.modalContent {
+  margin-top: 1rem;
 }
 
-.modalHeader h2 {
+.modalContent h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
   font-size: 1.5rem;
-  color: var(--neutral-900);
-  margin: 0;
+  font-weight: 600;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .formGroup {
-  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .formGroup label {
-  display: block;
-  font-size: 0.875rem;
-  color: var(--neutral-700);
-  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #666;
 }
 
-.formGroup input {
-  width: 100%;
+.formGroup input,
+.formGroup select,
+.formGroup textarea {
   padding: 0.75rem;
-  border: 1px solid var(--neutral-300);
-  border-radius: 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   font-size: 1rem;
-  color: var(--neutral-900);
-  transition: all 0.2s ease;
+  transition: border-color 0.2s;
 }
 
-.formGroup input:focus {
+.formGroup input:focus,
+.formGroup select:focus,
+.formGroup textarea:focus {
   outline: none;
-  border-color: var(--primary-500);
-  box-shadow: 0 0 0 2px var(--primary-100);
+  border-color: #0066cc;
 }
 
-.modalActions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 2rem;
+.formGroup input[type="date"] {
+  color: #333;
 }
 
-.cancelButton,
-.submitButton {
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
+.formGroup select {
+  background-color: white;
+  cursor: pointer;
+}
+
+.formGroup textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.error {
+  color: #dc3545;
   font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.saveButton,
+.cancelButton {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s;
+  flex: 1;
 }
 
-.cancelButton {
-  background: white;
-  color: var(--neutral-700);
-  border: 1px solid var(--neutral-300);
-}
-
-.cancelButton:hover {
-  background: var(--neutral-50);
-  border-color: var(--neutral-400);
-}
-
-.submitButton {
-  background: var(--primary-600);
+.saveButton {
+  background-color: #0066cc;
   color: white;
-  border: none;
 }
 
-.submitButton:hover {
-  background: var(--primary-700);
+.saveButton:hover {
+  background-color: #0052a3;
 }
 
-.submitButton:disabled,
-.cancelButton:disabled {
-  opacity: 0.5;
+.saveButton:disabled {
+  background-color: #ccc;
   cursor: not-allowed;
 }
 
-@media (max-width: 480px) {
-  .modalContent {
-    padding: 1rem;
+.cancelButton {
+  background-color: #f8f9fa;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.cancelButton:hover {
+  background-color: #e9ecef;
+}
+
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .modal {
+    width: 95%;
+    padding: 1.5rem;
   }
 
-  .timeSlots {
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  .buttonGroup {
+    flex-direction: column;
+  }
+
+  .saveButton,
+  .cancelButton {
+    width: 100%;
   }
 } 

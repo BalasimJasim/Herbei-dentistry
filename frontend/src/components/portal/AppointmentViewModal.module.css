@@ -4,36 +4,23 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 9999;
-  backdrop-filter: blur(4px);
+  align-items: center;
+  z-index: 1000;
 }
 
-.modalContent {
+.modal {
   background: white;
-  border-radius: 12px;
   padding: 2rem;
+  border-radius: 8px;
   width: 90%;
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  animation: modalAppear 0.3s ease-out forwards;
-}
-
-@keyframes modalAppear {
-  from {
-    opacity: 0;
-    transform: scale(0.95) translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .closeButton {
@@ -42,212 +29,168 @@
   right: 1rem;
   background: none;
   border: none;
-  font-size: 1.25rem;
-  color: var(--neutral-500);
+  font-size: 1.5rem;
   cursor: pointer;
+  color: #666;
   padding: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  transition: all 0.2s ease;
+  transition: color 0.2s;
 }
 
 .closeButton:hover {
-  background: var(--neutral-100);
-  color: var(--neutral-700);
+  color: #333;
 }
 
-.modalHeader {
-  margin-bottom: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.modalContent {
+  margin-top: 1rem;
 }
 
-.modalHeader h2 {
+.modalContent h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
   font-size: 1.5rem;
-  color: var(--neutral-900);
-  margin: 0;
+  font-weight: 600;
 }
 
-.statusBadge {
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.statusBadge[data-status="scheduled"] {
-  background: var(--primary-100);
-  color: var(--primary-700);
-}
-
-.statusBadge[data-status="cancelled"] {
-  background: var(--red-100);
-  color: var(--red-700);
-}
-
-.statusBadge[data-status="completed"] {
-  background: var(--green-100);
-  color: var(--green-700);
-}
-
-.appointmentDetails {
+.appointmentInfo {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
 }
 
-.detailGroup {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-}
-
-.detailItem {
+.infoGroup {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
 }
 
-.icon {
-  color: var(--primary-500);
-  font-size: 1.25rem;
-  margin-top: 0.25rem;
-}
-
-.detailItem label {
-  font-size: 0.875rem;
-  color: var(--neutral-500);
-  margin-bottom: 0.25rem;
-  display: block;
-}
-
-.detailItem p {
-  margin: 0;
-  color: var(--neutral-900);
+.infoGroup label {
+  min-width: 80px;
   font-weight: 500;
+  color: #666;
 }
 
-.serviceDetails {
-  background: var(--neutral-50);
-  padding: 1.5rem;
-  border-radius: 8px;
+.infoGroup span {
+  color: #333;
 }
 
-.serviceDetails h3 {
-  font-size: 1.125rem;
-  color: var(--neutral-900);
-  margin: 0 0 0.5rem 0;
+.status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
-.serviceDetails p {
-  margin: 0;
-  color: var(--neutral-700);
+.booked {
+  background-color: #e3f2fd;
+  color: #0066cc;
 }
 
-.notes {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--neutral-200);
+.cancelled {
+  background-color: #ffebee;
+  color: #dc3545;
 }
 
-.notes h4 {
-  font-size: 1rem;
-  color: var(--neutral-900);
-  margin: 0 0 0.5rem 0;
+.completed {
+  background-color: #e8f5e9;
+  color: #28a745;
 }
 
-.notes p {
-  font-size: 0.875rem;
-  color: var(--neutral-600);
-  margin: 0;
-}
-
-.modalActions {
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--neutral-200);
+.buttonGroup {
   display: flex;
   gap: 1rem;
+  margin-top: 2rem;
 }
 
-.editButton, .cancelButton {
+.editButton,
+.deleteButton,
+.cancelButton,
+.confirmDeleteButton {
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
   font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s;
+  flex: 1;
 }
 
 .editButton {
-  background: var(--primary-600);
+  background-color: #0066cc;
   color: white;
-  border: none;
 }
 
 .editButton:hover {
-  background: var(--primary-700);
+  background-color: #0052a3;
 }
 
-.cancelButton {
-  background: white;
-  color: var(--red-600);
-  border: 1px solid var(--red-200);
+.deleteButton {
+  background-color: #dc3545;
+  color: white;
 }
 
-.cancelButton:hover {
-  background: var(--red-50);
-  border-color: var(--red-300);
+.deleteButton:hover {
+  background-color: #c82333;
 }
 
-.confirmCancel {
+.confirmDelete {
   width: 100%;
 }
 
-.confirmCancel p {
-  color: var(--neutral-900);
-  margin: 0 0 1rem 0;
+.confirmDelete p {
   text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
 }
 
 .confirmButtons {
   display: flex;
-  justify-content: center;
   gap: 1rem;
 }
 
-.confirmButton, .denyButton {
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
+.cancelButton {
+  background-color: #f8f9fa;
+  color: #333;
+  border: 1px solid #ddd;
 }
 
-.confirmButton {
-  background: var(--red-600);
+.cancelButton:hover {
+  background-color: #e9ecef;
+}
+
+.confirmDeleteButton {
+  background-color: #dc3545;
   color: white;
-  border: none;
 }
 
-.confirmButton:hover {
-  background: var(--red-700);
+.confirmDeleteButton:hover {
+  background-color: #c82333;
 }
 
-.denyButton {
-  background: white;
-  color: var(--neutral-700);
-  border: 1px solid var(--neutral-300);
+.editButton:disabled,
+.deleteButton:disabled,
+.cancelButton:disabled,
+.confirmDeleteButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
-.denyButton:hover {
-  background: var(--neutral-50);
-  border-color: var(--neutral-400);
+@media (max-width: 768px) {
+  .modal {
+    width: 95%;
+    padding: 1.5rem;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+  }
+
+  .editButton,
+  .deleteButton,
+  .cancelButton,
+  .confirmDeleteButton {
+    width: 100%;
+  }
 } 

@@ -1,371 +1,221 @@
-import {
-  sendAppointmentNotifications,
-  scheduleReminders,
-  sendCancellationNotifications,
-} from "../services/notificationService.js";
-import Appointment from "../models/Appointment.js";
-import { ApiError } from "../middleware/errorHandler.js";
-import {
-  checkTimeSlotAvailability,
-  getAvailableTimeSlots as getTimeSlots,
-} from "../services/appointmentService.js";
-import { SERVICES } from "../config/servicesConfig.js";
-import Specialist from "../models/Specialist.js";
-import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
-import User from "../models/User.js";
-import { Types } from "mongoose";
+import asyncHandler from "express-async-handler";
+import Appointment from "../models/appointmentModel.js";
+import { validationResult } from "express-validator";
+import { isValidObjectId } from "mongoose";
 
-const validatePhoneNumber = (phone) => {
-  // Remove all non-digit characters
-  const cleanPhone = phone.replace(/\D/g, "");
+// @desc    Get user appointments
+// @route   GET /api/appointments/user
+// @access  Private
+export const getUserAppointments = asyncHandler(async (req, res) => {
+  const { email } = req.query;
 
-  // Check if it's a valid length (10-15 digits)
-  if (cleanPhone.length < 10 || cleanPhone.length > 15) {
-    return false;
+  if (!email) {
+    res.status(400);
+    throw new Error("Email is required");
   }
 
-  return true;
-};
+  const appointments = await Appointment.find({ email }).sort({ dateTime: -1 });
+  res.json(appointments);
+});
 
 // @desc    Create new appointment
 // @route   POST /api/appointments
 // @access  Public
-export const createAppointment = async (req, res) => {
-  try {
-    const appointmentData = req.body;
-
-    // Check slot availability
-    const { available, message } = await checkTimeSlotAvailability(
-      appointmentData.dateTime,
-      appointmentData.serviceId
-    );
-
-    if (!available) {
-      return res.status(400).json({
-        success: false,
-        message: message,
-      });
-    }
-
-    // If userId is provided (logged in user), validate and convert it
-    if (appointmentData.userId) {
-      try {
-        appointmentData.userId = new mongoose.Types.ObjectId(
-          appointmentData.userId
-        );
-      } catch (error) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid user ID format",
-        });
-      }
-    }
-
-    // Calculate end time based on service duration
-    const service = SERVICES.find((s) => s.id === appointmentData.serviceId);
-    if (!service) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid service ID",
-      });
-    }
-
-    const endTime = new Date(appointmentData.dateTime);
-    endTime.setMinutes(endTime.getMinutes() + service.duration);
-
-    // Create the appointment
-    const appointment = await Appointment.create({
-      ...appointmentData,
-      endTime,
-    });
-
-    // Send notifications
-    console.log("Sending appointment notifications...");
-    const notificationResult = await sendAppointmentNotifications(appointment);
-    console.log("Notification result:", notificationResult);
-
-    // Schedule reminders
-    await scheduleReminders(appointment);
-
-    res.status(201).json({
-      success: true,
-      data: appointment,
-      notifications: notificationResult,
-    });
-  } catch (error) {
-    console.error("Error creating appointment:", error);
-    res.status(500).json({
-      success: false,
-      message: error.message || "Failed to create appointment",
-    });
+export const createAppointment = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400);
+    throw new Error(errors.array()[0].msg);
   }
-};
+
+  const { firstName, lastName, email, phone, dateTime, serviceId, notes } =
+    req.body;
+
+  // Check if appointment time is available
+  const existingAppointment = await Appointment.findOne({
+    dateTime: new Date(dateTime),
+    status: { $ne: "cancelled" },
+  });
+
+  if (existingAppointment) {
+    res.status(400);
+    throw new Error("This time slot is already booked");
+  }
+
+  const appointment = await Appointment.create({
+    firstName,
+    lastName,
+    email,
+    phone,
+    dateTime,
+    serviceId,
+    notes,
+  });
+
+  if (appointment) {
+    res.status(201).json(appointment);
+  } else {
+    res.status(400);
+    throw new Error("Invalid appointment data");
+  }
+});
+
+// @desc    Cancel appointment
+// @route   PUT /api/appointments/:id/cancel
+// @access  Private
+export const cancelAppointment = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400);
+    throw new Error(errors.array()[0].msg);
+  }
+
+  const appointment = await Appointment.findById(req.params.id);
+
+  if (!appointment) {
+    res.status(404);
+    throw new Error("Appointment not found");
+  }
+
+  // Check if appointment belongs to user
+  if (appointment.email !== req.user.email && !req.user.isAdmin) {
+    res.status(403);
+    throw new Error("Not authorized to cancel this appointment");
+  }
+
+  appointment.status = "cancelled";
+  const updatedAppointment = await appointment.save();
+
+  res.json(updatedAppointment);
+});
 
 // @desc    Get available time slots
 // @route   GET /api/appointments/available
 // @access  Public
-export const getAvailableTimeSlots = async (req, res) => {
-  try {
-    const { date, serviceId } = req.query;
+export const getAvailableTimeSlots = asyncHandler(async (req, res) => {
+  const { date } = req.query;
 
-    console.log("Received request for slots:", { date, serviceId });
-
-    if (!date || !serviceId) {
-      return res.status(400).json({
-        success: false,
-        message: "Both date and serviceId are required",
-      });
-    }
-
-    // Parse and validate the date
-    const parsedDate = new Date(date);
-    if (isNaN(parsedDate.getTime())) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid date format",
-      });
-    }
-
-    // Get available slots using the renamed imported function
-    const slots = await getTimeSlots(parsedDate, serviceId);
-
-    res.json({
-      success: true,
-      data: slots,
-    });
-  } catch (error) {
-    console.error("Error getting available slots:", error);
-    res.status(500).json({
-      success: false,
-      message: error.message || "Failed to get available time slots",
-    });
+  if (!date) {
+    res.status(400);
+    throw new Error("Date is required");
   }
-};
 
-// @desc    Get appointment by ID
-// @route   GET /api/appointments/:id
+  // Get all appointments for the specified date
+  const startDate = new Date(date);
+  startDate.setHours(0, 0, 0, 0);
+  const endDate = new Date(date);
+  endDate.setHours(23, 59, 59, 999);
+
+  const appointments = await Appointment.find({
+    dateTime: {
+      $gte: startDate,
+      $lte: endDate,
+    },
+    status: { $ne: "cancelled" },
+  });
+
+  // Generate all possible time slots
+  const timeSlots = [];
+  const startHour = 9; // 9 AM
+  const endHour = 17; // 5 PM
+  const interval = 30; // 30 minutes
+
+  for (let hour = startHour; hour < endHour; hour++) {
+    for (let minute = 0; minute < 60; minute += interval) {
+      const time = new Date(date);
+      time.setHours(hour, minute, 0, 0);
+
+      // Check if time slot is already booked
+      const isBooked = appointments.some(
+        (apt) => apt.dateTime.getTime() === time.getTime()
+      );
+
+      if (!isBooked) {
+        timeSlots.push(time);
+      }
+    }
+  }
+
+  res.json(timeSlots);
+});
+
+// @desc    Update appointment
+// @route   PUT /api/appointments/:id
 // @access  Private
-export const getAppointmentById = async (req, res) => {
-  try {
-    const appointment = await Appointment.findById(req.params.id);
-    if (appointment) {
-      res.json(appointment);
-    } else {
-      res.status(404).json({ message: "Appointment not found" });
-    }
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+export const updateAppointment = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400);
+    throw new Error(errors.array()[0].msg);
   }
-};
 
-// @desc    Update appointment status
-// @route   PATCH /api/appointments/:id/status
-// @access  Private
-export const updateAppointmentStatus = async (req, res) => {
-  try {
-    const { status } = req.body;
-    const appointment = await Appointment.findById(req.params.id);
+  const appointment = await Appointment.findById(req.params.id);
 
-    if (!appointment) {
-      return res.status(404).json({ message: "Appointment not found" });
-    }
-
-    appointment.status = status;
-    appointment.updatedAt = Date.now();
-
-    const updatedAppointment = await appointment.save();
-    res.json(updatedAppointment);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+  if (!appointment) {
+    res.status(404);
+    throw new Error("Appointment not found");
   }
-};
 
-// @desc    Cancel appointment
-// @route   PATCH /api/appointments/:id/cancel
-// @access  Public
-export const cancelAppointment = async (req, res) => {
-  try {
-    const appointment = await Appointment.findById(req.params.id);
-
-    if (!appointment) {
-      return res.status(404).json({
-        success: false,
-        error: "Appointment not found",
-      });
-    }
-
-    // Check if user owns this appointment or is admin
-    if (appointment.email !== req.user.email && req.user.role !== "admin") {
-      return res.status(403).json({
-        success: false,
-        error: "Not authorized to cancel this appointment",
-      });
-    }
-
-    // Send cancellation notifications
-    await sendCancellationNotifications(appointment);
-
-    // Update appointment status
-    appointment.status = "cancelled";
-    await appointment.save();
-
-    res.status(200).json({
-      success: true,
-      data: appointment,
-    });
-  } catch (error) {
-    console.error("Error cancelling appointment:", error);
-    res.status(500).json({
-      success: false,
-      error: "Error cancelling appointment",
-    });
+  // Check if appointment belongs to user
+  if (appointment.email !== req.user.email && !req.user.isAdmin) {
+    res.status(403);
+    throw new Error("Not authorized to update this appointment");
   }
-};
 
-// @desc    Get user appointments
-// @route   GET /api/appointments/user
-// @access  Public
-export const getUserAppointments = async (req, res) => {
-  try {
-    console.log("=== getUserAppointments Start ===");
-    console.log("Request user:", req.user);
-    console.log("Request query:", req.query);
+  // If dateTime is being updated, check if the new time slot is available
+  if (req.body.dateTime) {
+    const existingAppointment = await Appointment.findOne({
+      dateTime: new Date(req.body.dateTime),
+      status: { $ne: "cancelled" },
+      _id: { $ne: req.params.id }, // Exclude current appointment
+    });
 
-    // Get email from either query params or user object
-    const email = req.query.email || req.user?.email;
-    const userId = req.query.userId || req.user?.userId;
-
-    if (!email || !userId) {
-      console.error("Missing required data:", { email, userId });
-      return res.status(400).json({
-        success: false,
-        message: "Email and userId are required",
-      });
+    if (existingAppointment) {
+      res.status(400);
+      throw new Error("This time slot is already booked");
     }
-
-    const userIdObj = new mongoose.Types.ObjectId(userId);
-    console.log("Looking for appointments with:", {
-      email,
-      userId: userIdObj.toString(),
-    });
-
-    // Find appointments with either userId or email
-    const appointments = await Appointment.find({
-      $or: [{ userId: userIdObj }, { email: email }],
-    })
-      .sort({ dateTime: -1 })
-      .populate("serviceId", "name duration")
-      .lean();
-
-    console.log("Found appointments:", appointments.length);
-
-    // Split appointments into upcoming and past
-    const now = new Date();
-    const { upcoming, past } = appointments.reduce(
-      (acc, apt) => {
-        if (new Date(apt.dateTime) > now) {
-          acc.upcoming.push(apt);
-        } else {
-          acc.past.push(apt);
-        }
-        return acc;
-      },
-      { upcoming: [], past: [] }
-    );
-
-    console.log("Processed appointments:", {
-      upcoming: upcoming.length,
-      past: past.length,
-    });
-
-    return res.status(200).json({
-      success: true,
-      data: { upcoming, past },
-    });
-  } catch (error) {
-    console.error("getUserAppointments error:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Failed to fetch appointments",
-      error: error.message,
-    });
   }
-};
 
-// Add this endpoint to get specialists by service
-export const getSpecialistsByService = async (req, res) => {
-  try {
-    const { serviceId } = req.params;
-    const service = SERVICES.find((s) => s.id === serviceId);
-
-    if (!service) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid service",
-      });
+  // Update only the fields that are provided
+  Object.keys(req.body).forEach((key) => {
+    if (req.body[key] !== undefined) {
+      appointment[key] = req.body[key];
     }
+  });
 
-    const specialists = await Specialist.find({
-      specialization: service.specialization,
-      isActive: true,
-    });
+  const updatedAppointment = await appointment.save();
+  res.json(updatedAppointment);
+});
 
-    res.json({
-      success: true,
-      data: specialists,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch specialists",
-      error: error.message,
-    });
-  }
-};
-
-// @desc    Delete appointment record (only for past appointments)
+// @desc    Delete appointment record
 // @route   DELETE /api/appointments/:id
 // @access  Private
-export const deleteAppointmentRecord = async (req, res) => {
-  try {
-    const appointment = await Appointment.findById(req.params.id);
-
-    if (!appointment) {
-      return res.status(404).json({
-        success: false,
-        message: "Appointment not found",
-      });
-    }
-
-    // Check if user owns this appointment
-    if (appointment.userId.toString() !== req.user.userId) {
-      return res.status(403).json({
-        success: false,
-        message: "Not authorized to delete this appointment",
-      });
-    }
-
-    // Check if appointment is in the past
-    if (new Date(appointment.dateTime) > new Date()) {
-      return res.status(400).json({
-        success: false,
-        message: "Cannot delete future appointments. Use cancel instead.",
-      });
-    }
-
-    await appointment.remove();
-
-    res.json({
-      success: true,
-      message: "Appointment record deleted successfully",
-    });
-  } catch (error) {
-    console.error("Error deleting appointment record:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error deleting appointment record",
-      error: process.env.NODE_ENV === "development" ? error.message : undefined,
-    });
+export const deleteAppointmentRecord = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400);
+    throw new Error(errors.array()[0].msg);
   }
-};
+
+  const appointment = await Appointment.findById(req.params.id);
+
+  if (!appointment) {
+    res.status(404);
+    throw new Error("Appointment not found");
+  }
+
+  // Check if appointment belongs to user
+  if (appointment.email !== req.user.email && !req.user.isAdmin) {
+    res.status(403);
+    throw new Error("Not authorized to delete this appointment");
+  }
+
+  // Only allow deletion of cancelled appointments
+  if (appointment.status !== "cancelled") {
+    res.status(400);
+    throw new Error("Only cancelled appointments can be deleted");
+  }
+
+  await appointment.deleteOne();
+  res.json({ message: "Appointment deleted" });
+});

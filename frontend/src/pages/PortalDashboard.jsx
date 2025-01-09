@@ -17,8 +17,6 @@ const PortalDashboard = () => {
 
   const handleSectionChange = (sectionId) => {
     setActiveSection(sectionId);
-    // You can add analytics tracking here if needed
-    console.log("Switched to section:", sectionId);
   };
 
   const renderContent = () => {
@@ -26,11 +24,17 @@ const PortalDashboard = () => {
       case "appointments":
         return <AppointmentManagement />;
       case "records":
-        return <div>Medical Records coming soon...</div>;
+        return (
+          <div className={styles.comingSoon}>
+            Medical Records coming soon...
+          </div>
+        );
       case "messages":
-        return <div>Messaging coming soon...</div>;
+        return (
+          <div className={styles.comingSoon}>Messaging coming soon...</div>
+        );
       case "billing":
-        return <div>Billing coming soon...</div>;
+        return <div className={styles.comingSoon}>Billing coming soon...</div>;
       default:
         return null;
     }
@@ -66,7 +70,7 @@ const PortalDashboard = () => {
   return (
     <div className={styles.dashboardContainer}>
       <header className={styles.dashboardHeader}>
-        <h1>Welcome, {user.name}</h1>
+        <h1>Welcome, {user?.name}</h1>
         <p>Manage your dental care all in one place</p>
       </header>
 

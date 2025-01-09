@@ -7,6 +7,8 @@ import {
   createAppointment,
   cancelAppointment,
   getAvailableTimeSlots,
+  updateAppointment,
+  deleteAppointmentRecord,
 } from "../controllers/appointmentController.js";
 
 const router = express.Router();
@@ -55,6 +57,22 @@ router.put(
   validations.appointmentValidation.cancel,
   sanitizeData,
   cancelAppointment
+);
+
+router.put(
+  "/:id",
+  protect,
+  validations.appointmentValidation.update,
+  sanitizeData,
+  updateAppointment
+);
+
+router.delete(
+  "/:id",
+  protect,
+  validations.appointmentValidation.delete,
+  sanitizeData,
+  deleteAppointmentRecord
 );
 
 export default router;

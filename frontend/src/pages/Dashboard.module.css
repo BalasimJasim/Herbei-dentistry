@@ -248,16 +248,15 @@
 
   .mainContent {
     margin-left: 0;
-    padding: 1rem;
   }
 
   .appointmentCard {
     flex-direction: column;
-    gap: 1rem;
     align-items: flex-start;
   }
 
   .appointmentActions {
+    margin-top: 1rem;
     width: 100%;
     justify-content: flex-end;
   }

@@ -75,6 +75,13 @@
   min-height: 400px;
 }
 
+.comingSoon {
+  text-align: center;
+  padding: 4rem;
+  color: var(--neutral-600);
+  font-size: 1.1rem;
+}
+
 @media (max-width: 768px) {
   .dashboardContainer {
     padding: 1rem;

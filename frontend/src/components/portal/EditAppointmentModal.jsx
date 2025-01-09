@@ -1,108 +1,150 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { FaTimes } from "react-icons/fa";
 import styles from "./EditAppointmentModal.module.css";
+import { formatDate, formatTime } from "../../utils/dateUtils";
+import { toast } from "react-toastify";
+import api from "../../utils/axios";
 
 const EditAppointmentModal = ({ appointment, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
-    firstName: appointment.firstName,
-    lastName: appointment.lastName,
-    email: appointment.email,
-    phone: appointment.phone,
-    notes: appointment.notes || "",
+    date: "",
+    time: "",
+    notes: "",
   });
+  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    if (appointment) {
+      const appointmentDate = new Date(appointment.dateTime);
+      setFormData({
+        date: formatDate(appointmentDate),
+        time: formatTime(appointmentDate),
+        notes: appointment.notes || "",
+      });
+      fetchAvailableTimeSlots(formatDate(appointmentDate));
+    }
+  }, [appointment]);
+
+  const fetchAvailableTimeSlots = async (selectedDate) => {
+    try {
+      const response = await api.get(
+        `/api/appointments/available?date=${selectedDate}`
+      );
+      if (response.data) {
+        setAvailableTimeSlots(
+          response.data.map((slot) => formatTime(new Date(slot)))
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching time slots:", error);
+      setError("Failed to load available time slots");
+      toast.error("Failed to load available time slots");
+    }
+  };
+
+  const handleInputChange = async (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "date") {
+      await fetchAvailableTimeSlots(value);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(appointment._id, formData);
+    setLoading(true);
+    setError("");
+
+    try {
+      const dateTime = new Date(`${formData.date}T${formData.time}`);
+
+      await onSubmit(appointment._id, {
+        dateTime: dateTime.toISOString(),
+        notes: formData.notes,
+      });
+
+      onClose();
+    } catch (error) {
+      console.error("Error updating appointment:", error);
+      setError(error.response?.data?.message || "Failed to update appointment");
+      toast.error("Failed to update appointment");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className={styles.modalOverlay}>
-      <div className={styles.modalContent}>
+    <div className={styles.modalOverlay} onClick={onClose}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <button className={styles.closeButton} onClick={onClose}>
-          <FaTimes />
+          &times;
         </button>
 
-        <div className={styles.modalHeader}>
+        <form onSubmit={handleSubmit} className={styles.form}>
           <h2>Edit Appointment</h2>
-        </div>
 
-        <form onSubmit={handleSubmit}>
+          {error && <div className={styles.error}>{error}</div>}
+
           <div className={styles.formGroup}>
-            <label htmlFor="firstName">First Name</label>
+            <label htmlFor="date">Date</label>
             <input
-              type="text"
-              id="firstName"
-              value={formData.firstName}
-              onChange={(e) =>
-                setFormData({ ...formData, firstName: e.target.value })
-              }
+              type="date"
+              id="date"
+              name="date"
+              value={formData.date}
+              onChange={handleInputChange}
+              min={formatDate(new Date())}
               required
             />
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="lastName">Last Name</label>
-            <input
-              type="text"
-              id="lastName"
-              value={formData.lastName}
-              onChange={(e) =>
-                setFormData({ ...formData, lastName: e.target.value })
-              }
+            <label htmlFor="time">Time</label>
+            <select
+              id="time"
+              name="time"
+              value={formData.time}
+              onChange={handleInputChange}
               required
-            />
+            >
+              <option value="">Select a time</option>
+              {availableTimeSlots.map((slot) => (
+                <option key={slot} value={slot}>
+                  {slot}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-              required
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="phone">Phone</label>
-            <input
-              type="tel"
-              id="phone"
-              value={formData.phone}
-              onChange={(e) =>
-                setFormData({ ...formData, phone: e.target.value })
-              }
-              required
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="notes">Notes</label>
+            <label htmlFor="notes">Notes (Optional)</label>
             <textarea
               id="notes"
+              name="notes"
               value={formData.notes}
-              onChange={(e) =>
-                setFormData({ ...formData, notes: e.target.value })
-              }
-              rows={4}
+              onChange={handleInputChange}
+              rows="3"
             />
           </div>
 
-          <div className={styles.modalActions}>
+          <div className={styles.buttonGroup}>
             <button
               type="button"
               className={styles.cancelButton}
               onClick={onClose}
+              disabled={loading}
             >
               Cancel
             </button>
-            <button type="submit" className={styles.submitButton}>
-              Save Changes
+            <button
+              type="submit"
+              className={styles.saveButton}
+              disabled={loading}
+            >
+              {loading ? "Updating..." : "Update Appointment"}
             </button>
           </div>
         </form>
@@ -114,12 +156,9 @@ const EditAppointmentModal = ({ appointment, onClose, onSubmit }) => {
 EditAppointmentModal.propTypes = {
   appointment: PropTypes.shape({
     _id: PropTypes.string.isRequired,
-    firstName: PropTypes.string.isRequired,
-    lastName: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired,
-    phone: PropTypes.string.isRequired,
+    dateTime: PropTypes.string.isRequired,
     notes: PropTypes.string,
-  }).isRequired,
+  }),
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
