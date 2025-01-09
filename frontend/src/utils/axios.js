@@ -5,11 +5,17 @@ const isPreview =
   window.location.origin.includes("localhost") ||
   window.location.origin.includes("127.0.0.1");
 
+// Remove the extra /api from the production URL if it exists
+const getProdUrl = () => {
+  const url = import.meta.env.VITE_PROD_API_URL;
+  return url.endsWith('/api') ? url : `${url}/api`;
+};
+
 const api = axios.create({
   baseURL:
     isDevelopment || isPreview
-      ? import.meta.env.VITE_API_URL
-      : import.meta.env.VITE_PROD_API_URL,
+      ? `${import.meta.env.VITE_API_URL}/api`
+      : getProdUrl(),
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -30,6 +36,7 @@ api.interceptors.request.use(
         method: config.method,
         headers: config.headers,
         hasToken: !!token,
+        fullUrl: `${config.baseURL}${config.url}`,
       });
     }
 
@@ -42,6 +49,9 @@ api.interceptors.request.use(
       config.headers["Access-Control-Allow-Origin"] = window.location.origin;
       config.headers["Access-Control-Allow-Credentials"] = true;
     }
+
+    // Remove any double /api/api in the URL
+    config.url = config.url.replace(/\/api\/api\//g, '/api/');
 
     return config;
   },
@@ -86,6 +96,7 @@ api.interceptors.response.use(
           url: error.config?.url,
           method: error.config?.method,
           headers: error.config?.headers,
+          fullUrl: error.config ? `${error.config.baseURL}${error.config.url}` : null,
         },
       });
     }

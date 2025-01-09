@@ -115,11 +115,13 @@ app.use((req, res, next) => {
   next();
 });
 
-// Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/services", serviceRoutes);
-app.use(
-  "/api/appointments",
+// API Routes
+const apiRouter = express.Router();
+
+apiRouter.use("/auth", authRoutes);
+apiRouter.use("/services", serviceRoutes);
+apiRouter.use(
+  "/appointments",
   (req, res, next) => {
     if (process.env.NODE_ENV === "development") {
       console.log("Processing appointment request:", {
@@ -132,6 +134,14 @@ app.use(
   appointmentRoutes
 );
 
+// Mount API router
+app.use("/api", apiRouter);
+
+// Health check route
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok", environment: process.env.NODE_ENV });
+});
+
 // Error handling middleware
 app.use(errorHandler);
 
@@ -139,6 +149,7 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+  console.log(`API base URL: ${process.env.NODE_ENV === 'development' ? `http://localhost:${PORT}/api` : 'https://herbei-dentistry.onrender.com/api'}`);
 });
 
 export default app;
