@@ -132,7 +132,7 @@ const Navbar = () => {
               {user ? (
                 <div className={styles.userMenu}>
                   <button className={styles.userButton}>
-                    <span>{user.name}</span>
+                    <span>{user.firstName}</span>
                   </button>
                   <div className={styles.userDropdown}>
                     <Link to={`/${currentLang}/portal-dashboard`}>

@@ -20,11 +20,16 @@ const AppointmentManagement = () => {
     try {
       setLoading(true);
       const response = await api.get("/api/appointments/user");
-      if (response.data.success) {
-        setAppointments(response.data.data);
-      } else {
-        throw new Error(response.data.message);
-      }
+      const appointments = response.data;
+
+      // Split appointments into upcoming and past
+      const now = new Date();
+      const splitAppointments = {
+        upcoming: appointments.filter((apt) => new Date(apt.dateTime) >= now),
+        past: appointments.filter((apt) => new Date(apt.dateTime) < now),
+      };
+
+      setAppointments(splitAppointments);
     } catch (error) {
       console.error("Error loading appointments:", error);
       toast.error("Failed to load appointments");
