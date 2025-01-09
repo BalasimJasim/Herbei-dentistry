@@ -1,0 +1,250 @@
+.confirmationContainer {
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: var(--neutral-50);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 100px;
+}
+
+.confirmationCard {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
+  padding: 2rem;
+}
+
+.confirmationHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+.successIcon {
+  font-size: 3rem;
+  color: var(--green-500);
+  margin-bottom: 1rem;
+}
+
+.confirmationHeader h1 {
+  font-size: 2rem;
+  color: var(--neutral-900);
+  margin-bottom: 0.5rem;
+}
+
+.confirmationHeader p {
+  color: var(--neutral-600);
+}
+
+.appointmentDetails {
+  margin-bottom: 2rem;
+}
+
+.appointmentDetails h2 {
+  font-size: 1.5rem;
+  color: var(--neutral-900);
+  margin-bottom: 1.5rem;
+}
+
+.detailRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.detailIcon {
+  color: var(--primary-500);
+  font-size: 1.25rem;
+  margin-top: 0.25rem;
+}
+
+.detailRow strong {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--neutral-500);
+  margin-bottom: 0.25rem;
+}
+
+.detailRow p {
+  color: var(--neutral-900);
+  margin: 0;
+}
+
+.duration {
+  font-size: 0.875rem;
+  color: var(--neutral-600);
+  margin-top: 0.25rem;
+}
+
+.contactDetails {
+  background: var(--neutral-50);
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+}
+
+.notesSection {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--neutral-200);
+}
+
+.confirmationFooter {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--neutral-200);
+}
+
+.reminderText {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.reminderText p {
+  color: var(--neutral-600);
+  margin-bottom: 0.5rem;
+}
+
+.importantInfo {
+  background: var(--primary-50);
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.importantInfo h3 {
+  color: var(--primary-900);
+  margin-bottom: 1rem;
+  font-size: 1.125rem;
+}
+
+.importantInfo ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.importantInfo li {
+  color: var(--primary-700);
+  margin-bottom: 0.5rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.importantInfo li:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--primary-500);
+}
+
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.addToCalendar,
+.bookAnother,
+.viewAppointments {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.addToCalendar {
+  background: var(--primary-600);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.addToCalendar:hover {
+  background: var(--primary-700);
+}
+
+.bookAnother {
+  background: white;
+  color: var(--primary-600);
+  border: 1px solid var(--primary-200);
+}
+
+.bookAnother:hover {
+  background: var(--primary-50);
+  border-color: var(--primary-300);
+}
+
+.viewAppointments {
+  background: var(--neutral-100);
+  color: var(--neutral-700);
+  border: none;
+}
+
+.viewAppointments:hover {
+  background: var(--neutral-200);
+}
+
+.confirmationError {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.confirmationError h2 {
+  color: var(--neutral-900);
+  margin-bottom: 1rem;
+}
+
+.confirmationError p {
+  color: var(--neutral-600);
+  margin-bottom: 2rem;
+}
+
+.bookAgainBtn {
+  padding: 0.75rem 1.5rem;
+  background: var(--primary-600);
+  color: white;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.bookAgainBtn:hover {
+  background: var(--primary-700);
+}
+
+@media (max-width: 768px) {
+  .confirmationContainer {
+    padding: 1rem;
+    padding-top: 80px;
+  }
+
+  .confirmationCard {
+    padding: 1.5rem;
+  }
+
+  .actionButtons {
+    flex-direction: column;
+  }
+
+  .addToCalendar,
+  .bookAnother,
+  .viewAppointments {
+    width: 100%;
+    text-align: center;
+  }
+} 

@@ -1,15 +1,13 @@
-div[class*="portalPage"] {
+.portalPage {
   min-height: 100vh;
   padding-top: 70px;
-  background-color: var(--neutral-50) !important;
+  background-color: var(--neutral-50);
   position: relative;
-  border-top: 5px solid red !important;
-  border-bottom: 5px solid red !important;
 }
 
-div[class*="heroSection"] {
-  background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%) !important;
-  padding: 4rem 2rem !important;
+.heroSection {
+  background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%);
+  padding: 4rem 2rem;
   text-align: center;
   position: relative;
   display: flex;

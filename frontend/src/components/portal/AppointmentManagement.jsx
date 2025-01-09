@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import classNames from "./AppointmentManagement.module.css";
+import styles from "./AppointmentManagement.module.css";
 import AppointmentViewModal from "./AppointmentViewModal";
 import EditAppointmentModal from "./EditAppointmentModal";
 import api from "../../utils/axios";
@@ -34,7 +34,6 @@ const AppointmentManagement = () => {
   };
 
   const handleViewAppointment = (appointment) => {
-    console.log("Opening modal for appointment:", appointment);
     setSelectedAppointment(appointment);
     setIsViewModalOpen(true);
   };
@@ -85,37 +84,37 @@ const AppointmentManagement = () => {
   };
 
   if (loading) {
-    return <div className={classNames.loading}>Loading appointments...</div>;
+    return <div className={styles.loading}>Loading appointments...</div>;
   }
 
   return (
-    <div className={classNames.container}>
-      <section className={classNames.section}>
+    <div className={styles.container}>
+      <section className={styles.section}>
         <h2>Upcoming Appointments</h2>
         {appointments.upcoming.length === 0 ? (
-          <div className={classNames.emptyState}>
+          <div className={styles.emptyState}>
             <p>No upcoming appointments</p>
           </div>
         ) : (
-          <div className={classNames.appointmentsList}>
+          <div className={styles.appointmentsList}>
             {appointments.upcoming.map((appointment) => (
               <div
                 key={appointment._id}
-                className={classNames.appointmentItem}
+                className={styles.appointmentItem}
                 onClick={() => handleViewAppointment(appointment)}
                 role="button"
                 tabIndex={0}
               >
-                <div className={classNames.serviceInfo}>
+                <div className={styles.serviceInfo}>
                   <h3>{appointment.serviceId?.name || "Unnamed Service"}</h3>
                   <span
-                    className={classNames.status}
+                    className={styles.status}
                     data-status={appointment.status}
                   >
                     {appointment.status}
                   </span>
                 </div>
-                <div className={classNames.dateTime}>
+                <div className={styles.dateTime}>
                   {formatDateTime(appointment.dateTime)}
                 </div>
               </div>
@@ -124,32 +123,32 @@ const AppointmentManagement = () => {
         )}
       </section>
 
-      <section className={classNames.section}>
+      <section className={styles.section}>
         <h2>Past Appointments</h2>
         {appointments.past.length === 0 ? (
-          <div className={classNames.emptyState}>
+          <div className={styles.emptyState}>
             <p>No past appointments</p>
           </div>
         ) : (
-          <div className={classNames.appointmentsList}>
+          <div className={styles.appointmentsList}>
             {appointments.past.map((appointment) => (
               <div
                 key={appointment._id}
-                className={classNames.appointmentItem}
+                className={styles.appointmentItem}
                 onClick={() => handleViewAppointment(appointment)}
                 role="button"
                 tabIndex={0}
               >
-                <div className={classNames.serviceInfo}>
+                <div className={styles.serviceInfo}>
                   <h3>{appointment.serviceId?.name || "Unnamed Service"}</h3>
                   <span
-                    className={classNames.status}
+                    className={styles.status}
                     data-status={appointment.status}
                   >
                     {appointment.status}
                   </span>
                 </div>
-                <div className={classNames.dateTime}>
+                <div className={styles.dateTime}>
                   {formatDateTime(appointment.dateTime)}
                 </div>
               </div>

@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/verify-css-modules.js && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "build": "npm run verify && vite build",
+    "verify": "node scripts/verify-css-modules.js",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "prebuild": "npm run verify"
   },
   "dependencies": {
     "axios": "^1.7.9",

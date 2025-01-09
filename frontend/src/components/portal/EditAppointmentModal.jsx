@@ -1,31 +1,20 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { format } from "date-fns";
 import { FaTimes } from "react-icons/fa";
 import styles from "./EditAppointmentModal.module.css";
 
 const EditAppointmentModal = ({ appointment, onClose, onSubmit }) => {
-  const [selectedDateTime, setSelectedDateTime] = useState(
-    appointment.dateTime
-  );
-  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: appointment.firstName,
+    lastName: appointment.lastName,
+    email: appointment.email,
+    phone: appointment.phone,
+    notes: appointment.notes || "",
+  });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!selectedDateTime) {
-      return;
-    }
-
-    try {
-      setLoading(true);
-      await onSubmit(appointment._id, {
-        dateTime: selectedDateTime,
-      });
-    } catch (error) {
-      console.error("Error updating appointment:", error);
-    } finally {
-      setLoading(false);
-    }
+    onSubmit(appointment._id, formData);
   };
 
   return (
@@ -41,37 +30,79 @@ const EditAppointmentModal = ({ appointment, onClose, onSubmit }) => {
 
         <form onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
-            <label>Current Date & Time:</label>
-            <p>{format(new Date(appointment.dateTime), "PPpp")}</p>
+            <label htmlFor="firstName">First Name</label>
+            <input
+              type="text"
+              id="firstName"
+              value={formData.firstName}
+              onChange={(e) =>
+                setFormData({ ...formData, firstName: e.target.value })
+              }
+              required
+            />
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="newDateTime">New Date & Time:</label>
+            <label htmlFor="lastName">Last Name</label>
             <input
-              type="datetime-local"
-              id="newDateTime"
-              value={selectedDateTime}
-              onChange={(e) => setSelectedDateTime(e.target.value)}
-              min={new Date().toISOString().slice(0, 16)}
+              type="text"
+              id="lastName"
+              value={formData.lastName}
+              onChange={(e) =>
+                setFormData({ ...formData, lastName: e.target.value })
+              }
               required
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+              required
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="phone">Phone</label>
+            <input
+              type="tel"
+              id="phone"
+              value={formData.phone}
+              onChange={(e) =>
+                setFormData({ ...formData, phone: e.target.value })
+              }
+              required
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="notes">Notes</label>
+            <textarea
+              id="notes"
+              value={formData.notes}
+              onChange={(e) =>
+                setFormData({ ...formData, notes: e.target.value })
+              }
+              rows={4}
             />
           </div>
 
           <div className={styles.modalActions}>
             <button
               type="button"
-              onClick={onClose}
               className={styles.cancelButton}
-              disabled={loading}
+              onClick={onClose}
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className={styles.submitButton}
-              disabled={loading || !selectedDateTime}
-            >
-              {loading ? "Updating..." : "Update Appointment"}
+            <button type="submit" className={styles.submitButton}>
+              Save Changes
             </button>
           </div>
         </form>
@@ -83,7 +114,11 @@ const EditAppointmentModal = ({ appointment, onClose, onSubmit }) => {
 EditAppointmentModal.propTypes = {
   appointment: PropTypes.shape({
     _id: PropTypes.string.isRequired,
-    dateTime: PropTypes.string.isRequired,
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    phone: PropTypes.string.isRequired,
+    notes: PropTypes.string,
   }).isRequired,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,

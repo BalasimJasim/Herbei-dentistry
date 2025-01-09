@@ -121,8 +121,27 @@ const PatientPortal = () => {
     }
   };
 
+  // Add debug logging for styles
+  useEffect(() => {
+    if (process.env.NODE_ENV === "development") {
+      console.log("Available CSS classes:", Object.keys(styles));
+      const element = document.querySelector(`.${styles.portalPage}`);
+      if (element) {
+        const computedStyle = window.getComputedStyle(element);
+        console.log("Applied styles:", {
+          className: styles.portalPage,
+          computedStyles: {
+            background: computedStyle.background,
+            padding: computedStyle.padding,
+            minHeight: computedStyle.minHeight,
+          },
+        });
+      }
+    }
+  }, []);
+
   return (
-    <div className={styles.portalPage}>
+    <div className={styles.portalPage} data-testid="portal-page">
       <Helmet>
         <title>Patient Portal - Herbie Dental</title>
         <meta
