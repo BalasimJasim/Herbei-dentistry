@@ -36,11 +36,12 @@ if (process.env.NODE_ENV === "development") {
 
 // Allowed origins based on environment
 const allowedOrigins = [
-  "http://localhost:5173",  // Vite dev server
-  "http://localhost:4173",  // Vite preview
-  "http://localhost:3000",  // Alternative local
+  "http://localhost:5173", // Vite dev server
+  "http://localhost:4173", // Vite preview
+  "http://localhost:3000", // Alternative local
   "https://dentalis.vercel.app",
-  /\.vercel\.app$/,        // All Vercel deployments
+  "https://dentalis-chi.vercel.app", // Your specific Vercel deployment
+  /\.vercel\.app$/, // All Vercel deployments
 ];
 
 // CORS configuration
