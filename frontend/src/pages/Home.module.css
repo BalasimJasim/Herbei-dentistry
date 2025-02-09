@@ -278,31 +278,50 @@
 }
 
 @media (max-width: 768px) {
+  .heroSection {
+    padding: var(--spacing-8) var(--spacing-4);
+    min-height: 80vh;
+    justify-content: center;
+  }
+
   .heroContainer {
     grid-template-columns: 1fr;
     text-align: center;
     gap: var(--spacing-8);
     padding: var(--spacing-4);
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .heroContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--spacing-4);
+  }
+
+  .heroContent h1 {
+    font-size: clamp(2rem, 8vw, 3rem);
+    margin-bottom: var(--spacing-4);
+    text-align: center;
   }
 
   .heroContent p {
+    font-size: clamp(1rem, 4vw, var(--text-lg));
     margin-left: auto;
     margin-right: auto;
+    text-align: center;
+    max-width: 100%;
+    padding: 0 var(--spacing-2);
   }
 
-  .heroButtons {
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: var(--spacing-4);
-  }
-}
-
-@media (max-width: 480px) {
   .heroButtons {
     flex-direction: column;
+    align-items: center;
     width: 100%;
-    max-width: 300px;
-    margin: 0 auto;
+    max-width: 280px;
+    margin: var(--spacing-6) auto 0;
     gap: var(--spacing-4);
   }
 
@@ -311,10 +330,59 @@
     min-width: unset;
     padding: var(--spacing-4) var(--spacing-6);
     font-size: 1rem;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .heroButton.primary {
+    background: var(--primary-600);
+    color: white;
+    border: none;
+  }
+
+  .heroButton.secondary {
+    background: white;
+    border: 2px solid var(--primary-600);
   }
 
   .sectionHeader {
     padding: 0 var(--spacing-4);
+    margin-bottom: var(--spacing-8);
+  }
+
+  .sectionHeader h2 {
+    font-size: clamp(1.75rem, 6vw, 2.5rem);
+  }
+
+  .sectionHeader p {
+    font-size: clamp(1rem, 4vw, var(--text-lg));
+  }
+}
+
+@media (max-width: 480px) {
+  .heroSection {
+    padding: var(--spacing-6) var(--spacing-3);
+  }
+
+  .heroContent h1 {
+    font-size: clamp(1.75rem, 7vw, 2.5rem);
+  }
+
+  .heroContent p {
+    font-size: clamp(0.875rem, 3.5vw, 1rem);
+  }
+
+  .heroButtons {
+    max-width: 240px;
+  }
+
+  .heroButton {
+    height: 44px;
+    font-size: 0.9375rem;
   }
 } 
 
