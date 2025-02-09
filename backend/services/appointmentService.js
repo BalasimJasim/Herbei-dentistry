@@ -207,28 +207,47 @@ export const getAvailableTimeSlots = async (date, serviceId) => {
         !isPast &&
         (await findAvailableSpecialist(service, slotTime, service.duration));
 
-      // Check if slot overlaps with any existing appointment in the same cabinet
-      const isOverlapping = appointments.some((apt) => {
+      // Check for overlapping appointments based on service type and cabinet
+      const overlappingAppointments = appointments.filter((apt) => {
         const aptService = findServiceById(apt.serviceId);
-        if (aptService.cabinetNumber !== service.cabinetNumber) {
-          return false;
-        }
-
         const aptStart = new Date(apt.dateTime);
         const aptEnd = new Date(aptStart);
         aptEnd.setMinutes(aptEnd.getMinutes() + aptService.duration);
 
-        return (
+        const timeOverlap =
           (slotTime >= aptStart && slotTime < aptEnd) ||
           (slotEndTime > aptStart && slotEndTime <= aptEnd) ||
-          (slotTime <= aptStart && slotEndTime >= aptEnd)
+          (slotTime <= aptStart && slotEndTime >= aptEnd);
+
+        // For operative services (cabinets 2 & 3)
+        if (service.cabinetNumber === 2 || service.cabinetNumber === 3) {
+          return (
+            timeOverlap &&
+            (aptService.cabinetNumber === 2 || aptService.cabinetNumber === 3)
+          );
+        }
+
+        // For all other services
+        return (
+          timeOverlap && aptService.cabinetNumber === service.cabinetNumber
         );
       });
+
+      // For operative services, check if both cabinets are occupied
+      const isOverlapping =
+        service.cabinetNumber === 2 || service.cabinetNumber === 3
+          ? overlappingAppointments.length >= 2 // Both operative cabinets are occupied
+          : overlappingAppointments.length > 0; // Single cabinet is occupied
 
       // Check if the slot end time exceeds business hours
       const exceedsBusinessHours =
         slotEndTime.getHours() >= endHour ||
         (slotEndTime.getHours() === endHour && slotEndTime.getMinutes() > 0);
+
+      // Check if the same service is already booked in this time slot
+      const sameServiceBooked = overlappingAppointments.some(
+        (apt) => apt.serviceId === serviceId
+      );
 
       // Determine the reason for unavailability
       let unavailabilityReason = null;
@@ -236,6 +255,8 @@ export const getAvailableTimeSlots = async (date, serviceId) => {
         unavailabilityReason = "PAST";
       } else if (exceedsBusinessHours) {
         unavailabilityReason = "EXCEEDS_HOURS";
+      } else if (sameServiceBooked) {
+        unavailabilityReason = "SERVICE_ALREADY_BOOKED";
       } else if (isOverlapping) {
         unavailabilityReason = "CABINET_OCCUPIED";
       } else if (!specialistAvailable) {
@@ -248,6 +269,7 @@ export const getAvailableTimeSlots = async (date, serviceId) => {
           !isPast &&
           !isOverlapping &&
           !exceedsBusinessHours &&
+          !sameServiceBooked &&
           specialistAvailable,
         isPast,
         hasSpecialist: !!specialistAvailable,

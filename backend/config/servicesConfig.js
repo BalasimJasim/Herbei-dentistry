@@ -239,10 +239,10 @@ export const CABINETS = {
 }
 
 export const SPECIALISTS = {
-  'dr-smith': { name: 'Dr. Smith', category: 'consultation' },
-  'dr-johnson': { name: 'Dr. Johnson', category: 'restorative' },
-  'dr-chen': { name: 'Dr. Chen', category: 'restorative' },
-  'dr-kim': { name: 'Dr. Kim', category: 'pediatric' },
-  'dr-brown': { name: 'Dr. Brown', category: 'prosthetic' },
-  'dr-garcia': { name: 'Dr. Garcia', category: 'surgery' }
+  "dr-smith": { name: "Dr. Smith", category: "consultation" },
+  "dr-johnson": { name: "Dr. Johnson", category: "operative" },
+  "dr-chen": { name: "Dr. Chen", category: "operative" },
+  "dr-patel": { name: "Dr. Patel", category: "orthopedic" },
+  "dr-kim": { name: "Dr. Kim", category: "orthodontic-pediatric" },
+  "dr-garcia": { name: "Dr. Garcia", category: "surgery" },
 }; 
