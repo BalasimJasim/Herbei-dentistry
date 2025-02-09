@@ -276,16 +276,27 @@
   background: transparent;
 }
 
-.mobileMenuButton.active .hamburger:before {
-  transform: rotate(45deg);
-  top: 0;
+.mobileMenuButton.active .hamburger:before,
+.mobileMenuButton.active .hamburger:after {
+  width: 22px;
+  height: 2px;
+  transition: all 0.3s ease;
   background: var(--primary-600);
 }
 
+.mobileMenuButton.active .hamburger:before {
+  transform: rotate(45deg) translate(0, 0);
+  top: 0;
+}
+
 .mobileMenuButton.active .hamburger:after {
-  transform: rotate(-45deg);
+  transform: rotate(-45deg) translate(0, 0);
   bottom: 0;
-  background: var(--primary-600);
+}
+
+/* Ensure clean rendering */
+.mobileMenuButton.active {
+  transform: translateY(-50%) rotate(0deg);
 }
 
 @media (max-width: 1024px) {
