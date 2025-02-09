@@ -3,6 +3,7 @@ import Appointment from "../models/Appointment.js";
 import { validationResult } from "express-validator";
 import { isValidObjectId } from "mongoose";
 import appointmentService from "../services/appointmentService.js";
+import { sendAppointmentNotifications } from "../services/notificationService.js";
 
 // @desc    Get user appointments
 // @route   GET /api/appointments/user
@@ -69,9 +70,21 @@ export const createAppointment = asyncHandler(async (req, res) => {
     });
 
     if (appointment) {
+      // Send confirmation notifications
+      const notificationResult = await sendAppointmentNotifications({
+        ...appointment.toObject(),
+        service: service.name, // Add service name for the email template
+      });
+
+      console.log("Notification result:", notificationResult);
+
       res.status(201).json({
         success: true,
         data: appointment,
+        notifications: {
+          emailSent: notificationResult.emailSent,
+          smsSent: notificationResult.smsSent,
+        },
       });
     } else {
       res.status(400);
