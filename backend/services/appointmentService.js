@@ -174,7 +174,9 @@ export const getAvailableTimeSlots = async (date, serviceId) => {
 
     // Set up the date for time slot generation
     const baseDate = new Date(date);
-    baseDate.setHours(startHour, 0, 0, 0);
+    // Reset hours to start of day and then set to business start time
+    baseDate.setHours(0, 0, 0, 0);
+    baseDate.setHours(startHour);
 
     // Current time for comparison
     const now = new Date();
