@@ -182,4 +182,10 @@ export const getAvailableTimeSlots = async (date, serviceId) => {
     console.error("Error getting available slots:", error);
     throw error;
   }
+};
+
+export default {
+  getAvailableTimeSlots,
+  checkTimeSlotAvailability,
+  findServiceById,
 }; 
