@@ -223,27 +223,34 @@
   padding: 1.25rem;
   cursor: pointer;
   position: absolute;
-  right: 0;
+  right: 1rem;
   top: 50%;
   transform: translateY(-50%);
   z-index: 100;
   outline: none;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
 }
 
-.mobileMenuButton:hover,
-.mobileMenuButton:active,
-.mobileMenuButton:focus,
-.mobileMenuButton.active {
-  background: none;
-  outline: none;
+.mobileMenuButton:hover {
+  background-color: var(--neutral-50);
+}
+
+.mobileMenuButton:active {
+  background-color: var(--neutral-100);
 }
 
 .hamburger {
   width: 20px;
   height: 2px;
-  background: #333;
+  background: var(--neutral-700);
   position: relative;
-  transition: all 0.15s ease;
+  transition: all 0.3s ease;
 }
 
 .hamburger:before,
@@ -252,9 +259,9 @@
   position: absolute;
   width: 20px;
   height: 2px;
-  background: #333;
+  background: var(--neutral-700);
   left: 0;
-  transition: all 0.15s ease;
+  transition: all 0.3s ease;
 }
 
 .hamburger:before {
@@ -272,13 +279,13 @@
 .mobileMenuButton.active .hamburger:before {
   transform: rotate(45deg);
   top: 0;
-  background: #333;
+  background: var(--primary-600);
 }
 
 .mobileMenuButton.active .hamburger:after {
   transform: rotate(-45deg);
   bottom: 0;
-  background: #333;
+  background: var(--primary-600);
 }
 
 @media (max-width: 1024px) {
