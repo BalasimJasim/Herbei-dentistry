@@ -32,32 +32,55 @@ export const createAppointment = asyncHandler(async (req, res) => {
   const { firstName, lastName, email, phone, dateTime, serviceId, notes } =
     req.body;
 
-  // Check if appointment time is available
-  const existingAppointment = await Appointment.findOne({
-    dateTime: new Date(dateTime),
-    status: { $ne: "cancelled" },
-  });
+  try {
+    // Check if the time slot is available using the appointmentService
+    const availability = await appointmentService.checkTimeSlotAvailability(
+      dateTime,
+      serviceId
+    );
 
-  if (existingAppointment) {
-    res.status(400);
-    throw new Error("This time slot is already booked");
-  }
+    if (!availability.available) {
+      res.status(400);
+      throw new Error(availability.message);
+    }
 
-  const appointment = await Appointment.create({
-    firstName,
-    lastName,
-    email,
-    phone,
-    dateTime,
-    serviceId,
-    notes,
-  });
+    // Find the service to get its duration
+    const service = await appointmentService.findServiceById(serviceId);
+    if (!service) {
+      res.status(400);
+      throw new Error("Invalid service selected");
+    }
 
-  if (appointment) {
-    res.status(201).json(appointment);
-  } else {
-    res.status(400);
-    throw new Error("Invalid appointment data");
+    // Calculate end time based on service duration
+    const startDateTime = new Date(dateTime);
+    const endDateTime = new Date(startDateTime);
+    endDateTime.setMinutes(endDateTime.getMinutes() + service.duration);
+
+    const appointment = await Appointment.create({
+      firstName,
+      lastName,
+      email,
+      phone,
+      dateTime: startDateTime,
+      endTime: endDateTime,
+      serviceId,
+      notes,
+      status: "scheduled",
+    });
+
+    if (appointment) {
+      res.status(201).json({
+        success: true,
+        data: appointment,
+      });
+    } else {
+      res.status(400);
+      throw new Error("Invalid appointment data");
+    }
+  } catch (error) {
+    console.error("Error creating appointment:", error);
+    res.status(error.status || 500);
+    throw new Error(error.message || "Failed to create appointment");
   }
 });
 

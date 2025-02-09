@@ -1,28 +1,22 @@
-import { useState, useEffect } from 'react'
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import api from "../utils/axios";
 import AppointmentCalendar from "./AppointmentCalendar";
 import styles from "./AppointmentForm.module.css";
+import PropTypes from "prop-types";
 
-const AppointmentForm = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
+const AppointmentForm = ({ onClose }) => {
   const { t } = useTranslation();
 
   // Form state
   const [formData, setFormData] = useState({
-    firstName: location.state?.autofill
-      ? location.state.userData?.name?.split(" ")[0] || ""
-      : "",
-    lastName: location.state?.autofill
-      ? location.state.userData?.name?.split(" ")[1] || ""
-      : "",
-    email: location.state?.autofill ? location.state.userData?.email || "" : "",
-    phone: location.state?.autofill ? location.state.userData?.phone || "" : "",
-    serviceId: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
     notes: "",
+    serviceId: "",
   });
 
   // Step management
@@ -36,69 +30,62 @@ const AppointmentForm = () => {
   // Disable editing of autofilled fields if user is logged in
   const isFieldDisabled = (fieldName) => {
     return (
-      location.state?.autofill &&
+      localStorage.getItem("autofill") &&
       (fieldName === "name" || fieldName === "email" || fieldName === "phone")
     );
   };
 
   // Fetch services on mount
-  useEffect(() => {
-    const loadServices = async (retryCount = 0) => {
-      setLoading(true);
-      try {
-        const response = await api.get("/api/services");
-        console.log("Services response:", response.data);
-        if (response.data.success) {
-          // Group services by cabinet
-          const groupedServices = {
-            1: { name: "Consultation Services", services: [] },
-            2: { name: "Operative Dentistry", services: [] },
-            4: { name: "Orthopedic Services", services: [] },
-            5: { name: "Orthodontics & Pediatric", services: [] },
-            6: { name: "Surgery Services", services: [] },
-          };
+  const loadServices = async (retryCount = 0) => {
+    setLoading(true);
+    try {
+      const response = await api.get("/api/services");
+      console.log("Services response:", response.data);
+      if (response.data.success) {
+        // Group services by cabinet
+        const groupedServices = {
+          1: { name: "Consultation Services", services: [] },
+          2: { name: "Operative Dentistry", services: [] },
+          4: { name: "Orthopedic Services", services: [] },
+          5: { name: "Orthodontics & Pediatric", services: [] },
+          6: { name: "Surgery Services", services: [] },
+        };
 
-          response.data.services.forEach((service) => {
-            const cabinet = service.cabinetNumber || 1;
-            if (cabinet === 2 || cabinet === 3) {
-              if (groupedServices[2]) {
-                groupedServices[2].services.push(service);
-              }
-            } else if (groupedServices[cabinet]) {
-              groupedServices[cabinet].services.push(service);
+        response.data.services.forEach((service) => {
+          const cabinet = service.cabinetNumber || 1;
+          if (cabinet === 2 || cabinet === 3) {
+            if (groupedServices[2]) {
+              groupedServices[2].services.push(service);
             }
-          });
+          } else if (groupedServices[cabinet]) {
+            groupedServices[cabinet].services.push(service);
+          }
+        });
 
-          // Filter out empty cabinets
-          const filtered = Object.fromEntries(
-            Object.entries(groupedServices).filter(
-              ([, value]) => value.services.length > 0
-            )
-          );
+        // Filter out empty cabinets
+        const filtered = Object.fromEntries(
+          Object.entries(groupedServices).filter(
+            ([, value]) => value.services.length > 0
+          )
+        );
 
-          setServices(filtered);
-        }
-      } catch (error) {
-        console.error("Failed to load services:", error);
-        if (retryCount < 3) {
-          // Retry up to 3 times
-          console.log(`Retrying service load... Attempt ${retryCount + 1}`);
-          setTimeout(
-            () => loadServices(retryCount + 1),
-            1000 * (retryCount + 1)
-          ); // Exponential backoff
-        } else {
-          toast.error(
-            t("Failed to load services. Please try refreshing the page.")
-          );
-        }
-      } finally {
-        setLoading(false);
+        setServices(filtered);
       }
-    };
-
-    loadServices();
-  }, [t]);
+    } catch (error) {
+      console.error("Failed to load services:", error);
+      if (retryCount < 3) {
+        // Retry up to 3 times
+        console.log(`Retrying service load... Attempt ${retryCount + 1}`);
+        setTimeout(() => loadServices(retryCount + 1), 1000 * (retryCount + 1)); // Exponential backoff
+      } else {
+        toast.error(
+          t("Failed to load services. Please try refreshing the page.")
+        );
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleServiceSelect = (serviceId) => {
     //Find the selected service to get its ID
@@ -122,6 +109,20 @@ const AppointmentForm = () => {
     setCurrentStep(3); // Move to personal info
   };
 
+  const resetForm = () => {
+    setFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      notes: "",
+      serviceId: "",
+    });
+    setSelectedDate(null);
+    setSelectedTime(null);
+    setCurrentStep(1);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -141,11 +142,6 @@ const AppointmentForm = () => {
       const token = localStorage.getItem("token");
       const userData = token ? JSON.parse(localStorage.getItem("user")) : null;
 
-      console.log("AppointmentForm - Creating appointment", {
-        hasToken: !!token,
-        userData,
-      });
-
       const appointmentData = {
         firstName: formData.firstName,
         lastName: formData.lastName,
@@ -158,8 +154,6 @@ const AppointmentForm = () => {
         userId: userData?.userId,
       };
 
-      console.log("AppointmentForm - Appointment data:", appointmentData);
-
       const config = {
         headers: {
           Authorization: token ? `Bearer ${token}` : undefined,
@@ -171,20 +165,18 @@ const AppointmentForm = () => {
         appointmentData,
         config
       );
-      console.log("AppointmentForm - Response:", response.data);
 
       if (response.data.success) {
         toast.success("Appointment booked successfully!");
-        if (userData?.userId) {
-          navigate("/portal-dashboard");
-        } else {
-          navigate("/appointments/confirmation", {
-            state: { appointment: response.data.data },
-          });
+        resetForm();
+        if (typeof onClose === "function") {
+          onClose();
         }
+      } else {
+        throw new Error(response.data.message || "Failed to book appointment");
       }
     } catch (error) {
-      console.error("AppointmentForm - Error:", error);
+      console.error("Error booking appointment:", error);
       toast.error(
         error.response?.data?.message || "Failed to book appointment"
       );
@@ -416,6 +408,10 @@ const AppointmentForm = () => {
       )}
     </div>
   );
+};
+
+AppointmentForm.propTypes = {
+  onClose: PropTypes.func,
 };
 
 export default AppointmentForm;
