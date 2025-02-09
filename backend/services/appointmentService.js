@@ -126,6 +126,20 @@ export const getAvailableTimeSlots = async (date, serviceId) => {
     // Current time for comparison
     const now = new Date();
 
+    // Get all appointments for the day
+    const dayStart = new Date(date);
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(date);
+    dayEnd.setHours(23, 59, 59, 999);
+
+    const appointments = await Appointment.find({
+      dateTime: {
+        $gte: dayStart,
+        $lte: dayEnd,
+      },
+      status: { $ne: "cancelled" },
+    });
+
     // Generate all possible time slots
     while (baseDate.getHours() < endHour) {
       const slotTime = new Date(baseDate);
@@ -135,19 +149,27 @@ export const getAvailableTimeSlots = async (date, serviceId) => {
       // Check if slot is in the past
       const isPast = slotTime <= now;
 
-      // Only check availability for future slots
-      let isAvailable = false;
-      if (!isPast) {
-        const { available } = await checkTimeSlotAvailability(
-          slotTime,
-          serviceId
+      // Check if slot overlaps with any existing appointment
+      const isOverlapping = appointments.some((apt) => {
+        const aptStart = new Date(apt.dateTime);
+        const aptEnd = new Date(aptStart);
+        aptEnd.setMinutes(aptEnd.getMinutes() + service.duration);
+
+        return (
+          (slotTime >= aptStart && slotTime < aptEnd) ||
+          (slotEndTime > aptStart && slotEndTime <= aptEnd) ||
+          (slotTime <= aptStart && slotEndTime >= aptEnd)
         );
-        isAvailable = available;
-      }
+      });
+
+      // Check if the slot end time exceeds business hours
+      const exceedsBusinessHours =
+        slotEndTime.getHours() >= endHour ||
+        (slotEndTime.getHours() === endHour && slotEndTime.getMinutes() > 0);
 
       slots.push({
         time: slotTime.toISOString(),
-        available: isAvailable,
+        available: !isPast && !isOverlapping && !exceedsBusinessHours,
         isPast,
       });
 

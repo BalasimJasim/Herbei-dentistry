@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import Appointment from "../models/Appointment.js";
 import { validationResult } from "express-validator";
 import { isValidObjectId } from "mongoose";
+import appointmentService from "../services/appointmentService.js";
 
 // @desc    Get user appointments
 // @route   GET /api/appointments/user
@@ -93,50 +94,29 @@ export const cancelAppointment = asyncHandler(async (req, res) => {
 // @route   GET /api/appointments/available
 // @access  Public
 export const getAvailableTimeSlots = asyncHandler(async (req, res) => {
-  const { date } = req.query;
+  const { date, serviceId } = req.query;
 
-  if (!date) {
+  if (!date || !serviceId) {
     res.status(400);
-    throw new Error("Date is required");
+    throw new Error("Date and serviceId are required");
   }
 
-  // Get all appointments for the specified date
-  const startDate = new Date(date);
-  startDate.setHours(0, 0, 0, 0);
-  const endDate = new Date(date);
-  endDate.setHours(23, 59, 59, 999);
-
-  const appointments = await Appointment.find({
-    dateTime: {
-      $gte: startDate,
-      $lte: endDate,
-    },
-    status: { $ne: "cancelled" },
-  });
-
-  // Generate all possible time slots
-  const timeSlots = [];
-  const startHour = 9; // 9 AM
-  const endHour = 17; // 5 PM
-  const interval = 30; // 30 minutes
-
-  for (let hour = startHour; hour < endHour; hour++) {
-    for (let minute = 0; minute < 60; minute += interval) {
-      const time = new Date(date);
-      time.setHours(hour, minute, 0, 0);
-
-      // Check if time slot is already booked
-      const isBooked = appointments.some(
-        (apt) => apt.dateTime.getTime() === time.getTime()
-      );
-
-      if (!isBooked) {
-        timeSlots.push(time);
-      }
-    }
+  try {
+    const slots = await appointmentService.getAvailableTimeSlots(
+      date,
+      serviceId
+    );
+    res.json({
+      success: true,
+      data: slots,
+    });
+  } catch (error) {
+    console.error("Error getting available slots:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Failed to get available time slots",
+    });
   }
-
-  res.json(timeSlots);
 });
 
 // @desc    Update appointment

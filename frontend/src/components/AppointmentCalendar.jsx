@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./AppointmentCalendar.css";
@@ -30,12 +31,18 @@ const AppointmentCalendar = ({
       console.log("Fetching slots for:", { date: selectedDate, serviceId });
       const response = await api.get("/api/appointments/available", {
         params: {
-          date: selectedDate.toISOString(),
+          date: selectedDate.toISOString().split("T")[0],
           serviceId: serviceId,
         },
       });
       console.log("Available slots response:", response.data);
-      setAvailableSlots(response.data.data || []);
+
+      if (response.data.success) {
+        setAvailableSlots(response.data.data || []);
+      } else {
+        console.error("Failed to fetch slots:", response.data.message);
+        setAvailableSlots([]);
+      }
     } catch (error) {
       console.error("Error fetching slots:", error);
       setAvailableSlots([]);
@@ -49,46 +56,17 @@ const AppointmentCalendar = ({
     onDateSelect(date);
   };
 
-  const navigationLabel = ({ date, label, locale, view }) => {
-    return (
-      <span className="calendar-nav-label">{format(date, "MMMM yyyy")}</span>
-    );
-  };
-
-  const navigation = {
-    prev: <FaChevronLeft className="calendar-nav-icon" />,
-    next: <FaChevronRight className="calendar-nav-icon" />,
-    prev2: null,
-    next2: null,
-  };
-
-  const generateTimeSlots = () => {
-    const slots = [];
-    const startHour = 9;
-    const endHour = 18;
-
-    for (let hour = startHour; hour < endHour; hour++) {
-      slots.push({
-        time: new Date(selectedDate).setHours(hour, 0, 0, 0),
-        available: true,
-      });
-      slots.push({
-        time: new Date(selectedDate).setHours(hour, 30, 0, 0),
-        available: true,
-      });
+  const renderTimeSlots = () => {
+    if (!selectedDate) {
+      return <div className="no-slots">Please select a date first</div>;
     }
 
-    return slots.map((slot) => ({
-      ...slot,
-      available: availableSlots.some(
-        (availSlot) => new Date(availSlot.time).getTime() === slot.time
-      ),
-    }));
-  };
-
-  const renderTimeSlots = () => {
     if (loading) {
       return <div className="loading-slots">Loading available times...</div>;
+    }
+
+    if (!serviceId) {
+      return <div className="no-slots">Please select a service first</div>;
     }
 
     if (!availableSlots.length) {
@@ -111,7 +89,9 @@ const AppointmentCalendar = ({
                 className={`time-slot ${isSelected ? "selected" : ""} ${
                   !slot.available || slot.isPast ? "unavailable" : ""
                 }`}
-                onClick={() => onTimeSelect(time)}
+                onClick={() =>
+                  slot.available && !slot.isPast && onTimeSelect(time)
+                }
                 disabled={!slot.available || slot.isPast}
               >
                 {format(time, "HH:mm")}
@@ -135,7 +115,6 @@ const AppointmentCalendar = ({
     compareDate.setHours(0, 0, 0, 0);
 
     // Only disable weekends and holidays
-    // Past dates will be styled differently but not disabled
     return isWeekend(compareDate) || isHoliday(compareDate);
   };
 
@@ -202,6 +181,14 @@ const AppointmentCalendar = ({
       {selectedDate && renderTimeSlots()}
     </div>
   );
+};
+
+AppointmentCalendar.propTypes = {
+  selectedDate: PropTypes.instanceOf(Date),
+  onDateSelect: PropTypes.func.isRequired,
+  onTimeSelect: PropTypes.func.isRequired,
+  selectedTime: PropTypes.instanceOf(Date),
+  serviceId: PropTypes.string,
 };
 
 export default AppointmentCalendar;
