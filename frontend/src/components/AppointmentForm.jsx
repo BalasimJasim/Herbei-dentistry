@@ -43,7 +43,7 @@ const AppointmentForm = () => {
 
   // Fetch services on mount
   useEffect(() => {
-    const loadServices = async () => {
+    const loadServices = async (retryCount = 0) => {
       setLoading(true);
       try {
         const response = await api.get("/api/services");
@@ -80,7 +80,18 @@ const AppointmentForm = () => {
         }
       } catch (error) {
         console.error("Failed to load services:", error);
-        toast.error(t("Failed to load services. Please try again."));
+        if (retryCount < 3) {
+          // Retry up to 3 times
+          console.log(`Retrying service load... Attempt ${retryCount + 1}`);
+          setTimeout(
+            () => loadServices(retryCount + 1),
+            1000 * (retryCount + 1)
+          ); // Exponential backoff
+        } else {
+          toast.error(
+            t("Failed to load services. Please try refreshing the page.")
+          );
+        }
       } finally {
         setLoading(false);
       }
@@ -237,8 +248,18 @@ const AppointmentForm = () => {
             </button>
 
             {isServiceModalOpen && (
-              <div className={styles.serviceModalOverlay}>
-                <div className={styles.serviceModal}>
+              <div
+                className={styles.serviceModalOverlay}
+                onClick={(e) => {
+                  if (e.target === e.currentTarget) {
+                    setIsServiceModalOpen(false);
+                  }
+                }}
+              >
+                <div
+                  className={styles.serviceModal}
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <div className={styles.modalHeader}>
                     <h2 className={styles.modalTitle}>
                       {t("Select a Service")}
@@ -251,7 +272,10 @@ const AppointmentForm = () => {
                     </button>
                   </div>
                   {loading ? (
-                    <div>Loading services...</div>
+                    <div className={styles.loadingContainer}>
+                      <div className={styles.spinner}></div>
+                      <p>{t("Loading services...")}</p>
+                    </div>
                   ) : (
                     Object.entries(services).map(([categoryId, category]) => (
                       <div key={categoryId}>
