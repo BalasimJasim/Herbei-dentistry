@@ -230,6 +230,18 @@ export const getAvailableTimeSlots = async (date, serviceId) => {
         slotEndTime.getHours() >= endHour ||
         (slotEndTime.getHours() === endHour && slotEndTime.getMinutes() > 0);
 
+      // Determine the reason for unavailability
+      let unavailabilityReason = null;
+      if (isPast) {
+        unavailabilityReason = "PAST";
+      } else if (exceedsBusinessHours) {
+        unavailabilityReason = "EXCEEDS_HOURS";
+      } else if (isOverlapping) {
+        unavailabilityReason = "CABINET_OCCUPIED";
+      } else if (!specialistAvailable) {
+        unavailabilityReason = "SPECIALIST_UNAVAILABLE";
+      }
+
       slots.push({
         time: slotTime.toISOString(),
         available:
@@ -239,6 +251,8 @@ export const getAvailableTimeSlots = async (date, serviceId) => {
           specialistAvailable,
         isPast,
         hasSpecialist: !!specialistAvailable,
+        unavailabilityReason,
+        duration: service.duration,
       });
 
       // Move to next slot

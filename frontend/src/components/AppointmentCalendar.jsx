@@ -83,21 +83,58 @@ const AppointmentCalendar = ({
             const time = new Date(slot.time);
             const isSelected = selectedTime?.getTime() === time.getTime();
 
+            // Get the appropriate unavailability message
+            let unavailabilityMessage = "";
+            if (slot.unavailabilityReason === "PAST") {
+              unavailabilityMessage = "Past time";
+            } else if (slot.unavailabilityReason === "EXCEEDS_HOURS") {
+              unavailabilityMessage = "Outside business hours";
+            } else if (slot.unavailabilityReason === "CABINET_OCCUPIED") {
+              unavailabilityMessage = "Cabinet occupied";
+            } else if (slot.unavailabilityReason === "SPECIALIST_UNAVAILABLE") {
+              unavailabilityMessage = "Specialist unavailable";
+            }
+
             return (
               <button
                 key={slot.time}
                 className={`time-slot ${isSelected ? "selected" : ""} ${
-                  !slot.available || slot.isPast ? "unavailable" : ""
+                  !slot.available ? "unavailable" : ""
+                } ${
+                  slot.unavailabilityReason
+                    ? `reason-${slot.unavailabilityReason.toLowerCase()}`
+                    : ""
                 }`}
-                onClick={() =>
-                  slot.available && !slot.isPast && onTimeSelect(time)
+                onClick={() => slot.available && onTimeSelect(time)}
+                disabled={!slot.available}
+                title={
+                  unavailabilityMessage ||
+                  `Available ${slot.duration} min appointment`
                 }
-                disabled={!slot.available || slot.isPast}
               >
-                {format(time, "HH:mm")}
+                <span className="time">{format(time, "HH:mm")}</span>
+                {!slot.available && unavailabilityMessage && (
+                  <span className="unavailability-reason">
+                    {unavailabilityMessage}
+                  </span>
+                )}
               </button>
             );
           })}
+        </div>
+        <div className="time-slots-legend">
+          <div className="legend-item">
+            <span className="legend-color available"></span>
+            <span>Available</span>
+          </div>
+          <div className="legend-item">
+            <span className="legend-color reason-specialist-unavailable"></span>
+            <span>Specialist Unavailable</span>
+          </div>
+          <div className="legend-item">
+            <span className="legend-color reason-cabinet-occupied"></span>
+            <span>Cabinet Occupied</span>
+          </div>
         </div>
       </div>
     );
