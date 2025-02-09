@@ -282,6 +282,7 @@
     grid-template-columns: 1fr;
     text-align: center;
     gap: var(--spacing-8);
+    padding: var(--spacing-4);
   }
 
   .heroContent p {
@@ -291,20 +292,25 @@
 
   .heroButtons {
     justify-content: center;
-  }
-
-  .featuresGrid {
-    grid-template-columns: 1fr;
+    flex-wrap: wrap;
+    gap: var(--spacing-4);
   }
 }
 
 @media (max-width: 480px) {
   .heroButtons {
     flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    gap: var(--spacing-4);
   }
 
   .heroButton {
     width: 100%;
+    min-width: unset;
+    padding: var(--spacing-4) var(--spacing-6);
+    font-size: 1rem;
   }
 
   .sectionHeader {
