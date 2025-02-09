@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import api from "../utils/axios";
@@ -27,6 +27,11 @@ const AppointmentForm = ({ onClose }) => {
   const [loading, setLoading] = useState(false);
   const [isServiceModalOpen, setIsServiceModalOpen] = useState(false);
 
+  // Load services when component mounts
+  useEffect(() => {
+    loadServices();
+  }, []);
+
   // Disable editing of autofilled fields if user is logged in
   const isFieldDisabled = (fieldName) => {
     return (
@@ -35,13 +40,13 @@ const AppointmentForm = ({ onClose }) => {
     );
   };
 
-  // Fetch services on mount
+  // Fetch services
   const loadServices = async (retryCount = 0) => {
     setLoading(true);
     try {
       const response = await api.get("/api/services");
       console.log("Services response:", response.data);
-      if (response.data.success) {
+      if (response.data.success && response.data.services) {
         // Group services by cabinet
         const groupedServices = {
           1: { name: "Consultation Services", services: [] },
@@ -51,7 +56,9 @@ const AppointmentForm = ({ onClose }) => {
           6: { name: "Surgery Services", services: [] },
         };
 
+        console.log("Grouping services...");
         response.data.services.forEach((service) => {
+          console.log("Processing service:", service);
           const cabinet = service.cabinetNumber || 1;
           if (cabinet === 2 || cabinet === 3) {
             if (groupedServices[2]) {
@@ -69,7 +76,11 @@ const AppointmentForm = ({ onClose }) => {
           )
         );
 
+        console.log("Filtered services:", filtered);
         setServices(filtered);
+      } else {
+        console.error("Invalid services data:", response.data);
+        throw new Error("Invalid services data format");
       }
     } catch (error) {
       console.error("Failed to load services:", error);
@@ -88,16 +99,25 @@ const AppointmentForm = ({ onClose }) => {
   };
 
   const handleServiceSelect = (serviceId) => {
+    console.log("Selecting service with ID:", serviceId);
+    console.log("Available services:", services);
+
     //Find the selected service to get its ID
     const selectedService = Object.values(services)
       .flatMap((category) => category.services)
-      .find((service) => service._id === serviceId);
+      .find((service) => service._id === serviceId || service.id === serviceId);
 
-    setFormData((prev) => ({
-      ...prev,
-      serviceId: selectedService.id || selectedService._id,
-    }));
-    setCurrentStep(2); // Move to date selection
+    console.log("Found service:", selectedService);
+
+    if (selectedService) {
+      setFormData((prev) => ({
+        ...prev,
+        serviceId: selectedService.id,
+      }));
+      setCurrentStep(2); // Move to date selection
+    } else {
+      toast.error(t("Failed to select service. Please try again."));
+    }
   };
 
   const handleDateSelect = (date) => {
@@ -235,7 +255,7 @@ const AppointmentForm = ({ onClose }) => {
               {formData.serviceId
                 ? Object.values(services)
                     .flatMap((category) => category.services)
-                    .find((service) => service._id === formData.serviceId)?.name
+                    .find((service) => service.id === formData.serviceId)?.name
                 : t("Choose a service...")}
             </button>
 
@@ -270,20 +290,20 @@ const AppointmentForm = ({ onClose }) => {
                     </div>
                   ) : (
                     Object.entries(services).map(([categoryId, category]) => (
-                      <div key={categoryId}>
+                      <div key={categoryId} className={styles.categorySection}>
                         <h3 className={styles.categoryTitle}>
                           {category.name}
                         </h3>
                         {category.services.map((service) => (
                           <button
-                            key={service._id}
+                            key={service.id}
                             className={`${styles.serviceOption} ${
-                              formData.serviceId === service._id
+                              formData.serviceId === service.id
                                 ? styles.selected
                                 : ""
                             }`}
                             onClick={() => {
-                              handleServiceSelect(service._id);
+                              handleServiceSelect(service.id);
                               setIsServiceModalOpen(false);
                             }}
                           >
