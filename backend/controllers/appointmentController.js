@@ -65,6 +65,7 @@ export const createAppointment = asyncHandler(async (req, res) => {
       dateTime: startDateTime,
       endTime: endDateTime,
       serviceId,
+      specialistId: availability.specialist.specialistId,
       notes,
       status: "scheduled",
     });
@@ -73,14 +74,18 @@ export const createAppointment = asyncHandler(async (req, res) => {
       // Send confirmation notifications
       const notificationResult = await sendAppointmentNotifications({
         ...appointment.toObject(),
-        service: service.name, // Add service name for the email template
+        service: service.name,
+        specialist: availability.specialist.specialist.name,
       });
 
       console.log("Notification result:", notificationResult);
 
       res.status(201).json({
         success: true,
-        data: appointment,
+        data: {
+          ...appointment.toObject(),
+          specialist: availability.specialist.specialist.name,
+        },
         notifications: {
           emailSent: notificationResult.emailSent,
           smsSent: notificationResult.smsSent,

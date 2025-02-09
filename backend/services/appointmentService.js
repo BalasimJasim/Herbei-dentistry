@@ -1,5 +1,5 @@
 import Appointment from '../models/Appointment.js';
-import { SERVICES } from "../config/servicesConfig.js";
+import { SERVICES, SPECIALISTS, CABINETS } from "../config/servicesConfig.js";
 
 // Helper function to find service by ID
 const findServiceById = (serviceId) => {
@@ -12,6 +12,39 @@ const findServiceById = (serviceId) => {
   }
   console.log("Found service:", service);
   return service;
+};
+
+// Helper function to find available specialist for a service
+const findAvailableSpecialist = async (service, dateTime, duration) => {
+  const cabinet = CABINETS[service.cabinetNumber];
+  const specialistsInCategory = Object.entries(SPECIALISTS).filter(
+    ([_, specialist]) => specialist.category === cabinet.category
+  );
+
+  // Get all appointments for this time period
+  const appointmentEndTime = new Date(dateTime);
+  appointmentEndTime.setMinutes(appointmentEndTime.getMinutes() + duration);
+
+  const existingAppointments = await Appointment.find({
+    dateTime: { $lt: appointmentEndTime },
+    endTime: { $gt: dateTime },
+    status: { $ne: "cancelled" },
+  });
+
+  // Find a specialist who is not booked during this time
+  for (const [specialistId, specialist] of specialistsInCategory) {
+    const isBooked = existingAppointments.some((apt) => {
+      const service = SERVICES.find((s) => s.id === apt.serviceId);
+      const cabinet = CABINETS[service.cabinetNumber];
+      return cabinet.category === specialist.category;
+    });
+
+    if (!isBooked) {
+      return { specialistId, specialist };
+    }
+  }
+
+  return null;
 };
 
 // Add this function to check business hours
@@ -77,9 +110,23 @@ export const checkTimeSlotAvailability = async (dateTime, serviceId) => {
       };
     }
 
-    // Check for overlapping appointments
+    // Find available specialist
+    const availableSpecialist = await findAvailableSpecialist(
+      service,
+      appointmentDateTime,
+      service.duration
+    );
+
+    if (!availableSpecialist) {
+      return {
+        available: false,
+        reason: "NO_SPECIALIST_AVAILABLE",
+        message: "No specialist available for this time slot",
+      };
+    }
+
+    // Check for overlapping appointments in the same cabinet
     const overlappingAppointment = await Appointment.findOne({
-      serviceId,
       status: { $ne: "cancelled" },
       $or: [
         {
@@ -87,20 +134,26 @@ export const checkTimeSlotAvailability = async (dateTime, serviceId) => {
           endTime: { $gt: appointmentDateTime },
         },
       ],
-    });
+    }).populate("serviceId");
 
     if (overlappingAppointment) {
-      return {
-        available: false,
-        reason: "OVERLAP",
-        message: "This time slot is already booked",
-      };
+      const overlappingService = findServiceById(
+        overlappingAppointment.serviceId
+      );
+      if (overlappingService.cabinetNumber === service.cabinetNumber) {
+        return {
+          available: false,
+          reason: "OVERLAP",
+          message: "This time slot is already booked in this cabinet",
+        };
+      }
     }
 
     return {
       available: true,
       reason: null,
       message: "Time slot is available",
+      specialist: availableSpecialist,
     };
   } catch (error) {
     console.error("Error checking slot availability:", error);
@@ -149,11 +202,21 @@ export const getAvailableTimeSlots = async (date, serviceId) => {
       // Check if slot is in the past
       const isPast = slotTime <= now;
 
-      // Check if slot overlaps with any existing appointment
+      // Check specialist availability
+      const specialistAvailable =
+        !isPast &&
+        (await findAvailableSpecialist(service, slotTime, service.duration));
+
+      // Check if slot overlaps with any existing appointment in the same cabinet
       const isOverlapping = appointments.some((apt) => {
+        const aptService = findServiceById(apt.serviceId);
+        if (aptService.cabinetNumber !== service.cabinetNumber) {
+          return false;
+        }
+
         const aptStart = new Date(apt.dateTime);
         const aptEnd = new Date(aptStart);
-        aptEnd.setMinutes(aptEnd.getMinutes() + service.duration);
+        aptEnd.setMinutes(aptEnd.getMinutes() + aptService.duration);
 
         return (
           (slotTime >= aptStart && slotTime < aptEnd) ||
@@ -169,8 +232,13 @@ export const getAvailableTimeSlots = async (date, serviceId) => {
 
       slots.push({
         time: slotTime.toISOString(),
-        available: !isPast && !isOverlapping && !exceedsBusinessHours,
+        available:
+          !isPast &&
+          !isOverlapping &&
+          !exceedsBusinessHours &&
+          specialistAvailable,
         isPast,
+        hasSpecialist: !!specialistAvailable,
       });
 
       // Move to next slot

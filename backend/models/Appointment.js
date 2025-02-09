@@ -35,6 +35,10 @@ const appointmentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    specialistId: {
+      type: String,
+      required: true,
+    },
     notes: {
       type: String,
       required: false,
