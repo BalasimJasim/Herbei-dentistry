@@ -284,7 +284,7 @@
     padding: var(--spacing-6) var(--spacing-4);
     min-height: 70vh;
     justify-content: flex-start;
-    padding-top: var(--spacing-12);
+    padding-top: var(--spacing-8);
   }
 
   .heroContainer {
@@ -306,11 +306,12 @@
 
   .heroContent h1 {
     font-size: clamp(1.75rem, 7vw, 2.5rem);
-    margin-bottom: var(--spacing-3);
+    margin-bottom: var(--spacing-4);
     text-align: center;
-    max-width: 90%;
-    margin-left: auto;
-    margin-right: auto;
+    max-width: 100%;
+    padding: 0 var(--spacing-2);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
   }
 
   .heroContent p {
@@ -376,8 +377,10 @@
 
   .heroContent h1 {
     font-size: clamp(1.5rem, 6vw, 1.75rem);
-    line-height: 1.3;
+    line-height: 1.25;
     margin-bottom: var(--spacing-3);
+    padding: 0 var(--spacing-1);
+    letter-spacing: -0.01em;
   }
 
   .heroContent p {
@@ -406,13 +409,18 @@
   }
 
   .heroContent h1 {
-    font-size: clamp(1.25rem, 5vw, 1.5rem);
+    font-size: 1.35rem;
+    line-height: 1.3;
     margin-bottom: var(--spacing-2);
+    padding: 0;
+    max-width: 280px;
+    margin-left: auto;
+    margin-right: auto;
+    word-spacing: -0.05em;
   }
 
-  .heroContent p {
-    font-size: 0.875rem;
-    margin-bottom: var(--spacing-3);
+  .heroContent {
+    padding: 0 var(--spacing-1);
   }
 
   .heroButtons {
