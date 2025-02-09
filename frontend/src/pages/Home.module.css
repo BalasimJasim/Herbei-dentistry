@@ -432,5 +432,31 @@
     font-size: 0.8125rem;
     padding: var(--spacing-2) var(--spacing-3);
   }
+}
+
+/* Ultra small devices */
+@media (max-width: 320px) {
+  .heroButtons {
+    max-width: 180px;
+    gap: var(--spacing-2);
+    margin-top: var(--spacing-2);
+  }
+
+  .heroButton {
+    height: 34px;
+    font-size: 0.8125rem;
+    padding: var(--spacing-2) var(--spacing-2);
+    min-width: unset;
+    width: 100%;
+  }
+
+  .heroButton.primary,
+  .heroButton.secondary {
+    border-radius: var(--radius-md);
+  }
+
+  .heroContent {
+    padding: 0;
+  }
 } 
 
