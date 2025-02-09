@@ -93,6 +93,8 @@ const AppointmentCalendar = ({
               unavailabilityMessage = "Cabinet occupied";
             } else if (slot.unavailabilityReason === "SPECIALIST_UNAVAILABLE") {
               unavailabilityMessage = "Specialist unavailable";
+            } else if (slot.unavailabilityReason === "SERVICE_ALREADY_BOOKED") {
+              unavailabilityMessage = "Service already booked";
             }
 
             return (

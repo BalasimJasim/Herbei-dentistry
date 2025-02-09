@@ -310,6 +310,12 @@
   border-color: var(--error-200);
 }
 
+.time-slot.reason-service-already-booked {
+  background: var(--error-50);
+  border-color: var(--error-200);
+  color: var(--error-700);
+}
+
 .time-slot .time {
   font-weight: 600;
 }
@@ -358,6 +364,11 @@
 .legend-color.reason-cabinet-occupied {
   background: var(--warning-50);
   border-color: var(--warning-200);
+}
+
+.legend-color.reason-service-already-booked {
+  background: var(--error-50);
+  border-color: var(--error-200);
 }
 
 @media (max-width: 768px) {
