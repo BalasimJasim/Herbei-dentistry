@@ -1,5 +1,8 @@
 {
   "version": 2,
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "routes": [
     {
       "src": "^/assets/(.*)",
@@ -21,18 +24,6 @@
       "dest": "/$1.png"
     },
     {
-      "src": "^/patient-portal",
-      "dest": "/index.html"
-    },
-    {
-      "src": "^/dashboard",
-      "dest": "/index.html"
-    },
-    {
-      "src": "^/en/(.*)",
-      "dest": "/index.html"
-    },
-    {
       "handle": "filesystem"
     },
     {
@@ -40,7 +31,8 @@
       "dest": "/index.html"
     }
   ],
-  "framework": "vite",
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist"
+  "github": {
+    "silent": true,
+    "autoAlias": true
+  }
 } 
